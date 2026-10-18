@@ -23,3 +23,11 @@ The hosted CI `check` job now runs the application from a locked `npm ci` + Vite
 **S003 evidence:** [Chromium CI run 39110275970](https://github.com/jball348-svg/ETTA/actions/runs/39110275970), exact source SHA `70e202bcb16ff1ca52fa8112e137c3b0ec4a25e9`, **15/15 browser checks PASS**, desktop Chromium, mobile touch emulation, WebGL fallback, input/collision/camera/reset and browser console. On an emulated phone, scroll to the stage before using its D-pad. SwiftShader software WebGL yielded about 6 FPS in emulation; real hardware performance is not established.
 
 Vercel and physical mobile hardware are still unverified and must not be conflated with local production-preview Chrome acceptance.
+
+## S004: first home
+The playable area is now a furnished studio. E toggles the nearby standing lamp; the inspector button only enables within 1.65 world units. Reset returns Etta to the legal spawn and restores the lamp. Reload resets the home — **no persistence**.
+
+S004 verification: [CI run 39114318840](https://github.com/jfairfaxball-348/ETTA/actions/runs/39114318840) (10/10 Node tests, 17/17 genuine Chromium checks), screenshot artifact 12131721675. Headless touch emulation passed; physical device was not benchmarked.
+
+**Owner-reported public URL:** https://etta-virid.vercel.app/ . After S004 is merged, ensure Vercel deploys the updated `main` and perform a live manual check: room rendering, WASD, doorway, lamp toggling, reset and touch pad. This independent live check has **NOT** been done in this session. Do not put a provider API key in Vercel until S005 has built a protected server-only adapter and abuse controls.
+

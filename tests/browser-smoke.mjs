@@ -1,4 +1,4 @@
-/** S003: genuine headless Chromium actions against the built production preview.
+/** S004: genuine headless Chromium actions against the built production preview.
  * Browser transport is pinned Playwright Core installed by the dedicated CI job.
  * No mocked DOM, simulation function calls or injected movement state.
  */
@@ -34,6 +34,15 @@ const stage = page.locator('#scene');
 async function telemetry(){return page.locator('#telemetry').innerText();}
 async function state(){return position(await telemetry());}
 async function reset(){await stage.focus();await page.keyboard.press('r');await sleep(220);}
+async function moveUntil(key, predicate, timeoutMs=11000) {
+  await stage.focus(); await page.keyboard.down(key);
+  const started=Date.now(); let last=await state();
+  try {
+    do { await sleep(230); last=await state(); if(predicate(last)) return last; }
+    while(Date.now()-started<timeoutMs);
+    throw new Error('Timed out while moving '+key+': '+JSON.stringify(last));
+  } finally { await page.keyboard.up(key); await sleep(120); }
+}
 async function walk(key='w',ms=600){await stage.focus();await page.keyboard.down(key);await sleep(ms);await page.keyboard.up(key);await sleep(100);return state();}
 try {
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
@@ -46,15 +55,29 @@ try {
   });
   const origin=await state();
   await attempt('W and D input actually change engine-owned coordinates',async()=>{
-    const w=await walk('w',650);assert.ok(distance(w,origin)>0.45,'W did not move Etta');
-    await reset();const d=await walk('d',500);assert.ok(distance(d,origin)>0.4,'D did not move Etta');
+    const w=await moveUntil('w',p=>distance(p,origin)>0.45);assert.ok(distance(w,origin)>0.45,'W did not move Etta');
+    await reset();const d=await moveUntil('d',p=>distance(p,origin)>0.4);assert.ok(distance(d,origin)>0.4,'D did not move Etta');
   });
-  await attempt('Run modifier increases displacement',async()=>{
-    await reset();const w=await walk('w',650);const walkDistance=distance(w,origin);
-    await reset();await stage.focus();await page.keyboard.down('Shift');await page.keyboard.down('w');
-    await sleep(650);await page.keyboard.up('w');await page.keyboard.up('Shift');await sleep(100);
-    const runDistance=distance(await state(),origin);
-    assert.ok(runDistance>walkDistance*1.25,'Walk '+walkDistance+' vs run '+runDistance);
+
+  await attempt('Run modifier produces faster observed velocity',async()=>{
+    async function observeSpeed(goal,run){
+      await reset();await stage.focus();
+      if(run)await page.keyboard.down('Shift');
+      await page.keyboard.down('w');
+      let speed=0;const started=Date.now();
+      try{
+        do{
+          await sleep(160);
+          const reading=/VELOCITY\s+([\d.]+)/.exec(await telemetry());
+          speed=Number(reading?.[1]||0);
+          if(speed>=goal)return speed;
+        }while(Date.now()-started<11000);
+        throw new Error('Observed velocity never reached '+goal+': '+speed);
+      }finally{await page.keyboard.up('w');if(run)await page.keyboard.up('Shift');}
+    }
+    const walkSpeed=await observeSpeed(2.2,false);
+    const runSpeed=await observeSpeed(3.6,true);
+    assert.ok(runSpeed>walkSpeed*1.25,'Walk '+walkSpeed+' vs run '+runSpeed);
   });
   await attempt('R resets motion, body and camera',async()=>{
     await reset();assert.ok(distance(await state(),origin)<0.06,'Body did not return to spawn');
@@ -97,16 +120,40 @@ try {
     await page.keyboard.up('w');
     assert.ok(distance(a,b)<0.05,'Movement continued after blur event');
   });
-  await attempt('Actual movement stays outside both obstacles and arena bounds',async()=>{
+
+  await attempt('Visible studio and manual lamp affordance, reversible and resettable',async()=>{
+    await reset();
+    assert.match(await page.locator('#object-name').innerText(),/Standing lamp/);
+    const action=page.locator('#interact-button');
+    assert.equal(await action.isEnabled(),true);
+    assert.match(await action.innerText(),/Turn light off/);
+    await action.click();
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light on'),null,{timeout:12000});
+    assert.match(await action.innerText(),/Turn light on/);
+    await stage.focus();await page.keyboard.press('e');
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light off'),null,{timeout:12000});
+    assert.match(await action.innerText(),/Turn light off/);
+    await action.click();await reset();
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light off'),null,{timeout:12000});
+    assert.match(await action.innerText(),/Turn light off/);
+  });
+  await attempt('Door passage outside and back, without crossing physical front walls',async()=>{
+    await reset();const porch=await moveUntil('s',p=>p.z>5.25);
+    assert.ok(porch.z>5.25,'Could not exit studio: '+JSON.stringify(porch));
+    assert.ok(Math.abs(porch.x)<1.18,'Exited through front wall');
+    const inside=await moveUntil('w',p=>p.z<4.7);
+    assert.ok(inside.z<4.7,'Could not re-enter studio: '+JSON.stringify(inside));
+  });
+  await attempt('Long movement halts against world-owned architecture',async()=>{
     await reset();await stage.focus();await page.keyboard.down('w');
-    try {
-      for(let i=0;i<30;i++){
-        await sleep(170);const p=await state();
-        assert.ok(Math.abs(p.x)<7.2&&Math.abs(p.z)<7.2,'Arena wall crossed');
-        for(const o of [{a:-2.2,b:-0.6,c:-3.3,d:-1.7},{a:2,b:3.1,c:0.8,d:2.4}])
-          assert.ok(!(p.x>o.a-0.30&&p.x<o.b+0.30&&p.z>o.c-0.30&&p.z<o.d+0.30),'Obstacle crossed '+JSON.stringify(p));
+    try{
+      for(let i=0;i<26;i++){
+        await sleep(180);const p=await state();
+        assert.ok(p.x>=-5.48&&p.x<=5.48&&p.z>=-4.73&&p.z<=6.78,'World bounds violated: '+JSON.stringify(p));
+        for(const o of [{a:-4.85,b:-2.5,c:-3.85,d:-1.1},{a:2.05,b:4.68,c:-3.8,d:-2.45},{a:2.62,b:3.45,c:-1.95,d:-1.06}])
+          assert.ok(!(p.x>o.a-0.32&&p.x<o.b+0.32&&p.z>o.c-0.32&&p.z<o.d+0.32),'Walked into furniture');
       }
-    } finally {await page.keyboard.up('w');}
+    } finally{await page.keyboard.up('w');}
   });
   await attempt('Screenshots capture desktop 3D result',async()=>{
     const bytes=await page.screenshot({path:'test-results/etta-desktop.png'});
@@ -169,5 +216,5 @@ try {
   await browser.close();
 }
 const failures=results.filter(r=>r.result!=='PASS');
-console.log('S003 CHROMIUM:',results.length-failures.length,'PASS;',failures.length,'FAIL');
+console.log('S004 CHROMIUM:',results.length-failures.length,'PASS;',failures.length,'FAIL');
 if(failures.length)process.exitCode=1;

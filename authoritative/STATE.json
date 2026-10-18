@@ -2,10 +2,10 @@
   "project": "ETTA",
   "as_of": "2026-10-18",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
-  "last_completed_session": "S003",
-  "next_session": "S004",
+  "last_completed_session": "S004",
+  "next_session": "S005",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P2",
+  "current_phase": "P3",
   "phases": {
     "P0": {
       "title": "Foundation",
@@ -17,11 +17,11 @@
     },
     "P2": {
       "title": "Give her a home",
-      "status": "NOT_STARTED"
+      "status": "PASS_CHROMIUM_AUTOMATED_FIRST_HOME"
     },
     "P3": {
       "title": "Put her mind in her body",
-      "status": "NOT_STARTED"
+      "status": "NOT_STARTED_NEXT_S005"
     },
     "P4": {
       "title": "Let her decide how she lives",
@@ -33,23 +33,23 @@
     }
   },
   "current_capabilities": [
-    "Static Vite/Three.js client with hosted build evidence",
-    "Deterministic grounded humanoid body with arena and obstacle colliders",
-    "Manual walking/running, touch direction pad, orbit/zoom camera, reset, developer HUD",
-    "Generated npm lockfile and configured reproducible npm ci pipeline",
-    "Source-level deterministic regression tests and governed sessions",
-    "15/15 actual Chromium browser checks passed: desktop scene and controls, collision, emulated mobile touch, WebGL fallback and screenshots"
+    "Three.js procedural studio with visual Etta body, cutaway walls and entry porch",
+    "World-owned stable object IDs, authoritative colliders and deterministic state",
+    "Manual WASD/arrows/Shift, camera orbit/zoom, touch D-pad, reset, diagnostic HUD",
+    "Studio furniture: bed, writing table, chair, cabinet, lamp, rug and plant",
+    "Nearby-object inspector and manual E/button toggling with reversible/resettable lamp state",
+    "10/10 Node tests and 17/17 hosted actual Chromium checks on S004 source"
   ],
   "not_yet_capabilities": [
-    "Verified deployed Vercel preview",
-    "Home or interactive objects",
-    "Cloud LLM connection",
-    "Autonomous decisions",
-    "Persistent agent memory"
+    "S004 Vercel production deployment verification",
+    "Physical phone/browser performance measurement",
+    "Server-side LLM inference and model-driven proposals",
+    "Autonomy or persisted memory"
   ],
   "deployment": {
     "target": "Vercel",
-    "status": "NOT_DEPLOYED_VERIFIED",
+    "status": "OWNER_REPORTS_PREVIOUS_BUILD_LIVE; S004_PRODUCTION_UNVERIFIED",
+    "url": "https://etta-virid.vercel.app/",
     "backend": "NOT_IMPLEMENTED"
   },
   "source_reference": {
@@ -62,20 +62,30 @@
     "real_browser": {
       "kind": "CHROMIUM_AUTOMATED",
       "status": "CI_PASS",
+      "url": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39114318840",
+      "source_sha": "e3453eebe30c9dec8db39af62eff3a8d47742e10",
+      "checks": 17,
+      "failed": 0,
+      "artifact_id": 12131721675
+    },
+    "vercel": "OWNER_REPORTED_PRIOR_DEPLOYMENT_S004_NOT_VERIFIED",
+    "mobile": "TOUCH_EMULATION_PASS_PHYSICAL_DEVICE_NOT_RUN",
+    "destination_ci": "PASS_S004_PR_SOURCE",
+    "pr": "https://github.com/jfairfaxball-348/ETTA/pull/1",
+    "p1_browser": {
+      "kind": "CHROMIUM_AUTOMATED",
+      "status": "CI_PASS",
       "url": "https://github.com/jball348-svg/ETTA/actions/runs/39110275970",
       "source_sha": "70e202bcb16ff1ca52fa8112e137c3b0ec4a25e9",
       "checks": 15,
       "failed": 0,
       "artifact_id": 12130221952
-    },
-    "vercel": "NOT_VERIFIED",
-    "mobile": "TOUCH_EMULATION_PASS_PHYSICAL_DEVICE_NOT_RUN",
-    "destination_ci": "PENDING_NEW_WORKFLOW_RUN"
+    }
   },
   "known_blockers": [
-    "Live Vercel deployment not independently observed",
-    "Physical mobile-device control/performance untested; SwiftShader mobile emulation measured about 6 FPS",
-    "No P2 home, P3 inference or P4 autonomy yet"
+    "Vercel production build not independently observed after S004",
+    "Physical mobile device performance untested; headless SwiftShader is not phone evidence",
+    "P3 inference and P4 autonomy/persistence not built"
   ],
   "migration": {
     "date": "2026-10-18",

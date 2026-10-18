@@ -5,29 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#07131b" />
   <link rel="icon" href="data:," />
-  <meta name="description" content="ETTA: meet a virtual character in her first playable body." />
-  <title>ETTA — First Steps</title>
+  <meta name="description" content="ETTA: explore a little home with a manually controlled virtual character." />
+  <title>ETTA — Her First Home</title>
 </head>
 <body>
   <div id="app">
     <main class="shell">
-      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S002 · BODY EXPERIMENT</span></header>
+      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S004 · FIRST HOME</span></header>
       <section class="hero" aria-labelledby="hero-title">
         <div class="copy">
-          <p class="eyebrow">PHASE 01 / GIVE ETTA A BODY</p>
-          <h1 id="hero-title">Her first<br /><em>steps.</em></h1>
-          <p class="intro">A body in a little testing world. For now, you choose where she goes. Later, she'll have a home — and eventually a mind to guide her.</p>
+          <p class="eyebrow">PHASE 02 / GIVE HER A HOME</p>
+          <h1 id="hero-title">A place<br /><em>to stay.</em></h1>
+          <p class="intro">Etta has a room of her own: a bed, a table, a chair and a little light. Explore it with developer controls. She doesn't make her own decisions yet.</p>
           <p id="mode-status" class="mode" aria-live="polite">MANUAL / DEV · NO AUTONOMY</p>
           <div class="instructions" aria-label="Movement controls">
             <strong>DEV CONTROLS</strong>
             <p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows · Walk</p>
             <p><kbd>Shift</kbd> Run · Drag to orbit · Scroll to zoom</p>
-            <p><kbd>R</kbd> Reset · <kbd>F1</kbd> Toggle state HUD</p>
+            <p><kbd>E</kbd> Toggle nearby lamp · <kbd>R</kbd> Reset</p><p><kbd>F1</kbd> Toggle state HUD</p>
             <p class="micro">Tap the 3D view to focus it. On touch, use the directional pad and drag the view to orbit.</p>
           </div>
         </div>
         <div class="viewport-wrap">
-          <div id="scene" tabindex="0" role="application" aria-label="Playable ETTA developer arena. Focus to move with WASD or arrow keys."></div>
+          <div id="scene" tabindex="0" role="application" aria-label="Playable ETTA home. Focus to move with WASD or arrow keys."></div>
           <div id="debug-hud" class="debug-hud" aria-live="off"><strong>LIVE BODY STATE</strong><pre id="telemetry">INITIALISING...</pre></div>
           <div class="scene-actions"><button id="reset-button" type="button">↺ Reset</button><button id="hud-toggle" type="button" aria-pressed="true">State HUD</button></div>
           <div class="touch-pad" aria-label="Touch movement controls">
@@ -35,10 +35,11 @@
             <div><button type="button" data-direction="left" aria-label="Walk left">◀</button><button type="button" data-direction="backward" aria-label="Walk backward">▼</button><button type="button" data-direction="right" aria-label="Walk right">▶</button></div>
             <button type="button" data-direction="run" aria-label="Hold to run">RUN</button>
           </div>
-          <div class="scene-caption"><span>ETTA // TEST ARENA</span><span id="render-status">INITIALISING…</span></div>
+          <div class="affordance" role="group" aria-label="Nearby object inspector"><strong>NEARBY OBJECT</strong><span id="object-name">Looking around…</span><small id="object-detail">Walk towards an object.</small><button id="interact-button" disabled type="button">No manual action</button></div>
+          <div class="scene-caption"><span>ETTA // FIRST HOME</span><span id="render-status">INITIALISING…</span></div>
         </div>
       </section>
-      <section class="milestones" aria-label="Project roadmap"><div class="active"><span>01</span> BODY</div><div><span>02</span> HOME</div><div><span>03</span> MIND</div><div><span>04</span> LIFE</div><div class="unknown"><span>05</span> ?</div></section>
+      <section class="milestones" aria-label="Project roadmap"><div class="active"><span>01</span> BODY</div><div class="active"><span>02</span> HOME</div><div><span>03</span> MIND</div><div><span>04</span> LIFE</div><div class="unknown"><span>05</span> ?</div></section>
       <footer><a href="https://github.com/jfairfaxball-348/ETTA" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a><span>Movement is manually controlled. No inference or autonomy yet.</span></footer>
     </main>
   </div>

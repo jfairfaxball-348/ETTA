@@ -17,3 +17,8 @@
 | DEC-0013 | S003 | Retain touch holds when canvas loses focus, but clear keyboard holds | Pressing a D-pad button can blur the canvas; should not stop an active finger | Input system refactors |
 | DEC-0014 | S003 | Keep screenshots + JSON evidence from hosted Chrome; pin CI-only Playwright transport | Reproduce full-browser smoke with no key/provider dependency | CI maintenance |
 | DEC-0015 | S003 | Distinguish mobile touch emulation from physical-device performance and deployment | SwiftShader emulator had low FPS; neither physical phone nor live Vercel were tested | Real device/preview availability |
+| DEC-0016 | S004 | Authoritative immutable room object records + mutable lamp-only world state | Preserve deterministic physics and future LLM trust boundary | P3 planning |
+| DEC-0017 | S004 | A walkable doorway leads to a bounded porch; all furnishings have conservative solid footprints | Avoid purely decorative room and walking through solids | More detailed room physics |
+| DEC-0018 | S004 | Inspector is manual-only; E/button may toggle the lamp within actual object distance | Build affordances without implying model decisions | P3 legal action API |
+| DEC-0019 | S004 | Reduce mobile render cost by limiting DPR and turning off shadow mapping on coarse pointers | Previously weak headless emulated GPU performance | Real phone benchmark |
+

@@ -1,7 +1,7 @@
 name: ETTA checks
 on:
   push:
-    branches: [main, 'session/**']
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
