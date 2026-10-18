@@ -58,12 +58,26 @@ try {
     const w=await moveUntil('w',p=>distance(p,origin)>0.45);assert.ok(distance(w,origin)>0.45,'W did not move Etta');
     await reset();const d=await moveUntil('d',p=>distance(p,origin)>0.4);assert.ok(distance(d,origin)>0.4,'D did not move Etta');
   });
-  await attempt('Run modifier increases displacement',async()=>{
-    await reset();const w=await walk('w',650);const walkDistance=distance(w,origin);
-    await reset();await stage.focus();await page.keyboard.down('Shift');await page.keyboard.down('w');
-    await sleep(650);await page.keyboard.up('w');await page.keyboard.up('Shift');await sleep(100);
-    const runDistance=distance(await state(),origin);
-    assert.ok(runDistance>walkDistance*1.25,'Walk '+walkDistance+' vs run '+runDistance);
+
+  await attempt('Run modifier produces faster observed velocity',async()=>{
+    async function observeSpeed(goal,run){
+      await reset();await stage.focus();
+      if(run)await page.keyboard.down('Shift');
+      await page.keyboard.down('w');
+      let speed=0;const started=Date.now();
+      try{
+        do{
+          await sleep(160);
+          const reading=/VELOCITY\\s+([\\d.]+)/.exec(await telemetry());
+          speed=Number(reading?.[1]||0);
+          if(speed>=goal)return speed;
+        }while(Date.now()-started<11000);
+        throw new Error('Observed velocity never reached '+goal+': '+speed);
+      }finally{await page.keyboard.up('w');if(run)await page.keyboard.up('Shift');}
+    }
+    const walkSpeed=await observeSpeed(2.2,false);
+    const runSpeed=await observeSpeed(3.6,true);
+    assert.ok(runSpeed>walkSpeed*1.25,'Walk '+walkSpeed+' vs run '+runSpeed);
   });
   await attempt('R resets motion, body and camera',async()=>{
     await reset();assert.ok(distance(await state(),origin)<0.06,'Body did not return to spawn');
