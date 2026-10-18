@@ -41,6 +41,7 @@ try {
   await attempt('Browser reaches protected adapter; fixture proposal waits for approval', async () => {
     await page.locator('#mind-access-code').fill(code); await ask();
     assert.match(await page.locator('#mind-meta').innerText(), /TEST_FIXTURE.*fixture-only/);
+    await page.locator('#mind-panel details summary').click();
     assert.match(await page.locator('#mind-observation').innerText(), /Standing lamp/);
     assert.match(await page.locator('#interact-button').innerText(), /Turn light off/);
     assert.equal(await page.locator('#approve-proposal').isEnabled(), true);
