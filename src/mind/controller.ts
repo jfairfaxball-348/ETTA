@@ -18,7 +18,7 @@ export class MindController {
   private fetcher: typeof fetch;
   private clock: () => number;
   constructor(hooks: Hooks, fetcher = fetch, clock = () => performance.now()) {
-    this.hooks = hooks; this.fetcher = fetcher; this.clock = clock;
+    this.hooks = hooks; this.fetcher = fetcher.bind(globalThis); this.clock = clock;
   }
   private publish(message?: string) {
     if (message) {
