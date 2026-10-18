@@ -6,17 +6,17 @@
   <meta name="theme-color" content="#07131b" />
   <link rel="icon" href="data:," />
   <meta name="description" content="ETTA: explore a little home with a manually controlled virtual character." />
-  <title>ETTA — Her First Home</title>
+  <title>ETTA — A First Thought</title>
 </head>
 <body>
   <div id="app">
     <main class="shell">
-      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S004 · FIRST HOME</span></header>
+      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S005 · FIRST MIND BRIDGE</span></header>
       <section class="hero" aria-labelledby="hero-title">
         <div class="copy">
-          <p class="eyebrow">PHASE 02 / GIVE HER A HOME</p>
-          <h1 id="hero-title">A place<br /><em>to stay.</em></h1>
-          <p class="intro">Etta has a room of her own: a bed, a table, a chair and a little light. Explore it with developer controls. She doesn't make her own decisions yet.</p>
+          <p class="eyebrow">PHASE 03 / PUT HER MIND IN HER BODY</p>
+          <h1 id="hero-title">A first<br /><em>thought.</em></h1>
+          <p class="intro">A room, a little light, and a choice. With her mind connected, ask Etta what she'd do next. You approve each suggestion before it happens.</p>
           <p id="mode-status" class="mode" aria-live="polite">MANUAL / DEV · NO AUTONOMY</p>
           <div class="instructions" aria-label="Movement controls">
             <strong>DEV CONTROLS</strong>
@@ -39,8 +39,19 @@
           <div class="scene-caption"><span>ETTA // FIRST HOME</span><span id="render-status">INITIALISING…</span></div>
         </div>
       </section>
+      <section id="mind-panel" class="mind-panel" aria-labelledby="mind-title">
+        <div class="mind-heading"><h2 id="mind-title">Ask Etta</h2><span id="mind-status" class="mode" role="status">DISABLED</span></div>
+        <p id="mind-message" aria-live="polite">Mind controls become available when the room and connection are ready.</p>
+        <p class="micro">One suggestion at a time: wait here or switch the lamp when it's within reach. Moving or resetting cancels the suggestion.</p>
+        <div class="mind-access"><label for="mind-access-code">Private access code</label><input id="mind-access-code" type="password" autocomplete="off" spellcheck="false" maxlength="128" placeholder="Access code for this site" /><button id="lock-mind" type="button">Clear code</button></div>
+        <small class="micro">Kept only in this tab. This is the site's access code, never your Google API key.</small>
+        <div class="mind-actions"><button id="ask-etta" type="button" disabled>Ask Etta</button><button id="approve-proposal" type="button" disabled>Approve action</button><button id="stop-mind" type="button">Stop / discard</button></div>
+        <p id="mind-proposal" class="mind-proposal" aria-live="polite">No action awaiting approval.</p>
+        <small id="mind-meta"></small>
+        <details><summary>Observation &amp; recent activity</summary><pre id="mind-observation">No observation sent.</pre><pre id="mind-history">No decisions yet.</pre></details>
+      </section>
       <section class="milestones" aria-label="Project roadmap"><div class="active"><span>01</span> BODY</div><div class="active"><span>02</span> HOME</div><div><span>03</span> MIND</div><div><span>04</span> LIFE</div><div class="unknown"><span>05</span> ?</div></section>
-      <footer><a href="https://github.com/jfairfaxball-348/ETTA" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a><span>Movement is manually controlled. No inference or autonomy yet.</span></footer>
+      <footer><a href="https://github.com/jfairfaxball-348/ETTA" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a><span>Every proposed action needs your approval. No ongoing autonomy or saved memory.</span></footer>
     </main>
   </div>
   <script type="module" src="/src/main.ts"></script>

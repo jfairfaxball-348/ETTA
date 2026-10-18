@@ -4,7 +4,9 @@
   "version": "0.2.0",
   "type": "module",
   "description": "ETTA: a session-driven embodied character experiment.",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -13,8 +15,11 @@
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "check": "npm run typecheck && npm run test && npm run build"
   },
-  "dependencies": { "three": "0.183.2" },
+  "dependencies": {
+    "three": "0.183.2"
+  },
   "devDependencies": {
+    "@types/node": "22.20.5",
     "@types/three": "^0.183.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.3"

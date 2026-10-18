@@ -19,11 +19,14 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ]
   },
   "include": [
     "src",
+    "server",
+    "api",
     "vite.config.ts"
   ]
 }

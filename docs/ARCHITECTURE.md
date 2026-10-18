@@ -1,18 +1,22 @@
-# ETTA architecture — S004 home
+# ETTA architecture — S005
 
-```
-index.html / src/main.ts
-  ├─ src/input.ts        Manual keyboard, touch, camera and E interaction intent
-  ├─ src/world.ts        Immutable room object IDs/bounds, proximity, lamp world state
-  ├─ src/simulation.ts   World-owned body + movement collision using world colliders
-  ├─ src/camera.ts       Follow/orbit/zoom; never writes world state
-  └─ src/scene.ts        Three.js visual meshes reflecting the world definitions
-```
+The browser owns the single-tab simulation: `world.ts` defines stable objects and interaction permissions; `simulation.ts` owns body collision and movement; `scene.ts` renders these values. Reload resets all state. S004 room/physics behavior is retained.
 
-The room definition is `HOME_OBJECTS`: each object has a stable ID, kind, footprint, height, collision flag and description. The renderer chooses meshes based on that state rather than acting as a physics source. The south wall has a real gap leading onto a bounded porch. `isPositionLegal` and `stepBody` perform conservative collision checks on the same footprints. Decorative pillows, window trim and table legs do not grant additional interactions.
+## One decision, manually approved
 
-`WorldState` currently contains only `lampOn`, reset to on. `nearbyObject` computes Euclidean distance from the avatar to furniture bounds. `interact` only accepts the lamp within a fixed range. Input or an on-screen button triggers this **manual** action, and the visual light follows state. Other furniture is intentionally non-interactive.
+1. `src/mind/panel.ts` captures the body and lamp from the engine on **Ask Etta**. The private site code stays in the password input in this tab and travels only in an Authorization header. It is not a provider key, cookie or persisted credential.
+2. `controller.ts` stops motion, keeps an exact snapshot and allows one request in flight. The observation inspector records the submitted context. Recent activity is capped at six entries in memory.
+3. `api/decision.ts` is a Vercel Node Web Standard entry point. `server/decision.ts` authenticates, checks origin/content type/body size and validates the minimal snapshot. The server reconstructs labels, distances and legal actions from canonical geometry, ignoring no extra fields: extras are rejected. It never accepts a caller-supplied prompt, model, URL or action list.
+4. `server/budget.ts` reserves one attempt with a single atomic Redis Lua script. All instances share 4 attempts per fixed minute and 40 per UTC day. Redis owns the clock; failed attempts still count; counters expire. Missing or failed Redis disables inference. Google quotas remain a separate backstop.
+5. `server/provider.ts` makes one bounded Google generateContent call, with no retries. It validates a complete JSON proposal against the snapshot; no fabricated fallback. Model text is never applied as state or rendered as HTML.
+6. The browser validates the response against its current snapshot and displays provenance, action, short intent, model and latency. Nothing executes until **Approve action**, which consumes the proposal once and rechecks live world permissions through `interact`. WAIT is a no-op. Any changed snapshot, movement, manual interaction, reset, Stop, focus loss or expiry discards the proposal. Late responses cannot resurrect it.
 
-There is no persistent world, cloud API, autonomous worker or LLM decision. The browser reload starts a fresh deterministic state. For future P3 keep provider credentials in a server-only endpoint with typed, enumerated actions. The existing Vercel target is static; a protected serverless function will be new work.
+`src/mind/protocol.ts` is shared but has no secrets or server dependencies. It enumerates only WAIT and TOGGLE_LAMP(lamp); extra targets, coordinates and fields are rejected. Body radius is engine-owned. Observations include nearby furnishings within 2.15 units; the lamp action requires 1.65 units. Other furniture has no actions.
 
-Browser evidence: [S004 actual Chromium check](https://github.com/jfairfaxball-348/ETTA/actions/runs/39114318840), 17/17; Node unit tests 10/10. Mobile was emulated, not physical. The old architecture record before S004 is superseded.
+## Boundaries
+
+The server validates a **client-reported** room snapshot, not a persistent server-owned multiplayer world. A modified client cannot create new server affordances, but can submit a different geometrically legal snapshot; this prototype does not establish remote simulation authenticity. Execution is checked in the actual local engine.
+
+Production has no fixture-mode environment switch. `tests/fixture-server.mjs` injects a deterministic transport into the real protected adapter and marks every successful response TEST_FIXTURE. Its server is never imported by production. A real Google call alone emits MODEL_DECISION. This is not evidence that the live provider has been configured or tested.
+
+Provider/Redis keys remain server-side. No personal data, free-text chat, memory, background worker, provider retries or continuous autonomy is introduced.

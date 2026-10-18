@@ -4,6 +4,8 @@ import { spawnBody, resetBody, stepBody } from './simulation';
 import { FollowCamera } from './camera';
 import { ManualControls } from './input';
 import { createWorld, resetWorld, nearbyObject, interact, INTERACTION_RANGE } from './world';
+import { attachMindPanel } from './mind/panel';
+import type { MindController } from './mind/controller';
 
 function required<T extends HTMLElement>(selector: string): T {
   const el = document.querySelector<T>(selector);
@@ -19,10 +21,12 @@ const reset = required<HTMLButtonElement>('#reset-button');
 const toggle = required<HTMLButtonElement>('#hud-toggle');
 const body = spawnBody();
 const world = createWorld();
+let mind: MindController | undefined;
 const objectName = required<HTMLElement>('#object-name');
 const objectDetail = required<HTMLElement>('#object-detail');
 const interactButton = required<HTMLButtonElement>('#interact-button');
 function manualInteract() {
+  mind?.cancel('Manual lamp control took over.');
   const nearby=nearbyObject(world,body.x,body.z);
   if(nearby) interact(world,body.x,body.z,nearby.object.id);
 }
@@ -32,18 +36,21 @@ let visible = true;
 mode.textContent = 'MANUAL / DEV · NO AUTONOMY';
 try {
   const stage = createStage(mount);
+  mind = attachMindPanel(body, world);
   const control = new ManualControls(mount, {
     orbit: (dx, dy) => cameraRig.orbit(dx, dy),
     zoom: delta => cameraRig.zoom(delta),
-    reset: () => { resetBody(body); resetWorld(world); cameraRig.reset(); },
+    reset: () => { mind?.cancel('Room reset.'); resetBody(body); resetWorld(world); cameraRig.reset(); },
     interact: manualInteract,
     toggleHud: () => {
       visible = !visible; hud.hidden = !visible;
       toggle.setAttribute('aria-pressed', String(visible));
     }
   });
+  document.getElementById('ask-etta')?.addEventListener('click', () => control.clear());
+  document.getElementById('stop-mind')?.addEventListener('click', () => control.clear());
   reset.addEventListener('click', () => {
-    control.clear(); resetBody(body); resetWorld(world); cameraRig.reset(); mount.focus({ preventScroll: true });
+    mind?.cancel('Room reset.'); control.clear(); resetBody(body); resetWorld(world); cameraRig.reset(); mount.focus({ preventScroll: true });
   });
   toggle.addEventListener('click', () => {
     visible = !visible; hud.hidden = !visible;
@@ -55,7 +62,10 @@ try {
     if (stopped) return;
     const dt = Math.min(0.05, Math.max(0, (now - previous) / 1000));
     previous = now; elapsed += dt;
-    stepBody(body, control.snapshot(), cameraRig.yaw, dt);
+    const intent = control.snapshot();
+    if (mind?.hasWork && (intent.side || intent.forward)) mind.cancel('Manual movement took over.');
+    stepBody(body, intent, cameraRig.yaw, dt);
+    mind?.tick();
     cameraRig.apply(stage.camera, body);
     stage.update(body, elapsed,world);
     const nearby=nearbyObject(world,body.x,body.z);

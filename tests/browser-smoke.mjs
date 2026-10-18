@@ -84,8 +84,16 @@ try {
     assert.match(await telemetry(),/CAMERA 7\.4m/);
   });
   await attempt('Arrow keys and key release work',async()=>{
-    await reset();const moved=await walk('ArrowUp',520);assert.ok(distance(moved,origin)>0.4);
-    await sleep(800);assert.ok(distance(await state(),moved)<0.09,'Movement stuck after key release');
+    // Wait for engine movement: software WebGL can render too slowly for a fixed 520ms hold.
+    await reset();await moveUntil('ArrowUp',p=>distance(p,origin)>0.45);
+    // Measure stability after the engine has decelerated, rather than from the
+    // last held-key sample returned by moveUntil (which precedes keyup).
+    await page.waitForFunction(()=>{
+      const m=/VELOCITY\s+([\d.]+)/.exec(document.querySelector('#telemetry')?.textContent || '');
+      return m && Number(m[1])<0.08;
+    },null,{timeout:11000});
+    const settled=await state();
+    await sleep(800);assert.ok(distance(await state(),settled)<0.05,'Movement stuck after key release');
   });
   await attempt('F1 and on-screen control toggle the diagnostic HUD',async()=>{
     await stage.focus();await page.keyboard.press('F1');

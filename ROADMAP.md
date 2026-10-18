@@ -2,19 +2,17 @@
 
 | Phase | Goal | Current acceptance |
 |---|---|---|
-| P0 FOUNDATION | Vite + CI + browser check | PASS CI + browser; owner-reported earlier Vercel site, latest production unverified |
-| P1 BODY | Recognisable body, manual control, camera, collision | PASS S003 Chromium |
-| **P2 HOME** | Small furnished room, legal doorway, collisions, world-owned objects and one reversible interaction | **PASS S004 first slice: 10/10 Node, 17/17 Chromium** |
-| **P3 MIND** | Server-only provider, strict legal actions, inspectable model proposal | NEXT S005; NOT STARTED |
-| P4 LIFE | Bounded optional autonomous episodes, drives, continuity and control | NOT STARTED |
+| P0 FOUNDATION | Vite, CI, browser and Vercel | Existing checks pass; owner reports room deployed; new function live gate open |
+| P1 BODY | Body, manual control, camera, collision | S003/S004 browser pass; retained |
+| P2 HOME | Furnished room, doorway, objects and reversible lamp | S004 10 Node/17 Chromium checks; owner reports working on deployed build |
+| **P3 MIND** | Protected server provider, legal proposals, manual approval | **S005 CI_PASS: 23 Node, 27 Chromium, Redis script; LIVE MODEL GATE OPEN** |
+| P4 LIFE | Bounded autonomous episodes, drives and continuity | NOT STARTED |
 | P5 OPEN | Owner-directed experimentation | UNDEFINED |
 
-## S004 delivered
-A cutaway studio and porch, with bed, writing table, chair, cabinet, rug, plant and switchable standing lamp. Physics and proximity calculations refer to stable `HOME_OBJECTS` world data. Walk through the open south doorway, remain within walls/furniture and use the visible manual inspector or E to toggle light. Reset restores world and body. No network or model inference.
+## S005 delivered
+A server-only Gemma adapter, private site access code, shared atomic request budget, bounded payloads/tokens/timeouts, minimal geometry-derived observations and strict WAIT/TOGGLE_LAMP proposals. Ask Etta requests one suggestion; manual approval rechecks live permissions. Movement, manual interaction, reset, Stop, focus loss and expiry cancel suggestions. No continuous loop or memory.
 
-**Evidence:** [hosted S004 run](https://github.com/jfairfaxball-348/ETTA/actions/runs/39114318840) shows all 10 deterministic tests, build/typecheck and all 17 Chromium desktop/emulated-touch tests passing. Screenshots stored in artifact 12131721675.
-
-**Remaining:** a real-device frame-rate check, independent Vercel production smoke following merge, richer object states/actions, and any persistent storage.
+The implementation and tests do not establish a live model connection. No credentials, Redis service, billing or production inference were configured. S005's live acceptance remains incomplete. [Validation and limitations](sessions/S005/VALIDATION.md).
 
 ## Next
-S005 connects the first deliberately-triggered, authenticated and bounded LLM decision proposal to legal world observations without beginning uncontrolled autonomy. The model proposes; existing engine authorises and moves. See [complete S005 prompt](authoritative/NEXT_SESSION_PROMPT.md).
+S006 finishes the configured Vercel/live Gemma acceptance gate without starting P4. The complete [next prompt](authoritative/NEXT_SESSION_PROMPT.md) is FUTURE / NOT EXECUTED. Physical-device performance, richer object actions and persistence remain future work.
