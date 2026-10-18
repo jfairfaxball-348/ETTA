@@ -1,26 +1,21 @@
-# ETTA S004 — GIVE ETTA A HOME: FIRST INHABITABLE ROOM (FUTURE / NOT EXECUTED)
+# ETTA S005 — FIRST MIND BRIDGE: SECURE, MANUALLY TRIGGERED DECISION (FUTURE / NOT EXECUTED)
 
-**Complete standalone next-session prompt.** This S004 instruction was installed at S003 closeout; **S004 IS FUTURE / NOT EXECUTED**. Owner saying "run next session" with ETTA in context authorises this **one** session only. Do not execute S005 during S004.
+**Complete standalone next-session instruction. S005 has NOT been executed.** Saying "run next session" in the ETTA project authorises S005. Keep this a practical software milestone, not a mathematics-style audit.
 
-## Preflight
-Repository: `jfairfaxball-348/ETTA`; authoritative default branch `main`. Read live main SHA and the full `AGENTS.md`, `PROJECT_CHARTER.md`, `ROADMAP.md`, `authoritative/STATE.json`, `docs/PHASE_GATES.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/OPERATIONS.md`, and S003 records and CI artifact/run links. Check open PRs and avoid branches diverged from current main.
-
-P1 BODY has automated Chromium verification; Vercel and physical mobile performance are separately unverified. The primary objective is **P2 HOME**. Keep manual controls, world-owned physics, diagnostic HUD and no model autonomy. **Do not implement P3 LLM or P4 life** in this session.
+## Starting point
+Repository: `jfairfaxball-348/ETTA`, default branch `main`. Read current main SHA, `README.md`, `ROADMAP.md`, `authoritative/STATE.json`, `src/world.ts`, `src/simulation.ts`, `src/main.ts`, relevant operation/security docs, and S004 closeout. Respect the owner-reported deployment `https://etta-virid.vercel.app/`: that site must be separately smoke-tested; don't assume it has the latest GitHub build. Etta's first room, walls, furniture, door, manual controls, nearby-object inspector and toggleable lamp were browser-tested in S004. No LLM, memory or autonomy is present.
 
 ## Mission
-**Give Etta her first small, coherent and explorable home.** Replace the abstract test arena with one lovingly but modestly staged interior or tiny studio containing floor, walls, one door/opening and a few recognisable furnishings. She must be able to walk through it with developer controls and stop against solid furniture and walls. Avoid a sprawling town or empty decorative shell.
+**Begin P3 MIND, without starting P4 LIFE:** let a deliberate user action request one bounded, *genuine model-sourced* proposal based on the real world snapshot. The world, never the model, owns state, collision and action permissions. Never mislabel a fallback as AI reasoning.
 
-## Required work
-1. Define a small authoritative world-state model for static architecture and furnishings: stable object IDs, bounds/footprints, labels, relevant properties and deterministic reset. Do not infer object truth from the render mesh.
-2. Add one coherent room and a clear entrance/threshold. Furnish with at least a bed, table, chair, lamp or equivalent simple assets. Use procedural meshes and tasteful styling; don't import heavyweight asset packs blindly. Make Etta visually readable.
-3. Make floor, walls and furniture consistent with movement physics; guarantee no walking through solids. Preserve camera-relative WASD/arrows, Shift, orbit/zoom, R, F1/HUD, blur safety and touch. Reset must restore room and body without teleporting through objects.
-4. Expose a **non-autonomous affordance inspector**: identify nearby objects from actual world distance, with explicit state and possible manual interaction hooks. If time permits, implement exactly one tested manual interaction (e.g. light on/off or chair sit) with reversible state and reset. Never claim simulated rules are model thoughts.
-5. Avoid falsely promising house persistence: a page reload may reset local state until a later explicit persistence design.
-6. Extend deterministic tests for room layout, legal spawn, collision, door passage, object bounds and replay/reset; add genuine browser smoke cases/screenshots for navigating in the furnished room on desktop. Retain existing S003 Chrome regression suite, updating its former arena-only assertions with evidence-backed home checks.
-7. Inspect performance on desktop and emulated mobile. Previously observed headless mobile SwiftShader ~6 FPS, not a measured real-phone rate. Limit excessive draw/shadow cost where it improves responsiveness without hiding problems.
-8. If actual Vercel preview credentials/URL already exist, visit and inspect; don't claim deployment from configuration alone and don't create paid infrastructure.
+## Build target
+1. Make a server-only Vercel API endpoint (or equally secure approved backend) for Google's Gemma/Gemini-compatible provider; read provider credentials solely from server environment (e.g. `GEMINI_API_KEY`), never from `VITE_*` or HTML. No secret committed or echoed. No paid infra assumed.
+2. Protect the public endpoint from uncontrolled expense: explicit opt-in configuration, authentication/access control, body-size limits, provider request timeout, bounded tokens, error responses and practical cost/rate-limit controls. A per-instance in-memory limiter alone is not globally reliable for serverless; explain the limit and use provider-side hard quota where applicable. **Do not activate production inference if abuse prevention is incomplete.**
+3. Provide a serializable, minimal legal world observation: own position/facing, nearby objects/labels/distances, lamp state, and enumerated valid actions. Prevent rendering-only meshes or model fiction from entering world truth.
+4. Define and validate a typed, finite action proposal schema. At minimum, support `WAIT` and one meaningfully grounded action (e.g. propose moving towards an object or toggling the lamp). Invalid IDs, out-of-bounds targets and disallowed interactions must be rejected. **Model outputs are proposals, not privileged state writes.**
+5. Expose one explicit `Ask Etta` developer control. Show provenance (MODEL_DECISION, MANUAL, ERROR, DISABLED) and the proposed action. Require manual approval before executing a proposal in S005, and permit an immediate manual stop/override. Avoid periodic/unbounded autonomous loops; P4 comes later.
+6. Preserve S004 studio and mobile/manual movement regressions. Simulate adapter responses deterministically for CI, and test adversarial/invalid payload handling. Mark mocked responses as fixtures and never claim a live provider call without provider evidence. Add actual end-to-end API/model testing only when configured and safely accessible.
+7. Update the practical session record, roadmap, deployment instructions, and `authoritative/STATE.json`. Record exact tests and limitations; install a complete S006 FUTURE / NOT EXECUTED prompt after finishing.
 
-## Acceptance and closeout
-Pass a first P2 vertical-slice gate only when room/object state, rendered body, collision, door passage and any claimed interaction are verified in actual Chrome with screenshots and deterministic tests. If incomplete, keep P2 in progress and target S005 to the gap.
-
-Produce `sessions/S004/{INPUT,PLAN,VALIDATION,REVIEW,CLOSEOUT}.md`; update authority, roadmap, phase and decision ledgers; install the **entire standalone S005 FUTURE / NOT EXECUTED prompt**. Use one S004 branch, normal PR, hosted checks and merge only with evidence. Independently reread main after merge and include the complete S005 prompt in the owner closeout. No P3 model connection or P4 autonomous choices in S004.
+## Acceptance
+P3 first bridge counts only if browser user action reaches the protected adapter, the proposal is validated against live world state, manual approval changes world state through existing physics/permissions, and a full stop/error path is visible. Security and mock-vs-real provenance are mandatory. If actual API credentials are unavailable, keep provider integration explicitly **UNVERIFIED** and S005 incomplete at the live-model gate rather than inventing success. Use a normal branch/PR, hosted tests, merge after passing checks, and reread main. No unsupervised continuous life, long-term memory or voice in S005.

@@ -1,0 +1,3 @@
+# S004 REVIEW
+
+Acceptance: PASS for first coherent P2 HOME vertical slice, not for all future home features. Renderer is driven by world object footprints and remains deliberately stylised and low-poly. Furniture interactions other than the lamp are only affordance labels; no chair sit, bed sleep or persistence. Collision is flat 2D conservative solid-footprint sliding; no doors that close, stairs or general navigation meshes. Node test + hosted browser pass is stronger than assertion-only evidence, but screenshots are archived rather than manually inspected on a physical device. Vercel production version unverified. No autonomy or provider requests implemented.
