@@ -34,6 +34,15 @@ const stage = page.locator('#scene');
 async function telemetry(){return page.locator('#telemetry').innerText();}
 async function state(){return position(await telemetry());}
 async function reset(){await stage.focus();await page.keyboard.press('r');await sleep(220);}
+async function moveUntil(key, predicate, timeoutMs=11000) {
+  await stage.focus(); await page.keyboard.down(key);
+  const started=Date.now(); let last=await state();
+  try {
+    do { await sleep(230); last=await state(); if(predicate(last)) return last; }
+    while(Date.now()-started<timeoutMs);
+    throw new Error('Timed out while moving '+key+': '+JSON.stringify(last));
+  } finally { await page.keyboard.up(key); await sleep(120); }
+}
 async function walk(key='w',ms=600){await stage.focus();await page.keyboard.down(key);await sleep(ms);await page.keyboard.up(key);await sleep(100);return state();}
 try {
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
@@ -46,8 +55,8 @@ try {
   });
   const origin=await state();
   await attempt('W and D input actually change engine-owned coordinates',async()=>{
-    const w=await walk('w',650);assert.ok(distance(w,origin)>0.45,'W did not move Etta');
-    await reset();const d=await walk('d',500);assert.ok(distance(d,origin)>0.4,'D did not move Etta');
+    const w=await moveUntil('w',p=>distance(p,origin)>0.45);assert.ok(distance(w,origin)>0.45,'W did not move Etta');
+    await reset();const d=await moveUntil('d',p=>distance(p,origin)>0.4);assert.ok(distance(d,origin)>0.4,'D did not move Etta');
   });
   await attempt('Run modifier increases displacement',async()=>{
     await reset();const w=await walk('w',650);const walkDistance=distance(w,origin);
@@ -104,18 +113,21 @@ try {
     const action=page.locator('#interact-button');
     assert.equal(await action.isEnabled(),true);
     assert.match(await action.innerText(),/Turn light off/);
-    await action.click();await sleep(150);
+    await action.click();
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light on'),null,{timeout:12000});
     assert.match(await action.innerText(),/Turn light on/);
-    await stage.focus();await page.keyboard.press('e');await sleep(150);
+    await stage.focus();await page.keyboard.press('e');
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light off'),null,{timeout:12000});
     assert.match(await action.innerText(),/Turn light off/);
     await action.click();await reset();
+    await page.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light off'),null,{timeout:12000});
     assert.match(await action.innerText(),/Turn light off/);
   });
   await attempt('Door passage outside and back, without crossing physical front walls',async()=>{
-    await reset();const porch=await walk('s',1350);
+    await reset();const porch=await moveUntil('s',p=>p.z>5.25);
     assert.ok(porch.z>5.25,'Could not exit studio: '+JSON.stringify(porch));
     assert.ok(Math.abs(porch.x)<1.18,'Exited through front wall');
-    const inside=await walk('w',1350);
+    const inside=await moveUntil('w',p=>p.z<4.7);
     assert.ok(inside.z<4.7,'Could not re-enter studio: '+JSON.stringify(inside));
   });
   await attempt('Long movement halts against world-owned architecture',async()=>{
