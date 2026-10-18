@@ -33,14 +33,17 @@ jobs:
       - name: Start production preview
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/etta-preview.log 2>&1 &
-      - name: Exercise actual Chromium rendering and controls
-        run: node tests/browser-smoke.mjs
-        env:
-          ETTA_BROWSER_URL: http://127.0.0.1:4173/
       - name: Start explicit fixture API integration server
         run: node --experimental-strip-types tests/fixture-server.mjs > /tmp/etta-fixture.log 2>&1 &
-      - name: Exercise protected mind bridge in Chromium (provider fixtures only)
-        run: node tests/mind-browser.mjs
+      - name: Exercise room and protected mind bridge in Chromium (provider fixtures only)
+        run: |
+          room_status=0
+          mind_status=0
+          node tests/browser-smoke.mjs || room_status=$?
+          node tests/mind-browser.mjs || mind_status=$?
+          exit $((room_status || mind_status))
+        env:
+          ETTA_BROWSER_URL: http://127.0.0.1:4173/
       - name: Archive browser screenshots and evidence
         if: always()
         uses: actions/upload-artifact@v4
