@@ -68,7 +68,7 @@ try {
       try{
         do{
           await sleep(160);
-          const reading=/VELOCITY\\s+([\\d.]+)/.exec(await telemetry());
+          const reading=/VELOCITY\s+([\d.]+)/.exec(await telemetry());
           speed=Number(reading?.[1]||0);
           if(speed>=goal)return speed;
         }while(Date.now()-started<11000);
