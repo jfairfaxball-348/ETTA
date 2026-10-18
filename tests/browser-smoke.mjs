@@ -1,4 +1,4 @@
-/** S003: genuine headless Chromium actions against the built production preview.
+/** S004: genuine headless Chromium actions against the built production preview.
  * Browser transport is pinned Playwright Core installed by the dedicated CI job.
  * No mocked DOM, simulation function calls or injected movement state.
  */
@@ -97,16 +97,37 @@ try {
     await page.keyboard.up('w');
     assert.ok(distance(a,b)<0.05,'Movement continued after blur event');
   });
-  await attempt('Actual movement stays outside both obstacles and arena bounds',async()=>{
+
+  await attempt('Visible studio and manual lamp affordance, reversible and resettable',async()=>{
+    await reset();
+    assert.match(await page.locator('#object-name').innerText(),/Standing lamp/);
+    const action=page.locator('#interact-button');
+    assert.equal(await action.isEnabled(),true);
+    assert.match(await action.innerText(),/Turn light off/);
+    await action.click();await sleep(150);
+    assert.match(await action.innerText(),/Turn light on/);
+    await stage.focus();await page.keyboard.press('e');await sleep(150);
+    assert.match(await action.innerText(),/Turn light off/);
+    await action.click();await reset();
+    assert.match(await action.innerText(),/Turn light off/);
+  });
+  await attempt('Door passage outside and back, without crossing physical front walls',async()=>{
+    await reset();const porch=await walk('s',1350);
+    assert.ok(porch.z>5.25,'Could not exit studio: '+JSON.stringify(porch));
+    assert.ok(Math.abs(porch.x)<1.18,'Exited through front wall');
+    const inside=await walk('w',1350);
+    assert.ok(inside.z<4.7,'Could not re-enter studio: '+JSON.stringify(inside));
+  });
+  await attempt('Long movement halts against world-owned architecture',async()=>{
     await reset();await stage.focus();await page.keyboard.down('w');
-    try {
-      for(let i=0;i<30;i++){
-        await sleep(170);const p=await state();
-        assert.ok(Math.abs(p.x)<7.2&&Math.abs(p.z)<7.2,'Arena wall crossed');
-        for(const o of [{a:-2.2,b:-0.6,c:-3.3,d:-1.7},{a:2,b:3.1,c:0.8,d:2.4}])
-          assert.ok(!(p.x>o.a-0.30&&p.x<o.b+0.30&&p.z>o.c-0.30&&p.z<o.d+0.30),'Obstacle crossed '+JSON.stringify(p));
+    try{
+      for(let i=0;i<26;i++){
+        await sleep(180);const p=await state();
+        assert.ok(p.x>=-5.48&&p.x<=5.48&&p.z>=-4.73&&p.z<=6.78,'World bounds violated: '+JSON.stringify(p));
+        for(const o of [{a:-4.85,b:-2.5,c:-3.85,d:-1.1},{a:2.05,b:4.68,c:-3.8,d:-2.45},{a:2.62,b:3.45,c:-1.95,d:-1.06}])
+          assert.ok(!(p.x>o.a-0.32&&p.x<o.b+0.32&&p.z>o.c-0.32&&p.z<o.d+0.32),'Walked into furniture');
       }
-    } finally {await page.keyboard.up('w');}
+    } finally{await page.keyboard.up('w');}
   });
   await attempt('Screenshots capture desktop 3D result',async()=>{
     const bytes=await page.screenshot({path:'test-results/etta-desktop.png'});
@@ -169,5 +190,5 @@ try {
   await browser.close();
 }
 const failures=results.filter(r=>r.result!=='PASS');
-console.log('S003 CHROMIUM:',results.length-failures.length,'PASS;',failures.length,'FAIL');
+console.log('S004 CHROMIUM:',results.length-failures.length,'PASS;',failures.length,'FAIL');
 if(failures.length)process.exitCode=1;

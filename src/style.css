@@ -27,3 +27,12 @@ footer{display:flex;justify-content:space-between;gap:18px;padding:20px 0 0;font
 @media(max-width:840px){.hero{grid-template-columns:1fr;padding:38px 0}.viewport-wrap{height:520px}.intro{max-width:590px}.milestones{flex-wrap:wrap}.milestones div{flex:1;min-width:70px}.status{letter-spacing:.04em;font-size:9px}footer{flex-wrap:wrap}}
 @media(max-width:500px){h1{font-size:64px}.viewport-wrap{height:500px}.scene-caption{font-size:8px;padding:12px}.debug-hud{max-width:230px}.hero{padding:30px 0}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* S004: deliberately small, readable manual affordance inspector. */
+.affordance{position:absolute;right:16px;bottom:55px;z-index:4;width:min(230px,46%);padding:13px 14px;display:flex;flex-direction:column;gap:6px;border:1px solid #58736c;background:rgba(10,27,34,.91);color:#e5efe7;box-shadow:0 12px 25px #07131b70;pointer-events:auto}
+.affordance strong{font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#78bead}
+.affordance span{font-weight:700;font-size:14px}
+.affordance small{font-size:11px;line-height:1.4;color:#bdd0c8}
+.affordance button{font-size:11px;padding:8px;background:#8bc3ae;color:#10252d;border:0;cursor:pointer}
+.affordance button:disabled{background:#31474c;color:#9fb4ac;cursor:default}
+@media(max-width:500px){.affordance{width:47%;padding:9px;right:8px;bottom:49px;gap:4px}.affordance small{font-size:9px}.affordance span{font-size:12px}}

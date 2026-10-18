@@ -3,6 +3,7 @@ import { createStage } from './scene';
 import { spawnBody, resetBody, stepBody } from './simulation';
 import { FollowCamera } from './camera';
 import { ManualControls } from './input';
+import { createWorld, resetWorld, nearbyObject, interact, INTERACTION_RANGE } from './world';
 
 function required<T extends HTMLElement>(selector: string): T {
   const el = document.querySelector<T>(selector);
@@ -17,6 +18,15 @@ const mode = required<HTMLElement>('#mode-status');
 const reset = required<HTMLButtonElement>('#reset-button');
 const toggle = required<HTMLButtonElement>('#hud-toggle');
 const body = spawnBody();
+const world = createWorld();
+const objectName = required<HTMLElement>('#object-name');
+const objectDetail = required<HTMLElement>('#object-detail');
+const interactButton = required<HTMLButtonElement>('#interact-button');
+function manualInteract() {
+  const nearby=nearbyObject(world,body.x,body.z);
+  if(nearby) interact(world,body.x,body.z,nearby.object.id);
+}
+interactButton.addEventListener('click',manualInteract);
 const cameraRig = new FollowCamera();
 let visible = true;
 mode.textContent = 'MANUAL / DEV · NO AUTONOMY';
@@ -25,14 +35,15 @@ try {
   const control = new ManualControls(mount, {
     orbit: (dx, dy) => cameraRig.orbit(dx, dy),
     zoom: delta => cameraRig.zoom(delta),
-    reset: () => { resetBody(body); cameraRig.reset(); },
+    reset: () => { resetBody(body); resetWorld(world); cameraRig.reset(); },
+    interact: manualInteract,
     toggleHud: () => {
       visible = !visible; hud.hidden = !visible;
       toggle.setAttribute('aria-pressed', String(visible));
     }
   });
   reset.addEventListener('click', () => {
-    control.clear(); resetBody(body); cameraRig.reset(); mount.focus({ preventScroll: true });
+    control.clear(); resetBody(body); resetWorld(world); cameraRig.reset(); mount.focus({ preventScroll: true });
   });
   toggle.addEventListener('click', () => {
     visible = !visible; hud.hidden = !visible;
@@ -46,7 +57,13 @@ try {
     previous = now; elapsed += dt;
     stepBody(body, control.snapshot(), cameraRig.yaw, dt);
     cameraRig.apply(stage.camera, body);
-    stage.update(body, elapsed);
+    stage.update(body, elapsed,world);
+    const nearby=nearbyObject(world,body.x,body.z);
+    objectName.textContent=nearby?nearby.object.label:'Nothing in reach';
+    objectDetail.textContent=nearby?nearby.object.detail:'Walk towards a furnishing to inspect it.';
+    const canToggle=!!nearby && nearby.object.kind==='lamp' && nearby.distance<=INTERACTION_RANGE;
+    interactButton.disabled=!canToggle;
+    interactButton.textContent=canToggle?(world.lampOn?'Turn light off · E':'Turn light on · E'):'No manual action';
     frames++;
     if (now - lastFpsAt >= 500) {
       fps = frames * 1000 / (now - lastFpsAt);
@@ -57,12 +74,13 @@ try {
         'POSITION X ' + body.x.toFixed(2) + ' · Z ' + body.z.toFixed(2) +
         '\nFACING ' + (body.yaw * 180 / Math.PI).toFixed(0) + '° · ' + body.action +
         '\nVELOCITY ' + Math.hypot(body.vx, body.vz).toFixed(2) + ' m/s · GROUNDED ' + body.grounded +
-        '\nCAMERA ' + cameraRig.distance.toFixed(1) + 'm · ' + fps.toFixed(0) + ' FPS';
+        '\nCAMERA ' + cameraRig.distance.toFixed(1) + 'm · ' + fps.toFixed(0) + ' FPS' +
+        '\nLAMP ' + (world.lampOn ? 'ON' : 'OFF');
     }
     raf = requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
-  renderStatus.textContent = 'BODY ONLINE · MANUAL CONTROL';
+  renderStatus.textContent = 'BODY ONLINE · HOME / MANUAL';
   mount.focus({ preventScroll: true });
   window.addEventListener('pagehide', () => {
     stopped = true; cancelAnimationFrame(raf); control.dispose(); stage.dispose();

@@ -1,6 +1,6 @@
 import type { ManualIntent } from './simulation';
 
-type ControlHooks = { orbit: (dx: number, dy: number) => void; zoom: (delta: number) => void; reset: () => void; toggleHud: () => void };
+type ControlHooks = { orbit: (dx: number, dy: number) => void; zoom: (delta: number) => void; reset: () => void; toggleHud: () => void; interact: () => void };
 const directionKeys: Record<string, 'forward' | 'backward' | 'left' | 'right'> = {
   KeyW: 'forward', ArrowUp: 'forward', KeyS: 'backward', ArrowDown: 'backward',
   KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right'
@@ -15,6 +15,7 @@ export class ManualControls {
     window.addEventListener('keydown', e => {
       if (e.code === 'F1') { e.preventDefault(); hooks.toggleHud(); return; }
       if (!this.inGameFocus()) return;
+      if (e.code === 'KeyE' && !e.repeat) { e.preventDefault(); hooks.interact(); return; }
       if (e.code === 'KeyR' && !e.repeat) { e.preventDefault(); this.clear(); hooks.reset(); return; }
       if (directionKeys[e.code] || e.code.startsWith('Shift')) {
         e.preventDefault();
