@@ -18,7 +18,7 @@ test('authoritative S003 state agrees with next S004 instruction', () => {
 });
 test('body modules and S002 evidence spine exist', () => {
   for (const path of [
-    'src/main.ts','src/simulation.ts','src/scene.ts','src/camera.ts','src/input.ts','src/style.css',
+    'src/main.ts','src/world.ts','src/simulation.ts','src/scene.ts','src/camera.ts','src/input.ts','src/style.css',
     'sessions/S002/INPUT.md','sessions/S002/PLAN.md','sessions/S002/VALIDATION.md',
     'sessions/S002/REVIEW.md','sessions/S002/CLOSEOUT.md',
     'sessions/S003/INPUT.md','sessions/S003/PLAN.md','sessions/S003/VALIDATION.md',
@@ -26,13 +26,13 @@ test('body modules and S002 evidence spine exist', () => {
     'docs/DECISIONS.md','docs/PHASE_GATES.md','docs/OPERATIONS.md'
   ]) assert.ok(existsSync(join(root, path)), path);
 });
-test('manual control is explicit; code does not claim an AI mind or home', () => {
+test('manual control is explicit; code has explicit manual operation, without a claimed AI mind', () => {
   assert.match(read('index.html'), /MANUAL \/ DEV/);
   assert.match(read('index.html'), /data-direction="forward"/);
   assert.match(read('src/main.ts'), /WEBGL UNAVAILABLE/);
   assert.match(read('src/input.ts'), /visibilitychange/);
   assert.match(read('src/input.ts'), /pointercancel/);
-  assert.match(read('src/simulation.ts'), /OBSTACLES/);
+  assert.match(read('src/simulation.ts'), /HOME_OBJECTS/);
 });
 test('project keeps credentials outside browser bundle', () => {
   assert.match(read('.gitignore'), /^\.env\s*$/m);
