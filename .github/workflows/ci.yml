@@ -28,6 +28,15 @@ jobs:
         run: npm run check
       - name: Verify shared budget Lua against actual Redis
         run: node --experimental-strip-types tests/budget-integration.mjs
+      - name: Package API with pinned Vercel CLI and load the built function (no credentials)
+        run: |
+          npm install --prefix /tmp/vercel-cli --no-audit --no-fund vercel@50.44.0
+          mkdir -p .vercel
+          echo '{"projectId":"prj_ci_local","orgId":"team_ci_local","settings":{"framework":"vite","installCommand":"npm ci --no-audit --no-fund","buildCommand":"npm run build","outputDirectory":"dist","rootDirectory":null}}' > .vercel/project.json
+          /tmp/vercel-cli/node_modules/.bin/vercel build --yes
+          node tests/vercel-function.mjs .vercel/output/functions/api/decision.func
+        env:
+          VERCEL_TELEMETRY_DISABLED: '1'
       - name: Install pinned browser transport (not an app dependency)
         run: npm install --no-save --package-lock=false --no-audit --no-fund playwright-core@1.56.1
       - name: Start production preview
