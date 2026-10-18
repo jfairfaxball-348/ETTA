@@ -1,0 +1,88 @@
+{
+  "project": "ETTA",
+  "as_of": "2026-10-18",
+  "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
+  "last_completed_session": "S003",
+  "next_session": "S004",
+  "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
+  "current_phase": "P2",
+  "phases": {
+    "P0": {
+      "title": "Foundation",
+      "status": "CI_AND_BROWSER_PASS_VERCEL_UNVERIFIED"
+    },
+    "P1": {
+      "title": "Give Etta a body",
+      "status": "PASS_CHROMIUM_AUTOMATED"
+    },
+    "P2": {
+      "title": "Give her a home",
+      "status": "NOT_STARTED"
+    },
+    "P3": {
+      "title": "Put her mind in her body",
+      "status": "NOT_STARTED"
+    },
+    "P4": {
+      "title": "Let her decide how she lives",
+      "status": "NOT_STARTED"
+    },
+    "P5": {
+      "title": "Who knows after that",
+      "status": "UNDEFINED_OWNER_DIRECTED"
+    }
+  },
+  "current_capabilities": [
+    "Static Vite/Three.js client with hosted build evidence",
+    "Deterministic grounded humanoid body with arena and obstacle colliders",
+    "Manual walking/running, touch direction pad, orbit/zoom camera, reset, developer HUD",
+    "Generated npm lockfile and configured reproducible npm ci pipeline",
+    "Source-level deterministic regression tests and governed sessions",
+    "15/15 actual Chromium browser checks passed: desktop scene and controls, collision, emulated mobile touch, WebGL fallback and screenshots"
+  ],
+  "not_yet_capabilities": [
+    "Verified deployed Vercel preview",
+    "Home or interactive objects",
+    "Cloud LLM connection",
+    "Autonomous decisions",
+    "Persistent agent memory"
+  ],
+  "deployment": {
+    "target": "Vercel",
+    "status": "NOT_DEPLOYED_VERIFIED",
+    "backend": "NOT_IMPLEMENTED"
+  },
+  "source_reference": {
+    "legacy": "jball348-svg/aStar",
+    "imported_code": false
+  },
+  "evidence": {
+    "initial_push_ci_pass": "https://github.com/jball348-svg/ETTA/actions/runs/39108879187",
+    "lockfile_pr_ci_pass": "https://github.com/jball348-svg/ETTA/actions/runs/39108906760",
+    "real_browser": {
+      "kind": "CHROMIUM_AUTOMATED",
+      "status": "CI_PASS",
+      "url": "https://github.com/jball348-svg/ETTA/actions/runs/39110275970",
+      "source_sha": "70e202bcb16ff1ca52fa8112e137c3b0ec4a25e9",
+      "checks": 15,
+      "failed": 0,
+      "artifact_id": 12130221952
+    },
+    "vercel": "NOT_VERIFIED",
+    "mobile": "TOUCH_EMULATION_PASS_PHYSICAL_DEVICE_NOT_RUN",
+    "destination_ci": "PENDING_NEW_WORKFLOW_RUN"
+  },
+  "known_blockers": [
+    "Live Vercel deployment not independently observed",
+    "Physical mobile-device control/performance untested; SwiftShader mobile emulation measured about 6 FPS",
+    "No P2 home, P3 inference or P4 autonomy yet"
+  ],
+  "migration": {
+    "date": "2026-10-18",
+    "source_repository": "jball348-svg/ETTA",
+    "destination_repository": "jfairfaxball-348/ETTA",
+    "source_commit": "c4d0400131f241c2b04814418f45f2cf7d8015ce",
+    "method": "source-file-snapshot",
+    "historical_ci": "Old repository only"
+  }
+}

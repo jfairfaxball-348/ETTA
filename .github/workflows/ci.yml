@@ -1,0 +1,39 @@
+name: ETTA checks
+on:
+  push:
+    branches: [main, 'session/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install locked application dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Typecheck, deterministic tests and production build
+        run: npm run check
+      - name: Install pinned browser transport (not an app dependency)
+        run: npm install --no-save --package-lock=false --no-audit --no-fund playwright-core@1.56.1
+      - name: Start production preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/etta-preview.log 2>&1 &
+      - name: Exercise actual Chromium rendering and controls
+        run: node tests/browser-smoke.mjs
+        env:
+          ETTA_BROWSER_URL: http://127.0.0.1:4173/
+      - name: Archive browser screenshots and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: etta-browser-evidence
+          path: test-results/
+          if-no-files-found: warn
