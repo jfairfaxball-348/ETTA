@@ -1,42 +1,56 @@
-# Deploy ETTA on Vercel
+# Deploy ETTA on Vercel — S005
 
-ETTA is currently a **static Vite + TypeScript + Three.js browser app**. This deployment publishes the **manual BODY experiment** (3D avatar, test arena, desktop/touch controls), **not** a home, connected LLM, autonomous character or continuously running server.
+Use **jfairfaxball-348/ETTA**, production branch `main`, root directory `./`, Vite preset, Node 22.x, install `npm ci --no-audit --no-fund`, build `npm run build`, output `dist`. `vercel.json` also configures the Node `/api/decision` function with a 20-second maximum duration. The existing owner-reported site is https://etta-virid.vercel.app/ . Do not import from the former GitHub account.
 
-## First deployment — Vercel dashboard
+## Room only
 
-1. Open [Vercel New Project](https://vercel.com/new), connect GitHub if prompted, and import **`jfairfaxball-348/ETTA`** using the **`jball348-svg`** GitHub account/integration.
-2. Set the **production branch** to `main`. Keep the **root directory** as the **repository root** (`./`); do not choose `src`.
-3. Confirm these settings. The checked-in `vercel.json` provides them:
-   - **Framework preset:** Vite
-   - **Install command:** `npm ci --no-audit --no-fund`
-   - **Build command:** `npm run build` (TypeScript check + Vite build)
-   - **Output directory:** `dist`
-   - **Node.js:** 22.x is the CI-tested major version; select 22.x in Vercel project settings for parity if an incompatible default is selected.
-4. **Environment variables: none required.** Do not paste a Google/Gemini/Gemma API key or a `VITE_*` secret into this static client. P3 MIND will add an explicitly secured server-side API boundary later.
-5. Click **Deploy**. Vercel should build from `main` and give a `*.vercel.app` URL. Keep the Git integration connected for future deployments when changes land on `main`.
+No settings are required. With missing credentials or `ETTA_MIND_ENABLED=false`, the API reports DISABLED and the room/manual controls remain available. Deploying code does not enable inference.
 
-This repository contains no API routes or serverless functions yet. Do not configure a background worker, inference endpoint, database or paid services just for this first deployment.
+## Enable one manually approved decision
 
-## Acceptance at the live URL
+In **Vercel → Project → Settings → Environment Variables**, configure these for the environments you intend to use, then redeploy. Keep preview inference disabled unless you intentionally configure it too.
 
-A successful Vercel build is **not** a verified running app. Inspect the actual URL:
+| Variable | Value |
+|---|---|
+| `GEMINI_API_KEY` | Your Google AI Studio key; server only |
+| `GEMMA_MODEL` | `gemma-4-26b-a4b-it` (default); also supports `gemma-4-31b-it` |
+| `ETTA_ACCESS_TOKEN` | A new random 32–128 character token using letters, digits, `_` or `-` |
+| `UPSTASH_REDIS_REST_URL` | Your Redis HTTPS REST URL, e.g. `https://<database>.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` | The database's REST token with EVAL/read/write permissions |
+| `ETTA_MIND_ENABLED` | `true` only after the other settings and quotas are ready |
 
-- On desktop: page loads with **ETTA — First Steps**, visible 3D character and **MANUAL / DEV · NO AUTONOMY**; no unexpected errors in browser console. Click the scene, use **WASD / arrow keys**, **Shift** for run, mouse drag to orbit, scroll to zoom, **R** for reset, and **F1** or the HUD button to toggle telemetry.
-- On a phone: load the page, scroll to the 3D scene/touch pad, hold the directional buttons, and check camera drag, HUD, reset and responsiveness. A prior **emulated** mobile software-WebGL test was slow (~6 FPS); real-device performance has **not** been measured.
-- If WebGL is unavailable, verify ETTA shows an explanatory fallback instead of claiming a running world.
-- Record the actual production URL, deployment commit and live checks before changing the project-state label to `VERCEL_VERIFIED`.
+Generate an access token locally with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Save it privately. Enter **that access token** in the website's private-access-code field. The Google API key belongs only in Vercel; the website never asks for it. Clear code removes the site token from the tab. Reload also forgets it.
 
-## Troubleshooting
+A small Upstash Redis database provides a shared atomic budget across Vercel instances: **4 attempts per minute and 40 per UTC day**, including provider failures. You can connect an existing database or provision one yourself through Upstash/Vercel Marketplace after checking its plan and limits. This session created no account, database, subscription or billing. The Google key alone intentionally does not enable inference. All deployment environments pointing at the same Redis database share this budget. Do not delete budget keys to bypass the limits.
 
-- **Build failure:** confirm Node version, repository root, `npm ci` and `npm run build`; inspect Vercel build logs. GitHub Actions also runs `npm run check` and real Chromium smoke tests.
-- **404 at the main URL:** ensure project Root Directory is `./` and output is `dist`. ETTA currently uses only `/` and has no client-side routes requiring an SPA rewrite.
-- **Empty/failed 3D view:** confirm the browser supports WebGL and hardware acceleration; check its console. A successful HTML response alone does not establish working 3D rendering.
-- **No AI conversation:** expected. No model or backend is wired up in the deployed BODY phase.
+Review the Google project's active model quotas in AI Studio, keep them at a suitable low ceiling and leave billing disabled if you want to stay on an available free tier. Availability and quotas are project-dependent; there is no unlimited usage assumption. Provider quotas are an additional backstop, not a substitute for the shared application budget. The Redis limits bound request counts, not all hosting/storage costs. The private access code must not be distributed publicly.
 
-## Security and scope
+Requests use one candidate, at most 256 output tokens, a 2 KiB client body, a 16 KiB provider response and a 12-second combined budget/provider deadline (3 seconds maximum for the budget check). No retries. Inference fails closed if the shared budget cannot be verified. No arbitrary endpoint/model selection is accepted from the client.
 
-The repository's `.env.example` is a **future** P3 server configuration illustration, not a deployment checklist. Any future Google API key must remain server-side with authentication, rate limiting, action validation and spending caps; never expose it using `VITE_` or embed it in committed code.
+## Live acceptance walkthrough
 
-This file is a **deployment handoff**, not evidence that a Vercel deployment has been made or tested.
+1. Confirm Vercel deployed the intended commit. Open `/api/decision` in the same site's tab: status should be READY only with complete configuration.
+2. Open the room, leave Etta near the lamp at spawn, enter the private access code and press Ask Etta. Verify a response marked MODEL_DECISION with a model name and latency. The lamp must not change yet. An invalid code should visibly fail without a model request.
+3. Verify the displayed observation matches Etta's position, nearby lamp and lamp state. Approve a valid toggle proposal to change the lamp via the world engine. WAIT is a valid model choice; do not call it a failure, and do not substitute a rule-based toggle. A real toggle proposal is needed to close the full world-change gate.
+4. Ask again, then Stop or move/reset. Approval must disable; a late response must not run. Check manual E/button interaction still works. Do not intentionally exhaust an expensive provider quota to test this: deterministic CI covers limits/failures.
+5. Record date, commit, real model ID, latency, action, approval result and source/model provenance without recording tokens or raw credentials. Check Google usage for the deliberate request.
 
-> Migration: This is the active `jfairfaxball-348/ETTA` repository, copied from `jball348-svg/ETTA` on 2026-10-18. Previous CI runs were recorded in the original repo; a new CI run is required here.
+**Live Google, live Upstash and this Vercel function deployment remain unverified until that walkthrough.** The owner separately reported S004 room/movement/lamp/proximity working. Physical-phone performance remains unmeasured.
+
+## Local development and troubleshooting
+
+Copy `.env.example` to ignored `.env.local`, configure it and run `npm run dev`. Vite's development server hosts the same handler. `npm run preview` deliberately uses disabled configuration. Fixture tests require no credentials and make no external calls.
+
+- DISABLED: missing enable flag, key, 32+ character access code, Redis settings, or unsupported model. Fix server variables and redeploy.
+- 401: the site's access code is wrong. Do not replace it with the Google key.
+- 429: shared request budget or provider quota exhausted. Wait; there is no auto-retry.
+- 503 budget unavailable: Redis is unavailable or misconfigured; no provider request is made.
+- 502/504: provider rejection, invalid output or timeout. Nothing executes; inspect configuration, then deliberately retry if appropriate. Secrets and upstream error bodies are not logged by this application.
+- 404 at `/api/decision`: ensure the repository root, not `dist` or `src`, is configured as the project root and redeploy the commit containing `api/decision.ts`.
+
+## References checked 18 October 2026
+
+- [Google: Gemma on Gemini API](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api) — model names, generateContent and minimal thinking.
+- [Google: active project rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+- [Vercel: Node Web Standard functions](https://vercel.com/docs/functions/runtimes/node-js).
+- [Upstash: Redis REST API](https://upstash.com/docs/redis/features/restapi).

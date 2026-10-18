@@ -36,3 +36,10 @@ footer{display:flex;justify-content:space-between;gap:18px;padding:20px 0 0;font
 .affordance button{font-size:11px;padding:8px;background:#8bc3ae;color:#10252d;border:0;cursor:pointer}
 .affordance button:disabled{background:#31474c;color:#9fb4ac;cursor:default}
 @media(max-width:500px){.affordance{width:47%;padding:9px;right:8px;bottom:49px;gap:4px}.affordance small{font-size:9px}.affordance span{font-size:12px}}
+
+.mind-panel{border:1px solid #355962;border-radius:8px;background:#0c202b;padding:24px;margin-bottom:30px;line-height:1.6}
+.mind-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.mind-heading h2{margin:0;font:500 27px 'Space Grotesk',sans-serif}.mind-heading .mode{margin:0}
+.mind-access{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:20px;font-size:13px}.mind-access input{background:#07131b;border:1px solid #58736c;border-radius:4px;padding:11px;color:#e9f7f2;font:inherit;flex:1;min-width:180px;max-width:420px}
+.mind-panel button{background:#8bc3ae;color:#10252d;border:1px solid #8bc3ae;border-radius:4px;padding:10px 16px;font-size:13px}.mind-panel button:disabled{opacity:.45;cursor:default}.mind-panel #stop-mind,.mind-panel #lock-mind{background:transparent;color:#c4d5d1;border-color:#58736c}
+.mind-actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 16px}.mind-proposal{color:#b8f0d8;font-size:17px;overflow-wrap:anywhere}.mind-panel details{margin-top:20px;color:#b1ceca;font-size:12px}.mind-panel summary{cursor:pointer}.mind-panel pre{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.7 ui-monospace,monospace;max-height:240px;overflow:auto}.mind-panel small{font-size:11px}input:focus-visible{outline:2px solid #97e9cf}
+@media(max-width:500px){.mind-panel{padding:17px}.mind-heading{align-items:flex-start;flex-direction:column}.mind-access label{width:100%}}

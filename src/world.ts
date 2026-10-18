@@ -44,7 +44,7 @@ export function nearbyObject(world: WorldState, x: number, z: number, maxDistanc
     .sort((a,b)=>a.distance-b.distance || a.object.id.localeCompare(b.object.id));
   return options[0] || null;
 }
-/** All actions remain manual in S004. Etta cannot infer, trigger or invent an action. */
+/** Both manual input and approved proposals pass through these world-owned permissions. */
 export function interact(world: WorldState, x: number, z: number, id: string): boolean {
   const target = world.objects.find(o => o.id === id);
   if (!target || target.kind !== 'lamp' || distanceToObject(x,z,target) > INTERACTION_RANGE) return false;

@@ -22,3 +22,10 @@
 | DEC-0018 | S004 | Inspector is manual-only; E/button may toggle the lamp within actual object distance | Build affordances without implying model decisions | P3 legal action API |
 | DEC-0019 | S004 | Reduce mobile render cost by limiting DPR and turning off shadow mapping on coarse pointers | Previously weak headless emulated GPU performance | Real phone benchmark |
 
+
+| DEC-0020 | S005 | WAIT and nearby TOGGLE_LAMP only; approve before execution | First grounded model-to-world bridge without P4 autonomy | Live P3 gate |
+| DEC-0021 | S005 | Shared atomic Redis budget, 4/minute and 40/UTC-day, fail closed | An in-memory serverless limiter cannot cap aggregate attempts | Owner changes budget/infrastructure |
+| DEC-0022 | S005 | Private access token, same-origin JSON, server-only Google/Redis credentials | Public static room with a private inference endpoint | Multi-user auth needed |
+| DEC-0023 | S005 | Strict canonical observations/proposals; no retries or synthetic fallback | Failures must not masquerade as model choices | More actions/models |
+| DEC-0024 | S005 | Cancel stale proposals and late responses; consume approval once | Prevent accidental or repeated world changes | Longer tasks/navigation |
+| DEC-0025 | S005 | Owner will configure credentials; keep live model gate open | Prior owner instruction explicitly requested scaffolding and manual Vercel env setup | S006 live acceptance |
