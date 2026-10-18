@@ -5,7 +5,7 @@
 | P0 FOUNDATION | Vite, CI, browser and Vercel | Existing checks pass; owner reports room deployed; new function live gate open |
 | P1 BODY | Body, manual control, camera, collision | S003/S004 browser pass; retained |
 | P2 HOME | Furnished room, doorway, objects and reversible lamp | S004 10 Node/17 Chromium checks; owner reports working on deployed build |
-| **P3 MIND** | Protected server provider, legal proposals, manual approval | **S005 implemented; fixture-tested; LIVE MODEL GATE OPEN** |
+| **P3 MIND** | Protected server provider, legal proposals, manual approval | **S005 CI_PASS: 23 Node, 27 Chromium, Redis script; LIVE MODEL GATE OPEN** |
 | P4 LIFE | Bounded autonomous episodes, drives and continuity | NOT STARTED |
 | P5 OPEN | Owner-directed experimentation | UNDEFINED |
 

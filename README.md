@@ -29,7 +29,7 @@ Development serves the API with server-only `.env.local` settings. A static `npm
 
 ## Evidence and next step
 
-[Session validation](sessions/S005/VALIDATION.md) distinguishes local tests, hosted CI, browser fixtures and unverified live services. [S006](authoritative/NEXT_SESSION_PROMPT.md) is future/not executed: finish the configured Vercel and live-model acceptance gate before extending capabilities.
+[S005 hosted checks](https://github.com/jfairfaxball-348/ETTA/actions/runs/39139974285) passed: **23 Node tests, 27 actual Chromium checks and the real Redis budget script**. Provider responses in browser tests are fixtures, not live Google. [Session validation](sessions/S005/VALIDATION.md) distinguishes local tests, hosted CI, browser fixtures and unverified live services. [S006](authoritative/NEXT_SESSION_PROMPT.md) is future/not executed: finish the configured Vercel and live-model acceptance gate before extending capabilities.
 
 [Roadmap](ROADMAP.md) · [Architecture](docs/ARCHITECTURE.md) · [Phase gates](docs/PHASE_GATES.md) · [S005 closeout](sessions/S005/CLOSEOUT.md)
 

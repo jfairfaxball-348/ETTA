@@ -2,7 +2,7 @@
 
 Implemented the server-only Gemma adapter, shared request budget, private access code, canonical observation/action checks, Ask Etta/approve/stop controls, cancellation and visible provenance/errors. Preserved the furnished room and manual controls.
 
-**S005 implementation is delivered; its live-model acceptance gate remains OPEN.** Owner will configure server environment values. No Google call, hosted Redis connection or new production function success is claimed. Full evidence: [VALIDATION](VALIDATION.md). S006 is installed, FUTURE / NOT EXECUTED.
+**S005 implementation is delivered; its live-model acceptance gate remains OPEN.** Owner will configure server environment values. No Google call, hosted Redis connection or new production function success is claimed. **CI_PASS:** [Actions 39139974285](https://github.com/jfairfaxball-348/ETTA/actions/runs/39139974285), source `48a25ed33b0a7963b579ead0298ac891399c9959`: 23/23 Node, build/typecheck, 17/17 room Chromium, 10/10 mind Chromium with explicit provider fixtures, and actual Redis budget script. Screenshots archived in artifact 12141591019 and visually reviewed. PR [#2](https://github.com/jfairfaxball-348/ETTA/pull/2). Full evidence and initial failures: [VALIDATION](VALIDATION.md). S006 is installed, FUTURE / NOT EXECUTED.
 
 ## Complete next-session prompt
 
