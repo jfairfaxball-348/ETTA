@@ -2,16 +2,25 @@
 
 **An embodied-character experiment:** give Etta a body → a home → a mind → let her decide how she lives.
 
-**Current milestone (19 Oct 2026):** Etta runs as a Vite/Three.js web app at https://etta-virid.vercel.app/. Her studio, walking controls, collisions, nearby-object inspector and manual lamp work. A server-side Gemma 4 adapter can propose **WAIT** or **TOGGLE_LAMP**, and the owner manually approves or discards the proposal. The owner **reported live success for both actions**, including a lamp state change after approval on 19 Oct. This is not a self-running agent; there is no persistent memory, self-navigation, conversation, voice or background autonomy.
+ETTA is a Vite/Three.js web app at https://etta-virid.vercel.app/ with a furnished studio, keyboard/touch controls, collision-aware avatar, working lamp and protected server-side Gemma bridge.
 
-Latest source includes [S006 Vercel function packaging repair](https://github.com/jfairfaxball-348/ETTA/pull/3) and [Gemma response parser repair](https://github.com/jfairfaxball-348/ETTA/pull/4). The latter passed [hosted CI including real Chromium fixture browser tests](https://github.com/jfairfaxball-348/ETTA/actions/runs/39226168465); the Vercel deployment status succeeded. Owner-reported production use is recorded separately from CI.
+## S007 — first self-directed destination choice
 
-## Controls
-- Focus scene: **WASD/arrows** walk, **Shift** run, **drag** orbit, **wheel** zoom.
-- **E** near lamp toggles it. **R** resets. **F1** toggles HUD. Touch D-pad is provided.
-- **Ask Etta**: enter the *site private access code*, not Google's API key. One deliberate request yields one proposal; **Approve action** is required to execute. **Stop** cancels, as do movement, reset, state change, focus loss or expiry. Current successful live WAIT and lamp change were owner-observed; a separate production Stop walkthrough remains unrecorded.
+Etta can choose one of **two named, reachable destinations**: the woven rug or the writing table. The observation supplies names and `validActions`; Gemma can propose `MOVE_TO` but cannot issue coordinates, raw movement, paths or scripts. One approval starts a finite, visibly animated walk controlled by deterministic world physics and a bounded collision-clearance planner. Arrival, Stop and failure are reported on screen. **This is not free-running autonomy.**
 
-## Local development / deployment
+The original **WAIT** and nearby **TOGGLE_LAMP** remain available. On 19 October the owner observed both actions with live Gemma, including the lamp actually switching after approval (**OWNER_REPORTED**, not a Chromium fixture).
+
+**S007 source:** [pull request #6](https://github.com/jfairfaxball-348/ETTA/pull/6). The hosted CI evidence is [GitHub Actions](https://github.com/jfairfaxball-348/ETTA/actions). Unit tests and real Chromium interaction checks use **explicit test fixtures**, not live Gemma for navigation. Production S007 navigation requires a separate owner-run walkthrough; do not assume it has occurred.
+
+## Controls / safety
+
+- **Manual:** focus 3D scene; WASD/arrows to walk, Shift to run, drag to orbit, wheel to zoom, E near lamp to toggle, R to reset, F1 for diagnostics; touch D-pad included.
+- **Ask Etta:** enter your site's private access code (never a Google API key), select **Ask Etta**, inspect one proposal, then **Approve action**. The selected destination and reason are shown before approval. During walking, the Ask button is disabled.
+- **Stop / discard** immediately cancels a request, proposed action or walk. Manual movement, reset, manual lamp interaction, tab/window blur, lost visibility, invalidated world state, timeout and loss of permission also cancel. Ask is available again only after completion or cancellation.
+- **No automatic prompting:** each Ask produces at most one proposed action. No persistence, background worker, voice, internet browsing or opt-in multi-decision episode yet.
+
+## Build and operations
+
 Node 22.12+:
 
 ~~~sh
@@ -20,13 +29,14 @@ npm run check
 npm run dev
 ~~~
 
-Production uses the repository root, Vite build, Vercel `/api/decision` Node function, server-only `GEMINI_API_KEY`, `ETTA_ACCESS_TOKEN`, `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, and `ETTA_MIND_ENABLED=true`. Keep secrets out of source and browsers. The manual room works even when inference is disabled. See [Vercel deployment instructions](docs/VERCEL_DEPLOYMENT.md).
+Vercel hosts the frontend and `/api/decision` Node function. Configure `GEMINI_API_KEY`, `ETTA_ACCESS_TOKEN`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` and `ETTA_MIND_ENABLED=true` in server-side Vercel environment settings. No secrets belong in source or the browser. The room remains manually usable when inference is off. See [deployment guide](docs/VERCEL_DEPLOYMENT.md).
 
-ETTA's own Redis shared budget is **4 attempts/minute and 40 attempts/UTC day** across instances. These are *our guardrails*, not Google's Gemma quotas (which apply separately). No unsupervised calls or 24/7 worker exists.
+ETTA's shared Upstash admission budget is **4 attempts/minute and 40 attempts/UTC day**, set by *our application*, independently of Google's Gemma quotas. Do not change it without owner approval.
 
-## What's next?
-The owner approved the [practical roadmap through S014](ROADMAP.md). **S007 — First Self-Directed Movement** is [installed for the next invocation](authoritative/NEXT_SESSION_PROMPT.md), not yet executed: Gemma chooses a named legal destination, owner approves, and Etta physically walks via collision-safe world navigation. S008 is the planned first bounded opt-in autonomous episode.
+## Roadmap
 
-[Project charter](PROJECT_CHARTER.md) · [Phase evidence](docs/PHASE_GATES.md) · [S006 live closeout](sessions/S006/CLOSEOUT.md) · [S007 prompt](authoritative/NEXT_SESSION_PROMPT.md).
+The [owner-approved roadmap](ROADMAP.md) schedules **S008 — one short, explicit opt-in autonomous episode** next, but it is [FUTURE / NOT EXECUTED](authoritative/NEXT_SESSION_PROMPT.md). Later stages add meaningful interactions, memory, simulated preferences, routines, conversation and possibly away-time operation after a separate cost/security decision.
 
-Active GitHub repository: `jfairfaxball-348/ETTA`. Old `jball348-svg/ETTA` evidence is historical only.
+[Charter](PROJECT_CHARTER.md) · [S007 records](sessions/S007/CLOSEOUT.md) · [Phase evidence](docs/PHASE_GATES.md) · [Next session](authoritative/NEXT_SESSION_PROMPT.md).
+
+Active source repository: `jfairfaxball-348/ETTA`; the older `jball348-svg/ETTA` is historical only.
