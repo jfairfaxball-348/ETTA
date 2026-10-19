@@ -19,7 +19,7 @@
 |---|---|---|
 | **S007** | Etta chooses where to walk | Gemma proposes a **named reachable location**; approval starts a finite world-engine-controlled walk, correctly avoiding obstacles; manual override/Stop always wins |
 | **S008 (COMPLETE)** | First independent episode | Opt-in Autonomy ON/OFF; several bounded decisions/actions without per-action approval during a short observed episode, with strict request/time limits and immediate Stop |
-| **S008.5 (IMPLEMENTED; VALIDATION IN PROGRESS)** | Immersive UI and multimodal mind | Remove dashboard clutter in favour of scene-first interface; four-digit PIN with shared auth-throttle; real avatar-eye image + text in one Gemma request; modular perception → choice → strict JSON action, optional additional calls within current limits |
+| **S008.5 (COMPLETE; CI_PASS)** | Immersive UI and multimodal mind | Remove dashboard clutter in favour of scene-first interface; four-digit PIN with shared auth-throttle; real avatar-eye image + text in one Gemma request; modular perception → choice → strict JSON action, optional additional calls within current limits |
 | **S009 (DEFERRED)** | More things to do | At least two meaningful, visible, permitted home activities (e.g., sit at chair, interact with desk/bed); world validates proximity/state |
 | S010 | Memory | Transparent, bounded, resettable persistence for actions/interactions across page reloads; no secret leakage |
 | S011 | Preferences, curiosity, motivations | Clearly **simulated** drives affect choices; controlled tests distinguish decisions in differing state |
@@ -27,7 +27,7 @@
 | S013 | Talk to Etta | Text conversation with typed input boundaries and appropriate context; voice only as a later option |
 | S014 | Life continues when away | Feasibility and cost/security review, then explicit owner approval before any hosted persistence/scheduled background execution |
 
-S008.5 is implemented in PR #9 and awaiting final hosted checks, merge and owner production trial as of 2026-10-19. The live production site's deployed SHA and PIN-mode readiness are not yet verified. S009's original standalone prompt is preserved in [DEFERRED_S009_PROMPT.md](authoritative/DEFERRED_S009_PROMPT.md) and returns as next after S008.5. The owner accepts a modest four-digit PIN only with bounded Redis-protected failed attempts; the provider key remains server-side. Existing 4/minute, 40/day and S008 finite-episode limits do not change by implementing S008.5.
+S008.5 implemented in PR #9 with [hosted CI_PASS run 39254894541](https://github.com/jfairfaxball-348/ETTA/actions/runs/39254894541) (43 Node, Redis auth/budget, Vercel function packaging and 17 room/15 mind Chromium fixture checks). Source review and desktop/mobile/avatar-eye screenshots completed; owner production PIN setup and real model-origin visual decision remain **NOT_RUN**. S009 is now the next **FUTURE / NOT EXECUTED** session. S009's original standalone prompt is preserved in [DEFERRED_S009_PROMPT.md](authoritative/DEFERRED_S009_PROMPT.md) and returns as next after S008.5. The owner accepts a modest four-digit PIN only with bounded Redis-protected failed attempts; the provider key remains server-side. Existing 4/minute, 40/day and S008 finite-episode limits do not change by implementing S008.5.
 
 Dates beyond S007 are not commitments and may be revised by the owner. Success depends on real-world observable and testable behaviour, not merely green builds.
 

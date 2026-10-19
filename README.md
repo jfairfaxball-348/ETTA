@@ -10,7 +10,7 @@ The UI now prioritises the playable 3D home; debug telemetry starts hidden (F1/D
 
 Each explicit model decision captures an independent **384×216 avatar-eye JPEG**, without interface overlays or Etta's own head, and sends it alongside server-derived world observations in **one** Gemma request. The server validates image dimensions, data, affordances, short perception/intention summaries and strict world actions. Multiple provider calls are *not* automatically made; no extra quota has been authorised. Existing one-off approval, 3-decision/60-second autonomy and 4/minute, 40/day Redis limits remain.
 
-**Verification:** [S008.5 PR #9](https://github.com/jfairfaxball-348/ETTA/pull/9) with Node/Redis/Chromium fixture checks. Genuine production Gemma image understanding is **NOT_RUN** until owner walkthrough; fixtures are not evidence of a live visual choice. [Vercel PIN instructions](docs/VERCEL_DEPLOYMENT.md) · [session record](sessions/S008.5/CLOSEOUT.md).
+**Verification:** [S008.5 PR #9](https://github.com/jfairfaxball-348/ETTA/pull/9), [CI_PASS 39254894541](https://github.com/jfairfaxball-348/ETTA/actions/runs/39254894541): 43/43 Node tests, actual Redis Lua, Vercel packaging, 17 room and 15 mind Chromium fixtures, visually reviewed desktop/mobile/eye screenshots. Genuine production Gemma image understanding is **NOT_RUN** until owner walkthrough; fixtures are not evidence of a live visual choice. [Vercel PIN instructions](docs/VERCEL_DEPLOYMENT.md) · [session record](sessions/S008.5/CLOSEOUT.md).
 
 ## S008 — bounded independent episode
 
@@ -47,7 +47,7 @@ ETTA's shared Upstash admission budget is **4 attempts/minute and 40 attempts/UT
 
 ## Roadmap
 
-The [owner-approved roadmap](ROADMAP.md) marks **S008.5 — immersive UI/PIN/multimodal refactor** as implemented awaiting final hosted/live checks; **S009 — meaningful furniture interactions** is installed FUTURE / NOT EXECUTED. Later stages add meaningful interactions, memory, simulated preferences, routines, conversation and possibly away-time operation after a separate cost/security decision.
+The [owner-approved roadmap](ROADMAP.md) marks **S008.5 — immersive UI/PIN/multimodal refactor** CI_PASS complete; **S009 — meaningful furniture interactions** is installed FUTURE / NOT EXECUTED. Later stages add meaningful interactions, memory, simulated preferences, routines, conversation and possibly away-time operation after a separate cost/security decision.
 
 [Charter](PROJECT_CHARTER.md) · [S008.5 records](sessions/S008.5/CLOSEOUT.md) · [Phase evidence](docs/PHASE_GATES.md) · [Next session](authoritative/NEXT_SESSION_PROMPT.md).
 
