@@ -52,7 +52,7 @@ export function createDecisionHandler(env: Environment, fetcher = fetch, timeout
           throw new HttpError(401, 'ACCESS_DENIED', 'The private access code was not accepted.');
         }
       }
-      if (!/^application\\/json(?:\\s*;.*)?$/i.test(request.headers.get('content-type') || '')) {
+      if (!/^application\/json(?:\s*;.*)?$/i.test(request.headers.get('content-type') || '')) {
         throw new HttpError(415, 'CONTENT_TYPE', 'Send application/json.');
       }
       let state, vision;
