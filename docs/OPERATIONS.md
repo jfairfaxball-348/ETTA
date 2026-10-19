@@ -22,3 +22,12 @@ After the S006 packaging repair and post-S006 [Gemma output fix](https://github.
 **Capacity:** Redis `server/budget.ts` enforces **4 requests per fixed minute and 40 per UTC day** across functions, including failed attempts after reservation. **This is our cap, not Gemma's; Google's quota applies separately.** Keep it unchanged for S007. Do not store live tokens in source or logs.
 
 Production runtime logs could not be retrieved by ChatGPT under the connected Vercel scope (403); owner can inspect logs in the project's Vercel dashboard. Production Stop/focus-loss and physical-device checks remain unobserved by the owner; include in S007 acceptance.
+
+
+## S008.5 current operation
+
+Open the room and walk normally. 3D fills the available viewport; F1 or Debug reveals developer telemetry, hidden by default. Etta's AI is OFF until the PIN unlock. In the pre-migration LEGACY mode only, the old access-code input remains accessible. **Stop** cancels a pending request, proposal, finite walk or episode without disabling the PIN unlock; **AI OFF** cancels and clears the in-tab PIN. The screenshot of Etta's own visual field is captured only on Ask or at one of the bounded autonomy decisions and may be inspected in fixture CI artifacts (`etta-avatar-eye.jpg`). Never treat fixture acceptance as a real-provider trial.
+
+CI runs Node schema/PIN/throttle checks, exact Redis Lua concurrency, Vercel packaging and desktop/mobile Chromium fixture regression. Auth failure caps are **6 per client and 60 globally per 15-minute fixed bucket**, independent of the existing 4/min and 40/day provider-request budget. Lockout messages are generic. No paid service or separate mind loop was enabled here.
+
+Owner production acceptance after PIN deployment: confirm READY and accessMode PIN; enable AI with the private PIN, Ask Etta once, inspect the model-origin perceived scene and safe WAIT/MOVE_TO/TOGGLE_LAMP choice; approve only when appropriate; exercise Stop and AI OFF. Record outcome as OWNER_REPORTED and no secret/image or raw user credential in logs.

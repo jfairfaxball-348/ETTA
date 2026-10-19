@@ -23,3 +23,6 @@
 
 ### Owner-directed next session inserted (planning only, 2026-10-19)
 **S008.5 FUTURE / NOT EXECUTED:** remove public-facing project/dashboard noise, emphasise large 3D scene, four-digit PIN with shared failed-auth lockouts and safe Vercel migration, avatar-eye bounded image + text passed in one Gemma request, modular perception/interpretation/validated actions with optional extra calls under the existing shared budget. This is an owner-approved plan, **not** CI, browser, deployed or live-provider evidence. The original S009 furniture activities prompt is preserved at `authoritative/DEFERRED_S009_PROMPT.md`.
+
+### S008.5 implementation acceptance (PR #9, 2026-10-19)
+S008.5 UI/PIN/multimodal changes implemented in [PR #9](https://github.com/jfairfaxball-348/ETTA/pull/9); final CI/merge evidence to be added once confirmed. Node tests cover PIN lockouts and image/provider contract; real Redis and Chromium CI scripts check concurrent admission and fixture screenshot if hosted checks finish green. None of this is production **MODEL_ORIGIN_IMAGE_UNDERSTANDING** evidence; a live owner test is **NOT_RUN**. No changes to the 4/min, 40/day or bounded S008 finite-episode limits.

@@ -1,60 +1,24 @@
-# Deploy ETTA on Vercel — live P3 update, 2026-10-19
+# ETTA S008.5 — four-digit PIN rollout, 19 October 2026
 
-Use **jfairfaxball-348/ETTA**, production branch `main`, root directory `./`, Vite preset, Node 22.x, install `npm ci --no-audit --no-fund`, build `npm run build`, output `dist`. `vercel.json` also configures the Node `/api/decision` function with a 20-second maximum duration. The existing owner-reported site is https://etta-virid.vercel.app/ . Do not import from the former GitHub account.
+**Production:** https://etta-virid.vercel.app/ · [source PR](https://github.com/jfairfaxball-348/ETTA/pull/9).
 
-## Room only
+## Safe migration from the existing long access code
 
-No settings are required. With missing credentials or `ETTA_MIND_ENABLED=false`, the API reports DISABLED and the room/manual controls remain available. Deploying code does not enable inference.
+1. Keep the existing server-side `ETTA_ACCESS_TOKEN`, `GEMINI_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `GEMMA_MODEL`, and `ETTA_MIND_ENABLED=true` **unchanged** during the code rollout. The new code supports a labelled **LEGACY** code input when `ETTA_ACCESS_PIN` does not yet exist. This prevents stranding the working production mind just by updating code.
+2. In **Vercel project → Settings → Environment Variables**, add a private `ETTA_ACCESS_PIN` for Production, with **exactly four decimal digits** of your choosing (leading zeros allowed). Do not put this value in chat, GitHub, client variables (`VITE_*`) or screenshots. Redeploy the current `main` commit after setting it. If the new code is already live, the PIN mode automatically supersedes the old token on that redeployment.
+3. In the browser visit `/api/decision` (GET). Expect `status: READY` and `accessMode: PIN`; neither the PIN nor API key should appear. Open the home, click **AI OFF**, enter the PIN, press **Unlock AI**. Expect **AI ON**. Bad PINs must fail; avoid repeated intentional guessing. Ask one decision: one avatar-eye JPEG and server-owned textual observation go to Gemma. Approve a valid action if appropriate; check Stop and AI OFF.
+4. **Only after owner acceptance**, remove the obsolete `ETTA_ACCESS_TOKEN` environment variable and redeploy. If PIN-mode fails, set `ETTA_MIND_ENABLED=false` to disable inference while investigating; manual home remains accessible. Alternatively remove PIN and redeploy with the legacy token still present to restore LEGACY mode. Do not publish the PIN or create a client-side bypass.
 
-## Enable one manually approved decision
+Set `ETTA_MIND_ENABLED=false` to keep AI off regardless of keys. Supported `GEMMA_MODEL` values remain `gemma-4-26b-a4b-it` (default) and `gemma-4-31b-it`. Provider credentials and Upstash REST token are server-only. Do not enable Google billing or higher quota as part of this session.
 
-In **Vercel → Project → Settings → Environment Variables**, configure these for the environments you intend to use, then redeploy. Keep preview inference disabled unless you intentionally configure it too.
+## What is limited
 
-| Variable | Value |
-|---|---|
-| `GEMINI_API_KEY` | Your Google AI Studio key; server only |
-| `GEMMA_MODEL` | `gemma-4-26b-a4b-it` (default); also supports `gemma-4-31b-it` |
-| `ETTA_ACCESS_TOKEN` | A new random 32–128 character token using letters, digits, `_` or `-` |
-| `UPSTASH_REDIS_REST_URL` | Your Redis HTTPS REST URL, e.g. `https://<database>.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` | The database's REST token with EVAL/read/write permissions |
-| `ETTA_MIND_ENABLED` | `true` only after the other settings and quotas are ready |
+The PIN offers only 10,000 possible combinations and **is not strong authentication**. An atomic Upstash script caps **6 incorrect PINs per reported Vercel client and 60 incorrect PINs globally per 15-minute fixed window**, failing closed when Redis cannot be contacted. These limits can temporarily block correct PIN entry; the site is not suitable for adversarial/public multi-user deployment without stronger auth. Vercel's platform-overwritten forwarding header is used only when running on Vercel; otherwise all requests share the unknown-client bucket. Cross-site POST is refused.
 
-Generate an access token locally with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Save it privately. Enter **that access token** in the website's private-access-code field. The Google API key belongs only in Vercel; the website never asks for it. Clear code removes the site token from the tab. Reload also forgets it.
+Successful unlock calls do **not** spend model budget. An actual decision still requires a separate shared atomic allowance of **4 requests per minute and 40 per UTC day**, independently of Google project's model quota. Failed/timeout attempts after reservation count; no automatic retries or scheduled/background inference. A bounded active episode is capped at three requests and 60 seconds, with three seconds between decisions. Each request sends a 384×216 JPEG and canonical geometric observation together in one `generateContent` call, limited to 128 KiB decoded JPEG / 220 KiB JSON request / 256 output tokens / 12-second server decision timeout. The server does not store submitted images.
 
-A small Upstash Redis database provides a shared atomic budget across Vercel instances: **4 attempts per minute and 40 per UTC day**, including provider failures. You can connect an existing database or provision one yourself through Upstash/Vercel Marketplace after checking its plan and limits. This session created no account, database, subscription or billing. The Google key alone intentionally does not enable inference. All deployment environments pointing at the same Redis database share this budget. Do not delete budget keys to bypass the limits.
+## Status and owner proof
 
-Review the Google project's active model quotas in AI Studio, keep them at a suitable low ceiling and leave billing disabled if you want to stay on an available free tier. Availability and quotas are project-dependent; there is no unlimited usage assumption. Provider quotas are an additional backstop, not a substitute for the shared application budget. The Redis limits bound request counts, not all hosting/storage costs. The private access code must not be distributed publicly.
+Node, Redis and Chromium use **TEST_FIXTURE** images/model outputs to check the mechanism. **Real Gemma image understanding: NOT_RUN** until an owner trial. A green deploy alone does not establish the new PIN or real image was received by Google. Document model ID, one explicit request, resulting action/approval and time without saving the PIN, image or provider key.
 
-Requests use one candidate, at most 256 output tokens, a 2 KiB client body, a 16 KiB provider response and a 12-second combined budget/provider deadline (3 seconds maximum for the budget check). No retries. Inference fails closed if the shared budget cannot be verified. No arbitrary endpoint/model selection is accepted from the client.
-
-## Live acceptance walkthrough
-
-1. Confirm Vercel deployed the intended commit. Open `/api/decision` in the same site's tab: status should be READY only with complete configuration.
-2. Open the room, leave Etta near the lamp at spawn, enter the private access code and press Ask Etta. Verify a response marked MODEL_DECISION with a model name and latency. The lamp must not change yet. An invalid code should visibly fail without a model request.
-3. Verify the displayed observation matches Etta's position, nearby lamp and lamp state. Approve a valid toggle proposal to change the lamp via the world engine. WAIT is a valid model choice; do not call it a failure, and do not substitute a rule-based toggle. A real toggle proposal is needed to close the full world-change gate.
-4. Ask again, then Stop or move/reset. Approval must disable; a late response must not run. Check manual E/button interaction still works. Do not intentionally exhaust an expensive provider quota to test this: deterministic CI covers limits/failures.
-5. Record date, commit, real model ID, latency, action, approval result and source/model provenance without recording tokens or raw credentials. Check Google usage for the deliberate request.
-
-**2026-10-19 status update:** After PR #3 and PR #4 fixes, the owner reported production READY, real Gemma WAIT, real Gemma TOGGLE_LAMP, and the lamp switching after approval. These are OWNER_REPORTED live observations, not provider-log capture; production Stop/focus-loss demonstration and physical-phone performance remain unverified.
-
-## Local development and troubleshooting
-
-Copy `.env.example` to ignored `.env.local`, configure it and run `npm run dev`. Vite's development server hosts the same handler. `npm run preview` deliberately uses disabled configuration. Fixture tests require no credentials and make no external calls.
-
-- DISABLED: missing enable flag, key, 32+ character access code, Redis settings, or unsupported model. Fix server variables and redeploy.
-- 401: the site's access code is wrong. Do not replace it with the Google key.
-- 429: shared request budget or provider quota exhausted. Wait; there is no auto-retry.
-- 503 budget unavailable: Redis is unavailable or misconfigured; no provider request is made.
-- 502/504: provider rejection, invalid output or timeout. Nothing executes; inspect configuration, then deliberately retry if appropriate. Secrets and upstream error bodies are not logged by this application.
-- 404 at `/api/decision`: ensure the repository root, not `dist` or `src`, is configured as the project root and redeploy the commit containing `api/decision.ts`.
-
-## References checked 18 October 2026
-
-- [Google: Gemma on Gemini API](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api) — model names, generateContent and minimal thinking.
-- [Google: active project rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
-- [Vercel: Node Web Standard functions](https://vercel.com/docs/functions/runtimes/node-js).
-- [Upstash: Redis REST API](https://upstash.com/docs/redis/features/restapi).
-
-
-## Rate-limit ownership
-The **4/minute and 40/UTC-day limits are enforced by ETTA's own shared Redis Lua script** in `server/budget.ts`. They are **not** Google's Gemma limits; Google model/project quotas are independent. Current values protect the prototype during manual decisions. Do not remove or increase them for S007 without explicit owner approval. A request-count cap does not guarantee zero cloud costs.
+See [operations](OPERATIONS.md), [architecture](ARCHITECTURE.md) and [phase evidence](PHASE_GATES.md). Reference: [Vercel forwarded headers](https://vercel.com/docs/headers/request-headers), [Gemma image input](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api).
