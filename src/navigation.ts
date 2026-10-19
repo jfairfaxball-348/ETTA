@@ -102,7 +102,8 @@ export class NavigationRunner {
   private next=0;
   private elapsed=0;
   private target: DestinationId | null=null;
-  constructor(private readonly body: BodyState) {}
+  private readonly body: BodyState;
+  constructor(body: BodyState) { this.body=body; }
   get active(): boolean { return this.waypoints!==null; }
   start(id: string): boolean {
     this.cancel();
