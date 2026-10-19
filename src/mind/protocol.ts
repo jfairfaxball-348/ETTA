@@ -40,8 +40,9 @@ export function observe(state: Snapshot) {
   if (nearby.some(o => o.id === 'lamp' && o.distance <= INTERACTION_RANGE)) {
     validActions.push({ type: 'TOGGLE_LAMP', targetId: 'lamp' });
   }
-  for (const place of reachableDestinations(state.body)) validActions.push({ type: 'MOVE_TO', targetId: place.id });
-  return { body: state.body, nearby, lampOn: state.lampOn, destinations: reachableDestinations(state.body).map(d=>({id:d.id,label:d.label})), validActions };
+  const destinations=reachableDestinations(state.body);
+  for (const place of destinations) validActions.push({ type: 'MOVE_TO', targetId: place.id });
+  return { body: state.body, nearby, lampOn: state.lampOn, destinations: destinations.map(d=>({id:d.id,label:d.label})), validActions };
 }
 export function parseProposal(value: unknown, state: Snapshot): Proposal {
   if (!record(value) || !keys(value, ['action', 'reason']) || !record(value.action) ||
