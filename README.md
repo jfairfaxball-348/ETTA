@@ -10,7 +10,7 @@ Etta can choose one of **two named, reachable destinations**: the woven rug or t
 
 The original **WAIT** and nearby **TOGGLE_LAMP** remain available. On 19 October the owner observed both actions with live Gemma, including the lamp actually switching after approval (**OWNER_REPORTED**, not a Chromium fixture).
 
-**S007 source:** [pull request #6](https://github.com/jfairfaxball-348/ETTA/pull/6). The hosted CI evidence is [GitHub Actions](https://github.com/jfairfaxball-348/ETTA/actions). Unit tests and real Chromium interaction checks use **explicit test fixtures**, not live Gemma for navigation. Production S007 navigation requires a separate owner-run walkthrough; do not assume it has occurred.
+**S007 source:** [pull request #6](https://github.com/jfairfaxball-348/ETTA/pull/6). **CI_PASS** on [run 39237279038](https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038) includes 31 Node tests, Redis, Vercel packaging and real Chromium walking tests with [screenshots](https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038/artifacts/12179209095). Unit and browser navigation checks use **explicit test fixtures**, not live Gemma. Production S007 navigation requires a separate owner-run walkthrough; do not assume it has occurred.
 
 ## Controls / safety
 
