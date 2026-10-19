@@ -94,7 +94,7 @@ try {
     assert.match(await page.locator('#mind-proposal').innerText(), /Centre of the woven rug/);
     const before=await page.locator('#telemetry').innerText();
     await pause(200);
-    assert.equal(await page.locator('#telemetry').innerText(), before, 'No movement before approval');
+    assert.equal((await page.locator('#telemetry').innerText()).split('\n')[0], before.split('\n')[0], 'No movement before approval');
     await page.locator('#approve-proposal').click();
     assert.equal(await page.locator('#ask-etta').isDisabled(),true);
     assert.match(await page.locator('#mind-message').innerText(), /Walking to/);
@@ -105,7 +105,8 @@ try {
     await page.waitForFunction(() => document.querySelector('#mind-message')?.textContent?.startsWith('Arrived at'));
     assert.match(await page.locator('#mind-message').innerText(), /woven rug/);
     const final=await page.locator('#telemetry').innerText();
-    assert.match(final,/POSITION X -0\\.0[0-9] · Z -0\\.8[0-9]/);
+    const coordinates=final.split('\n')[0].match(/-?\d+\.\d+/g).map(Number);
+    assert.ok(Math.hypot(coordinates[0]+0.04,coordinates[1]+0.875)<0.04,'Arrived at actual rug coordinates');
     assert.equal(await page.locator('#ask-etta').isEnabled(),true);
     await page.screenshot({path:'test-results/etta-s007-arrived-fixture.png'});
     await page.unroute('**/api/decision');
@@ -120,7 +121,7 @@ try {
     const frozen=await page.locator('#telemetry').innerText();
     await pause(150);
     assert.match(await page.locator('#mind-message').innerText(), /Stopped/);
-    assert.equal((await page.locator('#telemetry').innerText()).split('\\n')[0],frozen.split('\\n')[0]);
+    assert.equal((await page.locator('#telemetry').innerText()).split('\n')[0],frozen.split('\n')[0]);
     await reset(); await ask(); await page.locator('#approve-proposal').click(); await pause(300);
     await page.locator('#scene').focus(); await page.keyboard.down('a');
     try { await expectStatus('MANUAL'); } finally { await page.keyboard.up('a'); }
