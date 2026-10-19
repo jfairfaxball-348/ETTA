@@ -19,12 +19,15 @@
 |---|---|---|
 | **S007** | Etta chooses where to walk | Gemma proposes a **named reachable location**; approval starts a finite world-engine-controlled walk, correctly avoiding obstacles; manual override/Stop always wins |
 | **S008 (COMPLETE)** | First independent episode | Opt-in Autonomy ON/OFF; several bounded decisions/actions without per-action approval during a short observed episode, with strict request/time limits and immediate Stop |
-| **S009 (NEXT)** | More things to do | At least two meaningful, visible, permitted home activities (e.g., sit at chair, interact with desk/bed); world validates proximity/state |
+| **S008.5 (NEXT; OWNER-INSERTED)** | Immersive UI and multimodal mind | Remove dashboard clutter in favour of scene-first interface; four-digit PIN with shared auth-throttle; real avatar-eye image + text in one Gemma request; modular perception → choice → strict JSON action, optional additional calls within current limits |
+| **S009 (DEFERRED)** | More things to do | At least two meaningful, visible, permitted home activities (e.g., sit at chair, interact with desk/bed); world validates proximity/state |
 | S010 | Memory | Transparent, bounded, resettable persistence for actions/interactions across page reloads; no secret leakage |
 | S011 | Preferences, curiosity, motivations | Clearly **simulated** drives affect choices; controlled tests distinguish decisions in differing state |
 | S012 | Time, routines, daily life | Simulated day/night and sequences of chosen activities; do not suggest continuous cloud operation |
 | S013 | Talk to Etta | Text conversation with typed input boundaries and appropriate context; voice only as a later option |
 | S014 | Life continues when away | Feasibility and cost/security review, then explicit owner approval before any hosted persistence/scheduled background execution |
+
+S008.5 is a **documentation-only installed plan** as of 2026-10-19. It has not been implemented; the live site still uses its existing code. S009's original standalone prompt is preserved in [DEFERRED_S009_PROMPT.md](authoritative/DEFERRED_S009_PROMPT.md) and returns as next after S008.5. The owner accepts a modest four-digit PIN only with bounded Redis-protected failed attempts; the provider key remains server-side. Existing 4/minute, 40/day and S008 finite-episode limits do not change by installing the plan.
 
 Dates beyond S007 are not commitments and may be revised by the owner. Success depends on real-world observable and testable behaviour, not merely green builds.
 
@@ -44,4 +47,4 @@ Dates beyond S007 are not commitments and may be revised by the owner. Success d
 - Preserve manual playability when inference is off. Keep API keys server-only, refuse invented actions, avoid endless loops and expose provenance/error/cost boundaries.
 - Separate VERIFIED/CI_PASS from **OWNER_REPORTED** live use and NOT_RUN checks. The owner reported real WAIT and lamp-toggle approval, plus a later real Gemma rug-navigation choice, on 19 October; S008 live episodes remain NOT_RUN. No private logs or keys were stored.
 
-**[Complete installed S008 prompt](authoritative/NEXT_SESSION_PROMPT.md)** · [S006 closeout](sessions/S006/CLOSEOUT.md) · [Phase ledger](docs/PHASE_GATES.md).
+**[Complete installed S008.5 prompt](authoritative/NEXT_SESSION_PROMPT.md)** · [S006 closeout](sessions/S006/CLOSEOUT.md) · [Phase ledger](docs/PHASE_GATES.md).

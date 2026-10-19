@@ -4,6 +4,12 @@
 
 ETTA is a Vite/Three.js web app at https://etta-virid.vercel.app/ with a furnished studio, keyboard/touch controls, collision-aware avatar, working lamp and protected server-side Gemma bridge.
 
+## Next session installed — S008.5 (NOT YET IMPLEMENTED)
+
+The owner inserted **S008.5: scene-first UI, four-digit PIN and multimodal cognition** before S009. The planned design removes project-story text, debug overlays and recent-activity logs from the main screen; expands the 3D scene; replaces the cumbersome access token with a simple 4-digit PIN and Redis-throttled failed attempts; and adds a true Etta-eye camera image together with structured text in Gemma's **same request**. Perception, interpretation and action become separate software concerns, but not automatically three paid/provider calls. Quotas and S008 episode bounds stay unchanged. [Complete S008.5 brief](authoritative/NEXT_SESSION_PROMPT.md); [deferred original S009](authoritative/DEFERRED_S009_PROMPT.md).
+
+**This is a plan only:** the deployed site and the controls described below have not changed yet. No PIN is committed, and Vercel setup must be carefully migrated when implementing it.
+
 ## S008 — bounded independent episode
 
 An explicitly pressed **Autonomy ON · 3 decisions** button starts one foreground-only, supervised episode. Etta can request up to three sequential protected model decisions in at most 60 seconds, never while a prior decision or walk remains unfinished. A minimum of three seconds separates choices. Each decision uses only valid WAIT, lamp or named rug/table actions, revalidated by the world engine. **Stop, manual movement, reset, manual lamp interaction, focus/visibility loss, timeout or quota errors end the episode.** The UI displays its status, request count, provenance and last action. Off by default; never starts on reload. No saved memory, background service or cost-cap changes. **S008 CI_PASS:** [hosted run 39241206176](https://github.com/jfairfaxball-348/ETTA/actions/runs/39241206176) (37 Node tests, Redis, packaged Vercel API and real fixture Chromium). New live episode functionality still needs an owner production walkthrough; browser tests use conspicuously labelled TEST_FIXTURE.
@@ -39,7 +45,7 @@ ETTA's shared Upstash admission budget is **4 attempts/minute and 40 attempts/UT
 
 ## Roadmap
 
-The [owner-approved roadmap](ROADMAP.md) schedules **S009 — meaningful furniture interactions** after S008, [FUTURE / NOT EXECUTED](authoritative/NEXT_SESSION_PROMPT.md). Later stages add meaningful interactions, memory, simulated preferences, routines, conversation and possibly away-time operation after a separate cost/security decision.
+The [owner-approved roadmap](ROADMAP.md) schedules **S008.5 — immersive UI/PIN/multimodal refactor** as the next session, followed by unchanged **S009 — meaningful furniture interactions**, both FUTURE / NOT EXECUTED. Later stages add meaningful interactions, memory, simulated preferences, routines, conversation and possibly away-time operation after a separate cost/security decision.
 
 [Charter](PROJECT_CHARTER.md) · [S008 records](sessions/S008/CLOSEOUT.md) · [Phase evidence](docs/PHASE_GATES.md) · [Next session](authoritative/NEXT_SESSION_PROMPT.md).
 
