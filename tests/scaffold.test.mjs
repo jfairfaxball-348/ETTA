@@ -10,11 +10,11 @@ test('S008 episode handover is recorded and full S009 prompt is installed for la
   const nextPrompt = read('authoritative/NEXT_SESSION_PROMPT.md');
   const closeout = read('sessions/S008/CLOSEOUT.md');
   assert.equal(state.project, 'ETTA');
-  assert.ok(['S007', 'S008'].includes(state.last_completed_session));
-  assert.ok(['S007', 'S008'].includes(state.last_executed_session));
+  assert.equal(state.last_completed_session, 'S008');
+  assert.equal(state.last_executed_session, 'S008');
   assert.match(state.last_session_status, /S008/);
-  assert.ok(['S008', 'S009'].includes(state.next_session));
-  assert.match(state.next_session_status, /S009/);
+  assert.equal(state.next_session, 'S009');
+  assert.equal(state.next_session_status, 'INSTALLED_FUTURE_NOT_EXECUTED');
   assert.match(nextPrompt, /S009.*FUTURE \/ NOT EXECUTED/);
   assert.ok(closeout.includes(nextPrompt), 'Closeout contains the standalone next prompt verbatim');
   assert.match(roadmap, /Owner-approved direction/);
