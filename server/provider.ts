@@ -8,6 +8,8 @@ export async function requestProposal(state: Snapshot, apiKey: string, model: st
     'For WAIT, respond as {"action":{"type":"WAIT"},"reason":"I will wait here."}. ' +
     'For TOGGLE_LAMP, respond as {"action":{"type":"TOGGLE_LAMP","targetId":"lamp"},"reason":"I want to change the lamp."}, ' +
     'but only when TOGGLE_LAMP is present in validActions. ' +
+    'For MOVE_TO, respond as {"action":{"type":"MOVE_TO","targetId":"rug"},"reason":"I want to walk to the rug."}, ' +
+    'but choose targetId ONLY from MOVE_TO actions explicitly present in validActions; use their named destinations, never coordinates. ' +
     'Give a short reason (at most 240 characters); invent no actions or extra keys. ' +
     'The user must approve the suggestion before it happens. Do not claim it already happened.';
   let response: Response;
