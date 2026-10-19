@@ -11,7 +11,13 @@ const browser = await chromium.launch({ executablePath, headless: true,
 const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
 const errors = [], results = [];
 page.on('pageerror', error => errors.push(error.message));
-let posts = 0; page.on('request', req => { if (req.url().endsWith('/api/decision') && req.method() === 'POST') posts++; });
+let posts = 0, lastEye = null;
+page.on('request', req => {
+  if (req.url().endsWith('/api/decision') && req.method() === 'POST') {
+    posts++;
+    try { lastEye = req.postDataJSON()?.vision || null; } catch { /* invalid input is covered elsewhere */ }
+  }
+});
 const base = 'http://127.0.0.1:4174/';
 const code = 'fixture-access-code-never-a-real-secret';
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -40,7 +46,14 @@ try {
   });
   await attempt('Browser reaches protected adapter; fixture proposal waits for approval', async () => {
     await page.locator('#mind-access-code').fill(code); await ask();
-    assert.match(await page.locator('#mind-meta').innerText(), /TEST_FIXTURE.*fixture-only/);
+    assert.equal(lastEye?.mimeType, 'image/jpeg', 'Ask must capture real avatar-eye JPEG pixels');
+    assert.equal(lastEye?.width, 384);
+    assert.equal(lastEye?.height, 216);
+    const bytes = Buffer.from(lastEye.data, 'base64');
+    assert.ok(bytes.length > 2000 && bytes.length <= 131072, 'Bounded nonempty captured JPEG');
+    assert.equal(bytes[0], 0xff); assert.equal(bytes[1], 0xd8);
+    writeFileSync('test-results/etta-avatar-eye.jpg', bytes);
+    assert.match(await page.locator('#mind-meta').textContent(), /TEST_FIXTURE.*fixture-only/);
     await page.locator('#mind-panel details summary').click();
     assert.match(await page.locator('#mind-observation').innerText(), /Standing lamp/);
     assert.match(await page.locator('#interact-button').innerText(), /Turn light off/);
@@ -153,7 +166,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('Decisions 2/3'), {timeout:12000});
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('STOPPED'), {timeout:12000});
     assert.equal(decisions, 3);
-    assert.match(await page.locator('#episode-observation').innerText(), /TEST_FIXTURE|Three decisions completed/);
+    assert.match(await page.locator('#episode-observation').textContent(), /TEST_FIXTURE|Three decisions completed/);
     assert.equal(await page.locator('#ask-etta').isEnabled(), true);
     await page.screenshot({path:'test-results/etta-s008-finished-fixture.png'});
     await page.unroute('**/api/decision');
@@ -172,7 +185,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('ACTIVE'));
     await page.locator('#stop-mind').click();
     await pause(950);
-    assert.match(await page.locator('#episode-observation').innerText(), /STOPPED/);
+    assert.match(await page.locator('#episode-observation').textContent(), /STOPPED/);
     assert.equal(await page.locator('#approve-proposal').isDisabled(),true);
     const beforeReload = posts;
     await page.reload({waitUntil:'domcontentloaded'});
@@ -180,7 +193,7 @@ try {
     await pause(200);
     assert.equal(posts, beforeReload);
     assert.equal(await page.locator('#start-episode').isEnabled(),true);
-    assert.match(await page.locator('#episode-observation').innerText(), /^OFF/);
+    assert.match(await page.locator('#episode-observation').textContent(), /^OFF/);
     assert.equal(requests, 1);
     await page.unroute('**/api/decision');
     await page.locator('#mind-access-code').fill(code);
@@ -212,6 +225,57 @@ try {
     await page.screenshot({ path: 'test-results/etta-mind-mobile.png' });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.deepEqual(errors, []);
+  });
+  await attempt('PIN-mode Chromium: AI starts OFF, unlock, eye-image fixture decision, OFF clears PIN', async () => {
+    // Network fixture for UI flow; real PIN enforcement is checked by PIN/Redis integration tests.
+    const tab = await browser.newPage({ viewport: { width: 900, height: 760 } });
+    let unlocks = 0, decisions = 0, imageSent = false;
+    tab.on('pageerror', e => errors.push('pin fixture: ' + e.message));
+    await tab.route('**/api/decision', route => {
+      const req = route.request();
+      if (req.method() === 'GET') return route.fulfill({json:{status:'READY',accessMode:'PIN',message:'Fixture PIN mode enabled.'}});
+      const payload = req.postDataJSON();
+      if (payload.kind === 'unlock') {
+        unlocks++;
+        const correct = req.headers().authorization === 'Bearer 4827';
+        return route.fulfill({status:correct?200:401,json:correct?{status:'UNLOCKED'}:{code:'ACCESS_DENIED',message:'The private PIN was not accepted.'}});
+      }
+      decisions++;
+      imageSent = payload.vision?.mimeType === 'image/jpeg' && payload.vision.width === 384 &&
+        payload.vision.height === 216 && payload.vision.data.length > 100;
+      return route.fulfill({json:responseFixture(toggle)});
+    });
+    try {
+      await tab.goto(base, {waitUntil:'domcontentloaded'});
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='AI OFF',{timeout:30000});
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      assert.equal(decisions,0);
+      await tab.locator('#ai-switch').click();
+      await tab.locator('#mind-access-code').fill('0000');
+      await tab.locator('#pin-unlock').click();
+      await tab.waitForFunction(()=>document.querySelector('#mind-message')?.textContent?.includes('not accepted'));
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      await tab.locator('#mind-access-code').fill('4827');
+      await tab.locator('#pin-unlock').click();
+      await tab.waitForFunction(()=>document.querySelector('#ai-switch')?.textContent==='AI ON');
+      assert.equal(await tab.locator('#ask-etta').isEnabled(),true);
+      assert.equal(await tab.locator('#mind-access-area').isHidden(),true);
+      await tab.locator('#ask-etta').click();
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='TEST_FIXTURE');
+      assert.equal(imageSent,true,'One on-demand eye JPEG must accompany proposal');
+      assert.equal(decisions,1);
+      await tab.locator('#approve-proposal').click();
+      await tab.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light on'));
+      await tab.screenshot({path:'test-results/etta-pin-fixture.png'});
+      await tab.locator('#ai-switch').click();
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      assert.equal(await tab.locator('#mind-access-code').inputValue(),'');
+      assert.equal(await tab.locator('#ai-switch').getAttribute('aria-pressed'),'false');
+      await tab.reload({waitUntil:'domcontentloaded'});
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='AI OFF');
+      assert.equal(decisions,1,'Reload must never auto-start AI');
+      assert.equal(unlocks,2);
+    } finally {await tab.close();}
   });
 } finally {
   mkdirSync('test-results', { recursive: true });

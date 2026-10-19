@@ -1,49 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-:root{font-family:'DM Sans',system-ui,sans-serif;color:#e9f7f2;background:#07131b;font-weight:400;font-synthesis:none}
-*{box-sizing:border-box}body{margin:0;min-width:310px}a{color:inherit;text-decoration:none}a:hover{color:#92e5d5}
-button{font:inherit;cursor:pointer}button:focus-visible,#scene:focus-visible{outline:2px solid #97e9cf;outline-offset:-3px}
-.shell{max-width:1420px;margin:0 auto;padding:26px clamp(16px,4vw,64px) 24px;min-height:100vh;display:flex;flex-direction:column}
-.brand{display:flex;align-items:center;gap:10px;font:700 19px 'Space Grotesk',sans-serif;letter-spacing:.24em}
-.brand-symbol{color:#88e4d3;font-size:27px}.status{font:600 10px 'DM Sans',sans-serif;letter-spacing:.14em;color:#a6c3c0;border:1px solid #2d515b;border-radius:30px;padding:8px 11px;margin-left:auto}
-.hero{flex:1;display:grid;grid-template-columns:minmax(270px,.82fr) minmax(340px,1.18fr);gap:clamp(22px,3vw,54px);align-items:center;padding:54px 0 42px}
-.eyebrow{font-size:11px;letter-spacing:.25em;font-weight:700;color:#8bdac9}h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(65px,6vw,105px);line-height:.99;letter-spacing:-.06em;font-weight:500;margin:20px 0 26px}h1 em{font-style:normal;color:#8bdac9}
-.intro{max-width:400px;font-size:17px;line-height:1.75;color:#c4d5d1}.mode{color:#c3ead0;letter-spacing:.1em;font:700 11px 'Space Grotesk',sans-serif;margin:24px 0}
-.instructions{border-left:2px solid #77c9b8;padding:2px 0 2px 16px;color:#b1ceca;font-size:12px;line-height:1.7}
-.instructions strong{font-size:10px;letter-spacing:.18em;color:#9ae4d5}.instructions p{margin:8px 0}
-kbd{font-family:monospace;font-size:11px;min-width:18px;text-align:center;display:inline-block;border:1px solid #486970;border-radius:3px;padding:0 4px;margin-right:3px}
-.micro{opacity:.72}.viewport-wrap{position:relative;border:1px solid #355962;background:#0c202b;border-radius:8px;min-height:460px;height:clamp(460px,44vw,610px);overflow:hidden;box-shadow:0 14px 70px #0005}
-#scene{height:100%;width:100%;touch-action:none;outline-offset:-3px}#scene canvas{display:block;touch-action:none}
-.debug-hud{position:absolute;top:18px;left:18px;background:#071a20d9;padding:12px 15px;border:1px solid #3b6870;border-radius:5px;color:#b2ded7;pointer-events:none;max-width:calc(100% - 35px)}
-.debug-hud[hidden]{display:none}.debug-hud strong{font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.16em}.debug-hud pre{font:11px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;margin:8px 0 0;white-space:pre-wrap}
-.scene-actions{position:absolute;right:16px;top:16px;display:flex;gap:6px}
-.scene-actions button,.touch-pad button{background:#0a2532df;color:#ddf8f0;border:1px solid #568487;border-radius:5px;padding:9px 12px;font-size:11px}
-.scene-actions button:hover,.touch-pad button:active{background:#217b79}
-.scene-caption{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;gap:14px;padding:16px 18px;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.10em;color:#bbddda;background:linear-gradient(0deg,#07131b,transparent);pointer-events:none}
-.touch-pad{position:absolute;bottom:53px;left:15px;display:none;flex-direction:column;align-items:center;gap:4px;touch-action:none;user-select:none}
-.touch-pad div{display:flex;gap:4px}.touch-pad button{width:47px;height:43px;padding:0;touch-action:none}.touch-pad>button:last-child{width:66px;height:31px;font-size:10px}
-.render-error{padding:30px;color:#e7bda6;line-height:1.7}.milestones{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #29424d;border-bottom:1px solid #29424d;padding:24px 0;font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.15em}.milestones div{display:flex;align-items:center;gap:12px;color:#7a9998}.milestones .active{color:#c6f4e8}.milestones span{color:#63a99a}
-footer{display:flex;justify-content:space-between;gap:18px;padding:20px 0 0;font-size:11px;color:#7b9f9b}
-@media(pointer:coarse){.touch-pad{display:flex}.scene-actions{right:9px;top:9px}.debug-hud{top:62px;left:10px}.debug-hud pre{font-size:10px}.viewport-wrap{min-height:460px}}
-@media(max-width:840px){.hero{grid-template-columns:1fr;padding:38px 0}.viewport-wrap{height:520px}.intro{max-width:590px}.milestones{flex-wrap:wrap}.milestones div{flex:1;min-width:70px}.status{letter-spacing:.04em;font-size:9px}footer{flex-wrap:wrap}}
-@media(max-width:500px){h1{font-size:64px}.viewport-wrap{height:500px}.scene-caption{font-size:8px;padding:12px}.debug-hud{max-width:230px}.hero{padding:30px 0}}
+:root{font-family:'DM Sans',system-ui,sans-serif;color:#e6eee9;background:#101d20;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;min-width:310px}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.48;cursor:default}
+button:focus-visible,input:focus-visible,summary:focus-visible,#scene:focus-visible{outline:2px solid #abecd6;outline-offset:2px}
+.experience{min-height:100dvh;display:flex;flex-direction:column;gap:8px;padding:8px;max-width:1900px;margin:auto}
+.topbar{display:flex;align-items:center;gap:8px;min-height:43px}
+.brand{font:600 18px 'Space Grotesk',sans-serif;letter-spacing:.05em;margin-right:auto}.brand span{color:#8ee0c1}
+.mode{font-size:11px;color:#b5d4cd;letter-spacing:.04em;white-space:nowrap}
+button,.help summary{border:1px solid #58777b;border-radius:7px;background:#1b3940;color:#edf9f2;padding:9px 12px;font-size:12px}
+button:hover:enabled{background:#27545b}
+#ai-switch[aria-pressed=true]{background:#77cdb1;color:#0d2728;font-weight:700;border-color:#77cdb1}
+#stop-mind{background:#39292a;border-color:#906564}
+.help{position:relative;font-size:12px}.help summary{list-style:none;cursor:pointer}.help summary::-webkit-details-marker{display:none}
+.help[open]{z-index:10}.help p{position:absolute;right:0;top:37px;width:min(340px,85vw);margin:0;padding:13px 15px;background:#182e33;border:1px solid #527077;line-height:1.6;box-shadow:0 10px 25px #0008}
+.help p+p{top:90px}
+.viewport-wrap{position:relative;flex:1 0 auto;height:clamp(420px,76dvh,1150px);max-height:calc(100dvh - 160px);min-height:440px;background:#273f45;border:1px solid #466469;border-radius:10px;overflow:hidden}
+#scene,#scene canvas{width:100%;height:100%;touch-action:none}#scene canvas{display:block}
+.debug-hud{position:absolute;top:12px;left:12px;background:#071a20e8;padding:12px;border:1px solid #5b777a;border-radius:6px;max-width:min(360px,80vw);pointer-events:none}
+.debug-hud[hidden]{display:none}.debug-hud strong{font-size:11px}.debug-hud pre{font:11px/1.5 ui-monospace,monospace;white-space:pre-wrap}
+.scene-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.scene-actions button,.touch-pad button{background:#172f35e8;padding:8px 12px}
+.affordance{position:absolute;bottom:14px;right:12px;display:flex;align-items:center;gap:9px;max-width:min(450px,60vw);background:#0b2228d9;border:1px solid #466a70;border-radius:9px;padding:7px 9px;font-size:12px}
+.affordance span{font-weight:700}.affordance small{color:#afcac2}.affordance button{white-space:nowrap;background:#8ed1b9;color:#0b292c;border:0;font-size:11px}
+.affordance button:disabled{background:#345057;color:#d4e0d9}
+.scene-caption{position:absolute;left:12px;bottom:14px;color:#d8e6dc;font-size:10px;background:#0d272999;padding:6px 9px;border-radius:5px;pointer-events:none}
+.touch-pad{position:absolute;left:12px;bottom:58px;display:none;flex-direction:column;align-items:center;gap:4px;user-select:none;touch-action:none}
+.touch-pad div{display:flex;gap:4px}.touch-pad button{width:46px;height:43px;padding:0;touch-action:none}.touch-pad>button:last-child{width:60px;height:31px}
+.mind-panel{display:flex;flex-wrap:wrap;gap:9px 18px;align-items:center;background:#152a30;border:1px solid #466469;border-radius:9px;padding:10px 14px}
+.mind-actions{display:flex;flex-wrap:wrap;gap:7px}.mind-actions button{background:#8ed1b9;color:#133034;border:0;font-weight:600}
+#start-episode{background:#a6dec9}.mind-copy{display:flex;flex:1;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;min-width:220px}
+.mind-proposal{font-weight:600;color:#abf4d6}.mind-access{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%}
+.mind-access[hidden]{display:none}.mind-access input{background:#0b1d20;border:1px solid #567a7d;border-radius:5px;padding:10px;color:#f4faf8;width:146px}
+.mind-access label{font-size:12px}.mind-access button{padding:9px}
+.diagnostics{font-size:11px;width:100%;color:#baccc6}.diagnostics summary{cursor:pointer;width:max-content}
+.diagnostics pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;font:11px/1.5 ui-monospace,monospace}
+.episode-observation{font-size:11px;color:#b3e0d1}.micro{opacity:.7}.render-error{padding:25px;color:#ffcbac}
+@media(pointer:coarse){.touch-pad{display:flex}}
+@media(max-width:700px){.experience{padding:5px;gap:5px}.topbar{gap:5px;flex-wrap:wrap}.mode{font-size:10px}.brand{font-size:15px}.topbar button,.help summary{font-size:11px;padding:7px 8px}.viewport-wrap{height:65dvh;min-height:390px;max-height:none;border-radius:6px}.affordance{bottom:9px;right:7px;max-width:57vw;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:6px}.affordance small{display:none}.affordance button{font-size:10px;padding:5px 7px}.scene-caption{bottom:8px;left:7px;font-size:9px}.touch-pad{left:8px;bottom:46px}.mind-panel{padding:8px}.mind-actions button{padding:8px;font-size:11px}.mind-copy{min-width:100%;font-size:11px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-
-/* S004: deliberately small, readable manual affordance inspector. */
-.affordance{position:absolute;right:16px;bottom:55px;z-index:4;width:min(230px,46%);padding:13px 14px;display:flex;flex-direction:column;gap:6px;border:1px solid #58736c;background:rgba(10,27,34,.91);color:#e5efe7;box-shadow:0 12px 25px #07131b70;pointer-events:auto}
-.affordance strong{font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#78bead}
-.affordance span{font-weight:700;font-size:14px}
-.affordance small{font-size:11px;line-height:1.4;color:#bdd0c8}
-.affordance button{font-size:11px;padding:8px;background:#8bc3ae;color:#10252d;border:0;cursor:pointer}
-.affordance button:disabled{background:#31474c;color:#9fb4ac;cursor:default}
-@media(max-width:500px){.affordance{width:47%;padding:9px;right:8px;bottom:49px;gap:4px}.affordance small{font-size:9px}.affordance span{font-size:12px}}
-
-.mind-panel{border:1px solid #355962;border-radius:8px;background:#0c202b;padding:24px;margin-bottom:30px;line-height:1.6}
-.mind-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.mind-heading h2{margin:0;font:500 27px 'Space Grotesk',sans-serif}.mind-heading .mode{margin:0}
-.mind-access{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:20px;font-size:13px}.mind-access input{background:#07131b;border:1px solid #58736c;border-radius:4px;padding:11px;color:#e9f7f2;font:inherit;flex:1;min-width:180px;max-width:420px}
-.mind-panel button{background:#8bc3ae;color:#10252d;border:1px solid #8bc3ae;border-radius:4px;padding:10px 16px;font-size:13px}.mind-panel button:disabled{opacity:.45;cursor:default}.mind-panel #stop-mind,.mind-panel #lock-mind{background:transparent;color:#c4d5d1;border-color:#58736c}
-.mind-actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 16px}.mind-proposal{color:#b8f0d8;font-size:17px;overflow-wrap:anywhere}.mind-panel details{margin-top:20px;color:#b1ceca;font-size:12px}.mind-panel summary{cursor:pointer}.mind-panel pre{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.7 ui-monospace,monospace;max-height:240px;overflow:auto}.mind-panel small{font-size:11px}input:focus-visible{outline:2px solid #97e9cf}
-@media(max-width:500px){.mind-panel{padding:17px}.mind-heading{align-items:flex-start;flex-direction:column}.mind-access label{width:100%}}
-
-/* S008 opt-in episode information. */
-.episode-observation{padding:12px 14px;border:1px solid #568487;border-radius:4px;background:#112d34;color:#b9efdc;font-size:12px;overflow-wrap:anywhere}
-.mind-panel #start-episode{background:#a2e2c6;border-color:#a2e2c6;font-weight:700}

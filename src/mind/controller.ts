@@ -7,6 +7,7 @@ export interface MindView {
   pending: boolean; moving: boolean; destination: string | null; history: string[];
 }
 interface Hooks { snapshot: () => Snapshot; stop: () => void; apply: (proposal: Proposal) => boolean; changed: (view: MindView) => void;
+  captureVision?: () => { mimeType: 'image/jpeg'; data: string; width: number; height: number };
   navigation?: { start: (targetId: string) => boolean; step: (dt: number) => WalkResult; cancel: () => void } }
 
 export class MindController {
@@ -48,12 +49,18 @@ export class MindController {
   async ask(accessCode: string): Promise<void> {
     if (!this.enabled || this.hasWork) return;
     this.cancel('Preparing one proposal.');
-    if (!/^[A-Za-z0-9_-]{32,128}$/.test(accessCode)) {
-      this.view.status = 'ERROR'; this.publish('Enter the private access code configured for this site.'); return;
+    if (!(/^[A-Za-z0-9_-]{32,128}$/.test(accessCode) || /^\d{4}$/.test(accessCode))) {
+      this.view.status = 'ERROR'; this.publish('Enter the configured four-digit PIN.'); return;
     }
     const id = this.generation;
     const captured = this.hooks.snapshot(); this.captured = captured;
     this.view.observation = observe(captured);
+    let vision;
+    try { vision = this.hooks.captureVision?.(); }
+    catch {
+      this.view.status = 'ERROR'; this.publish('Avatar-eye image could not be captured. No request was made.');
+      return;
+    }
     const abort = new AbortController(); this.request = abort;
     const timer = setTimeout(() => abort.abort(), 16_000);
     this.view.pending = true; this.view.status = 'REQUESTING';
@@ -61,7 +68,7 @@ export class MindController {
     try {
       const response = await this.fetcher('/api/decision', { method: 'POST', signal: abort.signal, cache: 'no-store',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessCode}` },
-        body: JSON.stringify({ snapshot: captured }) });
+        body: JSON.stringify({ snapshot: captured, ...(vision ? { vision } : {}) }) });
       const data: unknown = await response.json();
       if (id !== this.generation) return;
       if (!response.ok) {
@@ -76,7 +83,10 @@ export class MindController {
       const provenance = data.provenance as Decision['provenance'];
       this.view.decision = { provenance, proposal, model: data.model, elapsedMs: data.elapsedMs };
       this.view.status = provenance; this.expires = this.clock() + PROPOSAL_TTL_MS;
-      this.publish(provenance === 'TEST_FIXTURE' ? 'Test fixture only. Awaiting manual approval.' : 'Etta has proposed an action. Awaiting your approval.');
+      const perception = typeof data.perception === 'string' ? data.perception.slice(0,180) : '';
+      const intent = typeof data.intent === 'string' ? data.intent.slice(0,160) : '';
+      this.publish(provenance === 'TEST_FIXTURE' ? 'Test fixture only. Awaiting manual approval.' :
+        (perception && intent ? perception + ' · ' + intent + ' · Awaiting approval.' : 'Etta has proposed an action. Awaiting your approval.'));
     } catch (error) {
       if (id !== this.generation) return;
       this.view.status = this.enabled ? 'ERROR' : 'DISABLED'; this.view.decision = null; this.captured = null;

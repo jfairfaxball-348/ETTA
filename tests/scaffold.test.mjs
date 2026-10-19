@@ -4,22 +4,24 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 const root = process.cwd(), read = p => readFileSync(join(root, p), 'utf8');
 
-test('S008 completed; owner inserted S008.5 and preserved full deferred S009 prompt', () => {
+test('S008.5 CI closed out and installed complete deferred S009 scope', () => {
   const state = JSON.parse(read('authoritative/STATE.json'));
   const roadmap = read('ROADMAP.md');
   const nextPrompt = read('authoritative/NEXT_SESSION_PROMPT.md');
   const closeout = read('sessions/S008/CLOSEOUT.md');
+  const s0085 = read('sessions/S008.5/CLOSEOUT.md');
   const deferred = read('authoritative/DEFERRED_S009_PROMPT.md');
   assert.equal(state.project, 'ETTA');
-  assert.equal(state.last_completed_session, 'S008');
-  assert.equal(state.last_executed_session, 'S008');
-  assert.match(state.last_session_status, /S008/);
-  assert.equal(state.next_session, 'S008.5');
+  assert.equal(state.last_completed_session, 'S008.5');
+  assert.equal(state.last_executed_session, 'S008.5');
+  assert.match(state.last_session_status, /S008_5/);
+  assert.equal(state.next_session, 'S009');
   assert.equal(state.next_session_status, 'INSTALLED_FUTURE_NOT_EXECUTED');
-  assert.match(nextPrompt, /S008\.5.*FUTURE \/ NOT EXECUTED/);
+  assert.match(nextPrompt, /S009.*FUTURE \/ NOT EXECUTED/);
   assert.match(deferred, /S009.*FUTURE \/ NOT EXECUTED/);
   assert.ok(closeout.includes(deferred), 'Historical S008 closeout retains full original S009 prompt');
-  assert.ok(read('sessions/S008.5/BRIEF.md').includes('NOT EXECUTED'));
+  assert.ok(s0085.includes('S009'), 'S008.5 closeout hands over intact S009 target');
+  assert.match(read('sessions/S008.5/VALIDATION.md'), /CI_PASS/);
   assert.match(nextPrompt, /four-digit/i);
   assert.match(nextPrompt, /avatar-eye/i);
   assert.match(roadmap, /Owner-approved direction/);
@@ -54,7 +56,7 @@ test('body modules and S002 evidence spine exist', () => {
   ]) assert.ok(existsSync(join(root, path)), path);
 });
 test('manual control is explicit; code has explicit manual operation, without a claimed AI mind', () => {
-  assert.match(read('index.html'), /MANUAL \/ DEV/);
+  assert.match(read('index.html'), /MANUAL · NO AUTONOMY/);
   assert.match(read('index.html'), /data-direction="forward"/);
   assert.match(read('src/main.ts'), /WEBGL UNAVAILABLE/);
   assert.match(read('src/input.ts'), /visibilitychange/);

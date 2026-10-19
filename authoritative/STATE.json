@@ -2,10 +2,10 @@
   "project": "ETTA",
   "as_of": "2026-10-19",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
-  "last_completed_session": "S008",
-  "next_session": "S008.5",
+  "last_completed_session": "S008.5",
+  "next_session": "S009",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P4_S008_COMPLETE_S008_5_UI_MULTIMODAL_REFACTOR_NEXT_S009_DEFERRED",
+  "current_phase": "P4_S008_5_IMMERSIVE_MULTIMODAL_CI_PASS_S009_ACTIVITIES_NEXT",
   "phases": {
     "P0": {
       "title": "Foundation",
@@ -25,7 +25,7 @@
     },
     "P4": {
       "title": "Let her decide how she lives",
-      "status": "S008_FINITE_OPT_IN_EPISODE_CI_PASS_REAL_GEMMA_OWNER_EPISODE_NOT_RUN"
+      "status": "S008_FINITE_EPISODE_CI_PASS_S008_5_UI_PIN_VISION_CI_PASS_LIVE_MULTIMODAL_NOT_RUN"
     },
     "P5": {
       "title": "Who knows after that",
@@ -45,14 +45,19 @@
     "World-validated named MOVE_TO rug/table choice, manual approval and collision-safe finite visible walking",
     "Immediate Stop, manual override, reset, blur, permission-loss and 30s route timeout cancellation",
     "S007 CI_PASS: 31 Node tests, 17 room and 12 protected-mind Chromium fixture checks with screenshot evidence",
-    "S008 CI_PASS: opt-in 3-decision/60-second foreground-only episode, 3-second spacing, manual/Stop priority, explicit provenance and request observability"
+    "S008 CI_PASS: opt-in 3-decision/60-second foreground-only episode, 3-second spacing, manual/Stop priority, explicit provenance and request observability",
+    "S008.5 immersive scene-first responsive UI, minimal AI ON/OFF + Stop, hidden-by-default diagnostic telemetry",
+    "S008.5 server-configured four-digit PIN with Redis atomic per-client/global brute-force throttling and safe legacy-token staging",
+    "S008.5 real avatar-eye 384x216 on-demand JPEG input plus canonical world text in one Gemma request; public perception-intent and strict action boundaries",
+    "S008.5 CI_PASS: 43 Node tests, actual Redis PIN/budget checks, Vercel packaging, 17 room/15 mind Chromium fixture checks and reviewed screen/eye screenshots"
   ],
   "not_yet_capabilities": [
     "Persistent memory, motivations, routines, conversation and away-time operation",
     "Independent production Stop/cancel/focus-loss log verification",
     "Physical-device performance measurement",
     "S008 production real Gemma multi-decision episode: NOT_RUN until owner verifies",
-    "S008.5 four-digit PIN / decluttered immersive viewport / real Gemma avatar-eye multimodal perception: PLANNED_NOT_EXECUTED"
+    "S008.5 owner production deployment of four-digit PIN in Vercel: NOT_RUN; code retains legacy mode until switched",
+    "S008.5 real Gemma model-origin avatar-eye image interpretation and resulting safe action: NOT_RUN; fixtures are not proof of live"
   ],
   "deployment": {
     "target": "Vercel",
@@ -152,12 +157,31 @@
       "source_sha": "0f131b3f51bb7f307edbf302386f9a8b897aa3c3",
       "node_tests": 37,
       "browser": "REAL_CHROMIUM_WITH_TEST_FIXTURES"
+    },
+    "s008_5": {
+      "pr": "https://github.com/jfairfaxball-348/ETTA/pull/9",
+      "verified_ci": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39254894541",
+      "verified_source_sha": "22aa759f2b4c66747e017fd050df120e79a5e2f2",
+      "node_tests": 43,
+      "room_chromium_checks": 17,
+      "mind_chromium_checks": 15,
+      "redis": "PASS_ACTUAL_REDIS_LUA_BUDGET_AND_AUTH_CONCURRENT",
+      "packaged_vercel_api": "CI_PASS",
+      "avatar_eye": "CHROMIUM_CAPTURE_REAL_384x216_JPEG_VISUALLY_REVIEWED_FIXTURE_PROVIDER",
+      "desktop_mobile_screenshots": "CAPTURED_AND_VISUALLY_REVIEWED_CI_ARTIFACT",
+      "real_provider_image_action": "NOT_RUN",
+      "owner_production_pin_setup": "NOT_RUN",
+      "provider_budget_change": "NONE",
+      "test_provenance": "TEST_FIXTURE_NOT_LIVE_GEMMA",
+      "doc_only_closeout_final_commit": "PENDING_HOSTED_VERIFY"
     }
   },
   "known_blockers": [
     "ChatGPT Vercel API cannot access runtime logs under the older jball348 scope (403); live results are owner-reported",
     "Production Stop/focus-loss manual verification not separately reported",
-    "Shared ETTA request budget intentionally capped at 4/minute and 40/UTC day; Google quota applies separately"
+    "Shared ETTA request budget intentionally capped at 4/minute and 40/UTC day; Google quota applies separately",
+    "S008.5 owner must configure private ETTA_ACCESS_PIN in Vercel, redeploy and confirm PIN mode before removing legacy ETTA_ACCESS_TOKEN",
+    "S008.5 real Gemma multimodal trial awaits owner; fixture browser and upstream-call shape are not proof of live image comprehension"
   ],
   "migration": {
     "date": "2026-10-18",
@@ -167,14 +191,14 @@
     "method": "source-file-snapshot",
     "historical_ci": "Old repository only"
   },
-  "last_executed_session": "S008",
-  "last_session_status": "CLOSED_S008_CI_PASS_REAL_GEMMA_EPISODE_NOT_RUN",
+  "last_executed_session": "S008.5",
+  "last_session_status": "CLOSED_S008_5_CI_PASS_OWNER_VERCEL_PIN_AND_LIVE_MULTIMODAL_NOT_RUN",
   "owner_approved_roadmap": {
     "date": "2026-10-19",
     "sessions": [
       "S007_APPROVED_NAVIGATION",
       "S008_BOUNDED_AUTONOMY",
-      "S008.5_UI_PIN_MULTIMODAL_REFACTOR",
+      "S008_5_IMMERSIVE_PIN_MULTIMODAL_COMPLETE_CI_PASS",
       "S009_INTERACTIONS",
       "S010_MEMORY",
       "S011_DRIVES",
@@ -198,18 +222,13 @@
     "change_policy": "owner approval required"
   },
   "next_session_owner_scope": {
-    "id": "S008.5",
-    "status": "PLAN_INSTALLED_NOT_IMPLEMENTED",
-    "approved": "2026-10-19",
-    "pillars": [
-      "Four-digit PIN + Redis fail-closed auth attempt throttling, key stays server-side",
-      "Scene-first immersive UI without hero/session/debug clutter",
-      "Avatar-eye image and text in one Gemma call; perception/intent/action modules with optional extra calls"
-    ],
-    "budget_change": "NONE",
-    "predecessor": "S008",
-    "deferred_successor": "S009",
-    "deferred_prompt_path": "authoritative/DEFERRED_S009_PROMPT.md",
-    "note": "Owner accepts 4-digit PIN limitations for nonbilling free-tier access; robust abuse limits remain required. Preserve working Vercel mind during env migration."
+    "id": "S009",
+    "status": "INSTALLED_FUTURE_NOT_EXECUTED",
+    "predecessor": "S008.5",
+    "objective": "At least two meaningful visible home activities, SIT_AT_CHAIR and EXAMINE_WRITING_TABLE, manual and model choices with world validation",
+    "prompt_path": "authoritative/NEXT_SESSION_PROMPT.md",
+    "inherited_constraints": "3-decisions/60s, 4/minute+40/UTC-day model budget, strict actions, image+text, PIN migration and truthful live-vs-fixture distinctions",
+    "original_prompt_archived": "authoritative/DEFERRED_S009_PROMPT.md",
+    "note": "Do not execute in S008.5"
   }
 }
