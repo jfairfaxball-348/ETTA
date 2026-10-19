@@ -1,5 +1,5 @@
 /** S008: finite, foreground-only opt-in controller over the existing approved world path. */
-import { MindController, type MindView } from './controller.ts';
+import { MindController } from './controller.ts';
 import type { Provenance } from './protocol.ts';
 
 export const EPISODE_DECISION_CAP = 3;
