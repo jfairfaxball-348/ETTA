@@ -54,7 +54,7 @@ test('body modules and S002 evidence spine exist', () => {
   ]) assert.ok(existsSync(join(root, path)), path);
 });
 test('manual control is explicit; code has explicit manual operation, without a claimed AI mind', () => {
-  assert.match(read('index.html'), /MANUAL \/ DEV/);
+  assert.match(read('index.html'), /MANUAL · NO AUTONOMY/);
   assert.match(read('index.html'), /data-direction="forward"/);
   assert.match(read('src/main.ts'), /WEBGL UNAVAILABLE/);
   assert.match(read('src/input.ts'), /visibilitychange/);
