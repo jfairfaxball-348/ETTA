@@ -11,7 +11,13 @@ const browser = await chromium.launch({ executablePath, headless: true,
 const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
 const errors = [], results = [];
 page.on('pageerror', error => errors.push(error.message));
-let posts = 0; page.on('request', req => { if (req.url().endsWith('/api/decision') && req.method() === 'POST') posts++; });
+let posts = 0, lastEye = null;
+page.on('request', req => {
+  if (req.url().endsWith('/api/decision') && req.method() === 'POST') {
+    posts++;
+    try { lastEye = req.postDataJSON()?.vision || null; } catch { /* invalid input is covered elsewhere */ }
+  }
+});
 const base = 'http://127.0.0.1:4174/';
 const code = 'fixture-access-code-never-a-real-secret';
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -40,6 +46,13 @@ try {
   });
   await attempt('Browser reaches protected adapter; fixture proposal waits for approval', async () => {
     await page.locator('#mind-access-code').fill(code); await ask();
+    assert.equal(lastEye?.mimeType, 'image/jpeg', 'Ask must capture real avatar-eye JPEG pixels');
+    assert.equal(lastEye?.width, 384);
+    assert.equal(lastEye?.height, 216);
+    const bytes = Buffer.from(lastEye.data, 'base64');
+    assert.ok(bytes.length > 2000 && bytes.length <= 131072, 'Bounded nonempty captured JPEG');
+    assert.equal(bytes[0], 0xff); assert.equal(bytes[1], 0xd8);
+    writeFileSync('test-results/etta-avatar-eye.jpg', bytes);
     assert.match(await page.locator('#mind-meta').innerText(), /TEST_FIXTURE.*fixture-only/);
     await page.locator('#mind-panel details summary').click();
     assert.match(await page.locator('#mind-observation').innerText(), /Standing lamp/);
