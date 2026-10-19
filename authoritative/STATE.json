@@ -48,7 +48,6 @@
     "S008 CI_PASS: opt-in 3-decision/60-second foreground-only episode, 3-second spacing, manual/Stop priority, explicit provenance and request observability"
   ],
   "not_yet_capabilities": [
-    "Opt-in bounded multi-decision autonomy (S008, FUTURE)",
     "Persistent memory, motivations, routines, conversation and away-time operation",
     "Independent production Stop/cancel/focus-loss log verification",
     "Physical-device performance measurement",
