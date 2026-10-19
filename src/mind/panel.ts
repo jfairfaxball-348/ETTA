@@ -39,7 +39,7 @@ export function attachMindPanel(body: BodyState, world: WorldState) {
         ' · Decisions ' + ep.decisions + '/3 · Requests ' + ep.requests + ' · Remaining ' + ep.remaining +
         ' · Elapsed ' + ep.elapsedSeconds + 's / 60s · Last: ' + ep.lastAction + ' · ' + ep.reason;
       el('mode-status').textContent = ep.state === 'ACTIVE' ?
-        'AUTONOMY ACTIVE · 3 DECISIONS MAX / 60s · STOP AVAILABLE' : 'MANUAL / DEV · AUTONOMY ' + ep.state;
+        'AUTONOMY ACTIVE · 3 DECISIONS MAX / 60s · STOP AVAILABLE' : 'MANUAL / DEV · NO AUTONOMY (' + ep.state + ')';
       el('mind-observation').textContent = view.observation ? JSON.stringify(view.observation, null, 2) : 'Ask Etta to capture the room as she can observe it.';
       el('mind-history').textContent = view.history.join('\n');
     }

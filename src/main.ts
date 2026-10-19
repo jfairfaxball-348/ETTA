@@ -33,7 +33,7 @@ function manualInteract() {
 interactButton.addEventListener('click',manualInteract);
 const cameraRig = new FollowCamera();
 let visible = true;
-mode.textContent = 'MANUAL / DEV · AUTONOMY OFF';
+mode.textContent = 'MANUAL / DEV · NO AUTONOMY (OFF)';
 try {
   const stage = createStage(mount);
   mind = attachMindPanel(body, world);

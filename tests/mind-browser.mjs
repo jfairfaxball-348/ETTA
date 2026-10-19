@@ -183,6 +183,7 @@ try {
     assert.match(await page.locator('#episode-observation').innerText(), /^OFF/);
     assert.equal(requests, 1);
     await page.unroute('**/api/decision');
+    await page.locator('#mind-access-code').fill(code);
   });
   await attempt('Model text renders as text; access code is not persisted', async () => {
     await page.route('**/api/decision', route => route.fulfill({ json: responseFixture({ ...toggle, reason: '<img src=x onerror=alert(1)>' }) }));
