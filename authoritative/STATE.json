@@ -2,10 +2,10 @@
   "project": "ETTA",
   "as_of": "2026-10-19",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
-  "last_completed_session": "S007",
-  "next_session": "S008",
+  "last_completed_session": "S008",
+  "next_session": "S009",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P4_S007_APPROVED_NAVIGATION_BRIDGE_S008_OPT_IN_EPISODE_NEXT",
+  "current_phase": "P4_S008_BOUNDED_AUTONOMY_COMPLETE_S009_MEANINGFUL_INTERACTIONS_NEXT",
   "phases": {
     "P0": {
       "title": "Foundation",
@@ -25,7 +25,7 @@
     },
     "P4": {
       "title": "Let her decide how she lives",
-      "status": "S007_FINITE_APPROVED_NAMED_NAVIGATION_IMPLEMENTED_NO_EPISODES"
+      "status": "S008_FINITE_OPT_IN_EPISODE_CI_PASS_REAL_GEMMA_OWNER_EPISODE_NOT_RUN"
     },
     "P5": {
       "title": "Who knows after that",
@@ -44,14 +44,14 @@
     "Owner-reported genuine Gemma WAIT and approved lamp-toggle executed on production 2026-10-19",
     "World-validated named MOVE_TO rug/table choice, manual approval and collision-safe finite visible walking",
     "Immediate Stop, manual override, reset, blur, permission-loss and 30s route timeout cancellation",
-    "S007 CI_PASS: 31 Node tests, 17 room and 12 protected-mind Chromium fixture checks with screenshot evidence"
+    "S007 CI_PASS: 31 Node tests, 17 room and 12 protected-mind Chromium fixture checks with screenshot evidence",
+    "S008 CI_PASS: opt-in 3-decision/60-second foreground-only episode, 3-second spacing, manual/Stop priority, explicit provenance and request observability"
   ],
   "not_yet_capabilities": [
-    "Production live Gemma-approved walk OWNER_REPORTED walkthrough (NOT_RUN)",
-    "Opt-in bounded multi-decision autonomy (S008, FUTURE)",
     "Persistent memory, motivations, routines, conversation and away-time operation",
     "Independent production Stop/cancel/focus-loss log verification",
-    "Physical-device performance measurement"
+    "Physical-device performance measurement",
+    "S008 production real Gemma multi-decision episode: NOT_RUN until owner verifies"
   ],
   "deployment": {
     "target": "Vercel",
@@ -136,9 +136,21 @@
       "node_ci": "31/31 PASS intermediary run 39236410379",
       "last_full_ci": "CI_PASS https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038",
       "browser_fixtures": "PASS_REAL_CHROMIUM_EXPLICIT_MODEL_FIXTURES",
-      "real_gemma_navigation": "NOT_RUN_OWNER_WALKTHROUGH_REQUIRED",
+      "real_gemma_navigation": "OWNER_REPORTED 2026-10-19: Gemma chose to walk to centre of rug; owner observed working live",
       "budget_change": "NONE",
       "screenshots": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038/artifacts/12179209095"
+    },
+    "s008": {
+      "pr": "https://github.com/jfairfaxball-348/ETTA/pull/7",
+      "branch": "session/S008-bounded-autonomy",
+      "hosted_ci": "CI_PASS",
+      "real_gemma_episode": "NOT_RUN_OWNER_WALKTHROUGH_REQUIRED",
+      "budget_change": "NONE",
+      "model_fixture_label": "TEST_FIXTURE",
+      "run": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39241206176",
+      "source_sha": "0f131b3f51bb7f307edbf302386f9a8b897aa3c3",
+      "node_tests": 37,
+      "browser": "REAL_CHROMIUM_WITH_TEST_FIXTURES"
     }
   },
   "known_blockers": [
@@ -154,8 +166,8 @@
     "method": "source-file-snapshot",
     "historical_ci": "Old repository only"
   },
-  "last_executed_session": "S007",
-  "last_session_status": "CLOSED_S007_CI_PASS_REAL_GEMMA_NAVIGATION_NOT_RUN",
+  "last_executed_session": "S008",
+  "last_session_status": "CLOSED_S008_CI_PASS_REAL_GEMMA_EPISODE_NOT_RUN",
   "owner_approved_roadmap": {
     "date": "2026-10-19",
     "sessions": [

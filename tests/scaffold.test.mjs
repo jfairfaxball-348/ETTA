@@ -4,18 +4,18 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 const root = process.cwd(), read = p => readFileSync(join(root, p), 'utf8');
 
-test('S007 approved navigation is recorded and the full S008 prompt is installed for later', () => {
+test('S008 episode handover is recorded and full S009 prompt is installed for later', () => {
   const state = JSON.parse(read('authoritative/STATE.json'));
   const roadmap = read('ROADMAP.md');
   const nextPrompt = read('authoritative/NEXT_SESSION_PROMPT.md');
-  const closeout = read('sessions/S007/CLOSEOUT.md');
+  const closeout = read('sessions/S008/CLOSEOUT.md');
   assert.equal(state.project, 'ETTA');
-  assert.equal(state.last_completed_session, 'S007');
-  assert.equal(state.last_executed_session, 'S007');
-  assert.match(state.last_session_status, /S007|NAVIGATION|PR6/);
-  assert.equal(state.next_session, 'S008');
+  assert.equal(state.last_completed_session, 'S008');
+  assert.equal(state.last_executed_session, 'S008');
+  assert.match(state.last_session_status, /S008/);
+  assert.equal(state.next_session, 'S009');
   assert.equal(state.next_session_status, 'INSTALLED_FUTURE_NOT_EXECUTED');
-  assert.match(nextPrompt, /S008.*FUTURE \/ NOT EXECUTED/);
+  assert.match(nextPrompt, /S009.*FUTURE \/ NOT EXECUTED/);
   assert.ok(closeout.includes(nextPrompt), 'Closeout contains the standalone next prompt verbatim');
   assert.match(roadmap, /Owner-approved direction/);
   for (let s = 7; s <= 14; s++) assert.ok(roadmap.includes('S' + String(s).padStart(3, '0')));
@@ -40,7 +40,10 @@ test('body modules and S002 evidence spine exist', () => {
     'sessions/S006/INPUT.md','sessions/S006/PLAN.md','sessions/S006/VALIDATION.md',
     'sessions/S006/REVIEW.md','sessions/S006/CLOSEOUT.md',
     'sessions/S007/INPUT.md','sessions/S007/PLAN.md','sessions/S007/VALIDATION.md',
-    'sessions/S007/REVIEW.md','sessions/S007/CLOSEOUT.md','src/navigation.ts','tests/navigation.test.mjs',
+    'sessions/S007/REVIEW.md','sessions/S007/CLOSEOUT.md',
+    'sessions/S008/INPUT.md','sessions/S008/PLAN.md','sessions/S008/VALIDATION.md',
+    'sessions/S008/REVIEW.md','sessions/S008/CLOSEOUT.md','src/mind/episode.ts','tests/episode.test.mjs',
+    'src/navigation.ts','tests/navigation.test.mjs',
     'tests/browser-smoke.mjs','docs/ARCHITECTURE.md',
     'docs/DECISIONS.md','docs/PHASE_GATES.md','docs/OPERATIONS.md'
   ]) assert.ok(existsSync(join(root, path)), path);

@@ -11,12 +11,12 @@
 <body>
   <div id="app">
     <main class="shell">
-      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S007 · FIRST CHOSEN WALK</span></header>
+      <header class="brand"><span class="brand-symbol">◈</span><span>ETTA</span><span class="status">S008 · FIRST INDEPENDENT EPISODE</span></header>
       <section class="hero" aria-labelledby="hero-title">
         <div class="copy">
-          <p class="eyebrow">PHASE 04 / FIRST CHOSEN DESTINATIONS</p>
-          <h1 id="hero-title">Her first<br /><em>chosen steps.</em></h1>
-          <p class="intro">A room, a little light, and somewhere to go. Etta can suggest waiting, switching the lamp or walking to the rug or writing table. You approve each action before it happens.</p>
+          <p class="eyebrow">PHASE 04 / BOUNDED INDEPENDENCE</p>
+          <h1 id="hero-title">Her first<br /><em>independent moments.</em></h1>
+          <p class="intro">A room, a little light, and somewhere to go. Etta can suggest waiting, switching the lamp or walking to the rug or writing table. One-off decisions still require approval. You can now opt into one short, observed episode of several actions.</p>
           <p id="mode-status" class="mode" aria-live="polite">MANUAL / DEV · NO AUTONOMY</p>
           <div class="instructions" aria-label="Movement controls">
             <strong>DEV CONTROLS</strong>
@@ -42,16 +42,16 @@
       <section id="mind-panel" class="mind-panel" aria-labelledby="mind-title">
         <div class="mind-heading"><h2 id="mind-title">Ask Etta</h2><span id="mind-status" class="mode" role="status">DISABLED</span></div>
         <p id="mind-message" aria-live="polite">Mind controls become available when the room and connection are ready.</p>
-        <p class="micro">One suggestion at a time: wait, switch the nearby lamp or walk to the rug / writing table. You approve before any movement; Stop, manual controls and reset interrupt safely.</p>
+        <p class="micro">One-off Ask Etta still requires approval. Autonomy ON opts into up to three decisions within 60 seconds, without separate approval per action. Stop, manual controls and reset interrupt safely.</p>
         <div class="mind-access"><label for="mind-access-code">Private access code</label><input id="mind-access-code" type="password" autocomplete="off" spellcheck="false" maxlength="128" placeholder="Access code for this site" /><button id="lock-mind" type="button">Clear code</button></div>
         <small class="micro">Kept only in this tab. This is the site's access code, never your Google API key.</small>
-        <div class="mind-actions"><button id="ask-etta" type="button" disabled>Ask Etta</button><button id="approve-proposal" type="button" disabled>Approve action</button><button id="stop-mind" type="button">Stop / discard</button></div>
-        <p id="mind-proposal" class="mind-proposal" aria-live="polite">No action awaiting approval.</p>
+        <div class="mind-actions"><button id="ask-etta" type="button" disabled>Ask Etta</button><button id="approve-proposal" type="button" disabled>Approve action</button><button id="start-episode" type="button" disabled>Autonomy ON · 3 decisions</button><button id="stop-mind" type="button">Stop / discard</button></div>
+        <p id="episode-observation" class="episode-observation" aria-live="polite">OFF · No episode started.</p><p id="mind-proposal" class="mind-proposal" aria-live="polite">No action awaiting approval.</p>
         <small id="mind-meta"></small>
         <details><summary>Observation &amp; recent activity</summary><pre id="mind-observation">No observation sent.</pre><pre id="mind-history">No decisions yet.</pre></details>
       </section>
       <section class="milestones" aria-label="Project roadmap"><div class="active"><span>01</span> BODY</div><div class="active"><span>02</span> HOME</div><div><span>03</span> MIND</div><div><span>04</span> LIFE</div><div class="unknown"><span>05</span> ?</div></section>
-      <footer><a href="https://github.com/jfairfaxball-348/ETTA" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a><span>Every action needs your approval. A completed walk ends; there is no ongoing autonomy or saved memory.</span></footer>
+      <footer><a href="https://github.com/jfairfaxball-348/ETTA" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a><span>One-off decisions need approval; autonomy is explicitly opt-in, finite and tab-local. No background operation or saved memory.</span></footer>
     </main>
   </div>
   <script type="module" src="/src/main.ts"></script>

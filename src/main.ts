@@ -33,7 +33,7 @@ function manualInteract() {
 interactButton.addEventListener('click',manualInteract);
 const cameraRig = new FollowCamera();
 let visible = true;
-mode.textContent = 'MANUAL / DEV · NO AUTONOMY';
+mode.textContent = 'MANUAL / DEV · NO AUTONOMY (OFF)';
 try {
   const stage = createStage(mount);
   mind = attachMindPanel(body, world);
@@ -48,6 +48,7 @@ try {
     }
   });
   document.getElementById('ask-etta')?.addEventListener('click', () => control.clear());
+  document.getElementById('start-episode')?.addEventListener('click', () => control.clear());
   document.getElementById('stop-mind')?.addEventListener('click', () => control.clear());
   reset.addEventListener('click', () => {
     mind?.cancel('Room reset.'); control.clear(); resetBody(body); resetWorld(world); cameraRig.reset(); mount.focus({ preventScroll: true });
