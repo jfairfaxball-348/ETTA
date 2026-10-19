@@ -64,8 +64,8 @@ try {
     previous = now; elapsed += dt;
     const intent = control.snapshot();
     if (mind?.hasWork && (intent.side || intent.forward)) mind.cancel('Manual movement took over.');
-    stepBody(body, intent, cameraRig.yaw, dt);
-    mind?.tick();
+    if (mind?.view.moving) mind.tick(dt);
+    else { stepBody(body, intent, cameraRig.yaw, dt); mind?.tick(); }
     cameraRig.apply(stage.camera, body);
     stage.update(body, elapsed,world);
     const nearby=nearbyObject(world,body.x,body.z);
