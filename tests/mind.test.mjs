@@ -248,7 +248,11 @@ test('provider timeout and provider connection failure have distinct safe error 
   const slow = mockTransport((_url, options) => new Promise((_, reject) => {
     options.signal.addEventListener('abort', () => reject(new Error('timed out fixture secret')), { once: true });
   }));
-  const timeout = await createDecisionHandler(env, slow.fetcher, 15)(request());
+  // Node's AbortSignal.timeout uses an unref'd timer; hold the fixture event loop open.
+  const keepAlive = setTimeout(() => {}, 150);
+  let timeout;
+  try { timeout = await createDecisionHandler(env, slow.fetcher, 15)(request()); }
+  finally { clearTimeout(keepAlive); }
   assert.equal(timeout.status, 504);
   const timed = await timeout.json();
   assert.equal(timed.code, 'PROVIDER_TIMEOUT');
