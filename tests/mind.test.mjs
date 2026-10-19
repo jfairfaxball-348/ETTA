@@ -35,14 +35,17 @@ function mockTransport(provider = () => providerOutput(), budget = 0) {
 test('observations and proposals follow geometry, with no arbitrary position writes', () => {
   const body = spawnBody(), world = createWorld();
   const observation = observe(snapshot(body, world));
-  assert.deepEqual(observation.validActions, [wait.action, toggle.action]);
+  assert.deepEqual(observation.validActions, [wait.action, toggle.action,
+    {type:'MOVE_TO',targetId:'rug'}, {type:'MOVE_TO',targetId:'table'}]);
   assert.equal(observation.nearby.find(o => o.id === 'lamp').label, 'Standing lamp');
   assert.equal(applyProposal(toggle, body, world), true); assert.equal(world.lampOn, false);
   body.x = 0; body.z = -3;
-  assert.deepEqual(observe(snapshot(body, world)).validActions, [wait.action]);
+  assert.deepEqual(observe(snapshot(body, world)).validActions, [wait.action,
+    {type:'MOVE_TO',targetId:'rug'}, {type:'MOVE_TO',targetId:'table'}]);
   assert.throws(() => applyProposal(toggle, body, world)); assert.equal(world.lampOn, false);
   for (const action of [{ type: 'TELEPORT', x: 100, z: 100 }, { type: 'TOGGLE_LAMP', targetId: 'plant' },
-    { type: 'WAIT', x: 100 }, { type: 'TOGGLE_LAMP', targetId: 'lamp', lampOn: true }]) {
+    { type: 'WAIT', x: 100 }, { type: 'TOGGLE_LAMP', targetId: 'lamp', lampOn: true },
+    { type: 'MOVE_TO', targetId: 'garden' }, { type: 'MOVE_TO', targetId: 'rug', x: 100 }]) {
     assert.throws(() => parseProposal({ action, reason: 'Bad' }, start()));
   }
   assert.throws(() => parseProposal({ ...wait, reason: 'x'.repeat(241) }, start()));
