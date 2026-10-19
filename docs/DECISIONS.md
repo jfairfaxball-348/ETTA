@@ -39,3 +39,7 @@
 | DEC-0031 | S007 | Allow `MOVE_TO` only for immutable-geometry-derived rug/table destinations after explicit approval | The model chooses WHAT, never world coordinates, and shared server/browser permission checks prevent invented targets | Additional rooms/destinations |
 | DEC-0032 | S007 | Bounded 25 cm grid routing with swept-clearance checks and 30 s maximum walk | Real visible body translation/turning without wall clipping or infinite stalls; no model calls per frame | Complex obstacle layouts |
 | DEC-0033 | S007 | Approved navigation is a single action, not an autonomy toggle | Prevent accidental escalation of privileges before S008 cost/consent review | S008 opt-in episode |
+
+| DEC-0034 | S008 | Opt-in, visible, at most three model decisions and 60 seconds, with at least three seconds between decisions; no overlap with active walking | User consent and budget discipline before more complex free choice | Behaviour/usage feedback |
+| DEC-0035 | S008 | Reuse protected one-shot Ask + world approval path internally, retaining strict affordances and provenance | Avoid a second, potentially divergent world executor or server quota bypass | More complex autonomous workflows |
+| DEC-0036 | S008 | Any manual action, tab loss, reset, Stop, failed model, quota or timeout ends episode; zero auto-start after reload | Manual priority and fail-closed bounded runtime | S010 persistence design |
