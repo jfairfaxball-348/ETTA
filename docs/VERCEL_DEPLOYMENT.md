@@ -1,4 +1,4 @@
-# Deploy ETTA on Vercel — S005
+# Deploy ETTA on Vercel — live P3 update, 2026-10-19
 
 Use **jfairfaxball-348/ETTA**, production branch `main`, root directory `./`, Vite preset, Node 22.x, install `npm ci --no-audit --no-fund`, build `npm run build`, output `dist`. `vercel.json` also configures the Node `/api/decision` function with a 20-second maximum duration. The existing owner-reported site is https://etta-virid.vercel.app/ . Do not import from the former GitHub account.
 
@@ -35,7 +35,7 @@ Requests use one candidate, at most 256 output tokens, a 2 KiB client body, a 16
 4. Ask again, then Stop or move/reset. Approval must disable; a late response must not run. Check manual E/button interaction still works. Do not intentionally exhaust an expensive provider quota to test this: deterministic CI covers limits/failures.
 5. Record date, commit, real model ID, latency, action, approval result and source/model provenance without recording tokens or raw credentials. Check Google usage for the deliberate request.
 
-**Live Google, live Upstash and this Vercel function deployment remain unverified until that walkthrough.** The owner separately reported S004 room/movement/lamp/proximity working. Physical-phone performance remains unmeasured.
+**2026-10-19 status update:** After PR #3 and PR #4 fixes, the owner reported production READY, real Gemma WAIT, real Gemma TOGGLE_LAMP, and the lamp switching after approval. These are OWNER_REPORTED live observations, not provider-log capture; production Stop/focus-loss demonstration and physical-phone performance remain unverified.
 
 ## Local development and troubleshooting
 
@@ -54,3 +54,7 @@ Copy `.env.example` to ignored `.env.local`, configure it and run `npm run dev`.
 - [Google: active project rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
 - [Vercel: Node Web Standard functions](https://vercel.com/docs/functions/runtimes/node-js).
 - [Upstash: Redis REST API](https://upstash.com/docs/redis/features/restapi).
+
+
+## Rate-limit ownership
+The **4/minute and 40/UTC-day limits are enforced by ETTA's own shared Redis Lua script** in `server/budget.ts`. They are **not** Google's Gemma limits; Google model/project quotas are independent. Current values protect the prototype during manual decisions. Do not remove or increase them for S007 without explicit owner approval. A request-count cap does not guarantee zero cloud costs.

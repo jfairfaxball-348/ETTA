@@ -1,15 +1,15 @@
 {
   "project": "ETTA",
-  "as_of": "2026-10-18",
+  "as_of": "2026-10-19",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
-  "last_completed_session": "S004",
-  "next_session": "S006",
+  "last_completed_session": "S006",
+  "next_session": "S007",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P3",
+  "current_phase": "P4_PLANNING_S007_BRIDGE",
   "phases": {
     "P0": {
       "title": "Foundation",
-      "status": "CI_AND_BROWSER_PASS_VERCEL_UNVERIFIED"
+      "status": "CI_PASS_VERCEL_DEPLOYMENT_OWNER_REPORTED_READY"
     },
     "P1": {
       "title": "Give Etta a body",
@@ -21,11 +21,11 @@
     },
     "P3": {
       "title": "Put her mind in her body",
-      "status": "IMPLEMENTED_FIXTURE_TESTED_LIVE_GATE_OPEN"
+      "status": "CORE_LIVE_GATE_MET_OWNER_REPORTED_WAIT_AND_APPROVED_TOGGLE"
     },
     "P4": {
       "title": "Let her decide how she lives",
-      "status": "NOT_STARTED"
+      "status": "NOT_STARTED_S007_APPROVED_NAVIGATION_NEXT"
     },
     "P5": {
       "title": "Who knows after that",
@@ -41,19 +41,21 @@
     "Ask Etta: one model proposal, manual approval, WAIT or nearby lamp toggle",
     "Server-only Google adapter with access token, shared Redis request budget and bounded requests",
     "Strict observation/proposal validation, cancellation, stale-response protection and visible errors",
-    "Deterministic provider fixtures distinctly labelled TEST_FIXTURE; live provider unverified",
-    "CI_PASS: 23 Node tests, 17 room Chromium checks, 10 fixture mind Chromium checks and actual Redis budget integration"
+    "CI_PASS: 23 Node tests, 17 room Chromium checks, 10 fixture mind Chromium checks and actual Redis budget integration",
+    "Owner-reported genuine Gemma WAIT and approved lamp-toggle executed on production 2026-10-19"
   ],
   "not_yet_capabilities": [
-    "Verified S005 Vercel function and live Gemma/Upstash connection",
-    "Physical phone performance measurement",
-    "Autonomy or persisted memory"
+    "Self-directed named-destination navigation (S007, FUTURE)",
+    "Opt-in bounded multi-decision autonomy (S008, FUTURE)",
+    "Persistent memory, motivations, routines, conversation and away-time operation",
+    "Independent production Stop/cancel/focus-loss log verification",
+    "Physical-device performance measurement"
   ],
   "deployment": {
     "target": "Vercel",
-    "status": "OWNER_REPORTS_S004_ROOM_WORKING; S005_FUNCTION_UNVERIFIED",
+    "status": "DEPLOYED_READY_OWNER_REPORTED_LIVE_MIND_SUCCESS",
     "url": "https://etta-virid.vercel.app/",
-    "backend": "VERCEL_NODE_API_IMPLEMENTED_DISABLED_UNTIL_CONFIGURED"
+    "backend": "VERCEL_NODE_API_LIVE_GEMMA_PRIVATE_AUTH_SHARED_REDIS_BUDGET"
   },
   "source_reference": {
     "legacy": "jball348-svg/aStar",
@@ -115,12 +117,23 @@
       "checks": 17,
       "failed": 0,
       "artifact_id": 12131721675
+    },
+    "s006": {
+      "packaging_pr": "https://github.com/jfairfaxball-348/ETTA/pull/3",
+      "packaging_merge": "a810044486de8425b0731d341fca47839f6054d2",
+      "provider_format_fix_pr": "https://github.com/jfairfaxball-348/ETTA/pull/4",
+      "provider_fix_merge": "e3fe97ebf226baaecd98ab3e325a6f47d077398f",
+      "ci": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39226168465",
+      "ci_status": "CI_PASS_FIXTURE_BROWSER_AND_REDIS",
+      "owner_live_observation": "OWNER_REPORTED: 2026-10-19 READY; Gemma WAIT and TOGGLE_LAMP, approval changed lamp",
+      "independent_live_provider_log": "NOT_RUN_VERCEL_LOG_SCOPE_403",
+      "live_stop": "NOT_RUN_OWNER_NOT_REPORTED"
     }
   },
   "known_blockers": [
-    "S005 live-model gate requires owner configuration and deliberate real provider test",
-    "Hosted shared Redis budget not provisioned or tested",
-    "Physical mobile performance not measured"
+    "ChatGPT Vercel API cannot access runtime logs under the older jball348 scope (403); live results are owner-reported",
+    "Production Stop/focus-loss manual verification not separately reported",
+    "Shared ETTA request budget intentionally capped at 4/minute and 40/UTC day; Google quota applies separately"
   ],
   "migration": {
     "date": "2026-10-18",
@@ -130,6 +143,33 @@
     "method": "source-file-snapshot",
     "historical_ci": "Old repository only"
   },
-  "last_executed_session": "S005",
-  "last_session_status": "IMPLEMENTED_LIVE_MODEL_GATE_OPEN"
+  "last_executed_session": "S006",
+  "last_session_status": "CLOSED_OWNER_REPORTED_LIVE_P3_CORE_GATE_MET",
+  "owner_approved_roadmap": {
+    "date": "2026-10-19",
+    "sessions": [
+      "S007_APPROVED_NAVIGATION",
+      "S008_BOUNDED_AUTONOMY",
+      "S009_INTERACTIONS",
+      "S010_MEMORY",
+      "S011_DRIVES",
+      "S012_ROUTINES",
+      "S013_TEXT_CONVERSATION",
+      "S014_AWAY_TIME_FEASIBILITY"
+    ],
+    "stages": [
+      "room_of_her_own",
+      "home_and_personality",
+      "world_beyond_home",
+      "open_ended"
+    ],
+    "basis": "owner explicitly agreed roadmap in conversation; later sessions are plans, not executed"
+  },
+  "rate_limits": {
+    "enforced_by": "ETTA_UPSTASH_REDIS_LUA",
+    "per_minute": 4,
+    "per_utc_day": 40,
+    "provider_quota": "separate Google project/model limits",
+    "change_policy": "owner approval required"
+  }
 }

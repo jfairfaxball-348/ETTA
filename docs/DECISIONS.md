@@ -29,3 +29,9 @@
 | DEC-0023 | S005 | Strict canonical observations/proposals; no retries or synthetic fallback | Failures must not masquerade as model choices | More actions/models |
 | DEC-0024 | S005 | Cancel stale proposals and late responses; consume approval once | Prevent accidental or repeated world changes | Longer tasks/navigation |
 | DEC-0025 | S005 | Owner will configure credentials; keep live model gate open | Prior owner instruction explicitly requested scaffolding and manual Vercel env setup | S006 live acceptance |
+
+| DEC-0026 | S006 closeout | Accept core live P3 gate on owner-reported WAIT and approved lamp toggle, with live Stop still unverified | Distinguish real end-to-end manual observation from fixture CI and missing logs | S007 regression |
+| DEC-0027 | Owner roadmap approval 2026-10-19 | Adopt explicit S007–S014 capability progression; keep session ceremony lightweight | Owner agrees walking → bounded episodes → interactions → memory → motivations → routines → chat → away-time review | Owner reprioritisation |
+| DEC-0028 | S007 plan | Named-destination, owner-approved navigation only; deterministic physics/path routing and manual override | Grow what model may choose without granting raw positional commands or P4 autonomy early | S007 implementation |
+| DEC-0029 | Budget clarification | ETTA enforces 4/minute and 40/UTC day using Upstash, independent of Google's project/model quotas | Shared operational safeguards, not Gemma pricing/rate-limit claims | S008 autonomy/cost review |
+| DEC-0030 | Future infrastructure | No 24/7 world or recurring cloud requests before a separate hosting, security and spend decision | Prevent assumptions about Vercel free-tier persistence/compute | S014 feasibility |
