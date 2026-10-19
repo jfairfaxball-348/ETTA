@@ -179,3 +179,45 @@ test('client rejects invalid proposals and displays API failure without action',
     assert.equal(controller.view.status, 'ERROR'); assert.equal(controller.view.decision, null); assert.equal(world.lampOn, true);
   }
 });
+
+
+test('Gemma thought parts, split text and code-fenced JSON normalize without loosening action checks', async () => {
+  const json = JSON.stringify(toggle);
+  const fence = String.fromCharCode(96).repeat(3);
+  const legalReplies = [
+    { candidates: [{ finishReason: 'STOP', content: { parts: [
+      { text: '', thought: true }, { text: fence + 'json\n' + json + '\n' + fence }
+    ] } }] },
+    { candidates: [{ finishReason: 'STOP', content: { parts: [
+      { text: json.slice(0, 20) }, { text: json.slice(20) }
+    ] } }] }
+  ];
+  for (const reply of legalReplies) {
+    const { fetcher, calls } = mockTransport(() => Response.json(reply));
+    const response = await createDecisionHandler(env, fetcher)(request());
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json()).proposal, toggle);
+    assert.equal(calls.length, 2);
+  }
+  const illegalReplies = [
+    ['MODEL_ACTION', { candidates: [{ finishReason: 'STOP', content: { parts: [
+      { text: fence + 'json\n' + JSON.stringify({ action: { type: 'TELEPORT', x: 99 }, reason: 'Bad' }) + '\n' + fence }
+    ] } }] }],
+    ['MODEL_FORMAT', { candidates: [{ finishReason: 'STOP', content: { parts: [
+      { text: 'Here is my suggestion: ' + json }
+    ] } }] }],
+    ['MODEL_TRUNCATED', { candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [
+      { text: json }
+    ] } }] }]
+  ];
+  for (const [expectedCode, reply] of illegalReplies) {
+    const { fetcher, calls } = mockTransport(() => Response.json(reply));
+    const response = await createDecisionHandler(env, fetcher)(request());
+    assert.equal(response.status, 502);
+    const body = await response.json();
+    assert.equal(body.code, expectedCode);
+    assert.equal(body.provenance, 'ERROR');
+    assert.equal(calls.length, 2);
+    assert.doesNotMatch(JSON.stringify(body), /TELEPORT|Here is my suggestion/);
+  }
+});
