@@ -96,12 +96,13 @@ try {
     await sleep(800);assert.ok(distance(await state(),settled)<0.05,'Movement stuck after key release');
   });
   await attempt('F1 and on-screen control toggle the diagnostic HUD',async()=>{
+    assert.equal(await page.locator('#debug-hud').evaluate(el=>el.hidden),true, 'HUD hidden by default');
     await stage.focus();await page.keyboard.press('F1');
-    assert.equal(await page.locator('#debug-hud').evaluate(el=>el.hidden),true);
-    await page.keyboard.press('F1');
     assert.equal(await page.locator('#debug-hud').evaluate(el=>el.hidden),false);
-    await page.locator('#hud-toggle').click();
+    await page.keyboard.press('F1');
     assert.equal(await page.locator('#debug-hud').evaluate(el=>el.hidden),true);
+    await page.locator('#hud-toggle').click();
+    assert.equal(await page.locator('#debug-hud').evaluate(el=>el.hidden),false);
     await page.locator('#hud-toggle').click();
     await reset();
   });

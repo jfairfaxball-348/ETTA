@@ -53,7 +53,7 @@ export class EpisodeMindController extends MindController {
   }
   startEpisode(code: string): boolean {
     if (!this.enabled || this.hasWork) return false;
-    if (!/^[A-Za-z0-9_-]{32,128}$/.test(code)) {
+    if (!(/^[A-Za-z0-9_-]{32,128}$/.test(code) || /^\d{4}$/.test(code))) {
       this.view.status = 'ERROR';
       this.publish('Enter the private access code before enabling autonomy.');
       return false;

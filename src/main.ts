@@ -32,11 +32,13 @@ function manualInteract() {
 }
 interactButton.addEventListener('click',manualInteract);
 const cameraRig = new FollowCamera();
-let visible = true;
+let visible = false;
+hud.hidden = true;
+toggle.setAttribute('aria-pressed', 'false');
 mode.textContent = 'MANUAL / DEV · NO AUTONOMY (OFF)';
 try {
   const stage = createStage(mount);
-  mind = attachMindPanel(body, world);
+  mind = attachMindPanel(body, world, () => stage.captureEye(body));
   const control = new ManualControls(mount, {
     orbit: (dx, dy) => cameraRig.orbit(dx, dy),
     zoom: delta => cameraRig.zoom(delta),
@@ -80,7 +82,7 @@ try {
       fps = frames * 1000 / (now - lastFpsAt);
       frames = 0; lastFpsAt = now;
     }
-    if (visible) {
+    {
       telemetry.textContent =
         'POSITION X ' + body.x.toFixed(2) + ' · Z ' + body.z.toFixed(2) +
         '\nFACING ' + (body.yaw * 180 / Math.PI).toFixed(0) + '° · ' + body.action +

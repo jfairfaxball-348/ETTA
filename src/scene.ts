@@ -130,6 +130,40 @@ export function createStage(mount: HTMLElement) {
   addBox(0.07,1.02,0.12,0xf2dfbd,-0.55,1.88,-4.53);
   addBox(1.88,0.06,0.12,0xf2dfbd,-0.55,1.88,-4.52);
   const etta=buildEtta();scene.add(etta.root);
+  // Separate optical viewpoint: fixed eye height and heading, never spectator orbit.
+  // Render to an offscreen target only after an explicit Ask/episode decision.
+  const eyeCamera = new THREE.PerspectiveCamera(66, 384 / 216, 0.07, 30);
+  const eyeTarget = new THREE.WebGLRenderTarget(384, 216, { depthBuffer: true });
+  function captureEye(body: BodyState) {
+    eyeCamera.position.set(body.x, 1.98, body.z);
+    eyeCamera.lookAt(body.x - Math.sin(body.yaw) * 3, 1.87, body.z - Math.cos(body.yaw) * 3);
+    eyeCamera.updateMatrixWorld();
+    const previous = renderer.getRenderTarget();
+    const priorVisibility = etta.root.visible;
+    const bytes = new Uint8Array(384 * 216 * 4);
+    try {
+      etta.root.visible = false; // Etta's own head must not occlude her view.
+      renderer.setRenderTarget(eyeTarget);
+      renderer.render(scene, eyeCamera);
+      renderer.readRenderTargetPixels(eyeTarget, 0, 0, 384, 216, bytes);
+    } finally {
+      renderer.setRenderTarget(previous);
+      etta.root.visible = priorVisibility;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = 384; canvas.height = 216;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Eye image conversion unavailable.');
+    const image = context.createImageData(384, 216);
+    for (let y = 0; y < 216; y++)
+      image.data.set(bytes.subarray((215-y)*384*4, (216-y)*384*4), y*384*4);
+    context.putImageData(image, 0, 0);
+    const uri = canvas.toDataURL('image/jpeg', 0.67);
+    if (!uri.startsWith('data:image/jpeg;base64,')) throw new Error('JPEG capture unavailable.');
+    const data = uri.slice('data:image/jpeg;base64,'.length);
+    if (data.length > 175_000) throw new Error('Eye image exceeded the safe request limit.');
+    return { mimeType: 'image/jpeg' as const, data, width: 384, height: 216 };
+  }
   let lastWidth=0,lastHeight=0;
   function resize(){
     const w=Math.max(1,mount.clientWidth),h=Math.max(1,mount.clientHeight);
@@ -152,7 +186,7 @@ export function createStage(mount: HTMLElement) {
         materials.forEach(m=>m.dispose());
       }
     });
-    renderer.dispose();renderer.domElement.remove();
+    eyeTarget.dispose();renderer.dispose();renderer.domElement.remove();
   }
-  return {camera,update,dispose};
+  return {camera,update,captureEye,dispose};
 }
