@@ -22,7 +22,7 @@ export class MindController {
   constructor(hooks: Hooks, fetcher = fetch, clock = () => performance.now()) {
     this.hooks = hooks; this.fetcher = fetcher.bind(globalThis); this.clock = clock;
   }
-  private publish(message?: string) {
+  protected publish(message?: string) {
     if (message) {
       this.view.message = message;
       this.view.history = [`${this.view.status} · ${message}`, ...this.view.history].slice(0, 6);
