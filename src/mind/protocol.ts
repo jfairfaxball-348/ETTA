@@ -1,8 +1,9 @@
 /** Shared, renderer-free contract. The server derives affordances from canonical geometry. */
 import { isPositionLegal, type BodyState } from '../simulation.ts';
 import { createWorld, distanceToObject, interact, INTERACTION_RANGE, type WorldState } from '../world.ts';
+import { reachableDestinations, type DestinationId } from '../navigation.ts';
 
-export type Action = { type: 'WAIT' } | { type: 'TOGGLE_LAMP'; targetId: 'lamp' };
+export type Action = { type: 'WAIT' } | { type: 'TOGGLE_LAMP'; targetId: 'lamp' } | { type: 'MOVE_TO'; targetId: DestinationId };
 export interface Proposal { action: Action; reason: string }
 export interface Snapshot { version: 1; body: { x: number; z: number; yaw: number }; lampOn: boolean }
 export type Provenance = 'MODEL_DECISION' | 'TEST_FIXTURE';
@@ -39,7 +40,8 @@ export function observe(state: Snapshot) {
   if (nearby.some(o => o.id === 'lamp' && o.distance <= INTERACTION_RANGE)) {
     validActions.push({ type: 'TOGGLE_LAMP', targetId: 'lamp' });
   }
-  return { body: state.body, nearby, lampOn: state.lampOn, validActions };
+  for (const place of reachableDestinations(state.body)) validActions.push({ type: 'MOVE_TO', targetId: place.id });
+  return { body: state.body, nearby, lampOn: state.lampOn, destinations: reachableDestinations(state.body).map(d=>({id:d.id,label:d.label})), validActions };
 }
 export function parseProposal(value: unknown, state: Snapshot): Proposal {
   if (!record(value) || !keys(value, ['action', 'reason']) || !record(value.action) ||
@@ -51,8 +53,11 @@ export function parseProposal(value: unknown, state: Snapshot): Proposal {
   if (action.type === 'WAIT' && keys(action, ['type'])) parsed = { type: 'WAIT' };
   else if (action.type === 'TOGGLE_LAMP' && action.targetId === 'lamp' && keys(action, ['type', 'targetId'])) {
     parsed = { type: 'TOGGLE_LAMP', targetId: 'lamp' };
+  } else if (action.type === 'MOVE_TO' && (action.targetId === 'rug' || action.targetId === 'table') && keys(action, ['type','targetId'])) {
+    parsed = {type:'MOVE_TO', targetId:action.targetId};
   } else throw new Error('Unknown action or target.');
-  if (!observe(state).validActions.some(a => a.type === parsed.type)) throw new Error('Action is not currently permitted.');
+  if (!observe(state).validActions.some(a => a.type === parsed.type &&
+    (a.type === 'WAIT' || ('targetId' in parsed && a.targetId === parsed.targetId)))) throw new Error('Action is not currently permitted.');
   return { action: parsed, reason: value.reason.trim() };
 }
 export function sameSnapshot(a: Snapshot, b: Snapshot): boolean {
@@ -61,5 +66,7 @@ export function sameSnapshot(a: Snapshot, b: Snapshot): boolean {
 /** Called only after manual approval; still rechecks live world permissions. */
 export function applyProposal(value: Proposal, body: BodyState, world: WorldState): boolean {
   const { action } = parseProposal(value, snapshot(body, world));
-  return action.type === 'WAIT' || interact(world, body.x, body.z, action.targetId);
+  if (action.type === 'WAIT') return true;
+  if (action.type === 'TOGGLE_LAMP') return interact(world, body.x, body.z, action.targetId);
+  return false; // MOVE_TO is handled only by the deterministic NavigationRunner.
 }
