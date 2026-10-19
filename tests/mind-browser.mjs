@@ -226,6 +226,57 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.deepEqual(errors, []);
   });
+  await attempt('PIN-mode Chromium: AI starts OFF, unlock, eye-image fixture decision, OFF clears PIN', async () => {
+    // Network fixture for UI flow; real PIN enforcement is checked by PIN/Redis integration tests.
+    const tab = await browser.newPage({ viewport: { width: 900, height: 760 } });
+    let unlocks = 0, decisions = 0, imageSent = false;
+    tab.on('pageerror', e => errors.push('pin fixture: ' + e.message));
+    await tab.route('**/api/decision', route => {
+      const req = route.request();
+      if (req.method() === 'GET') return route.fulfill({json:{status:'READY',accessMode:'PIN',message:'Fixture PIN mode enabled.'}});
+      const payload = req.postDataJSON();
+      if (payload.kind === 'unlock') {
+        unlocks++;
+        const correct = req.headers().authorization === 'Bearer 4827';
+        return route.fulfill({status:correct?200:401,json:correct?{status:'UNLOCKED'}:{code:'ACCESS_DENIED',message:'The private PIN was not accepted.'}});
+      }
+      decisions++;
+      imageSent = payload.vision?.mimeType === 'image/jpeg' && payload.vision.width === 384 &&
+        payload.vision.height === 216 && payload.vision.data.length > 100;
+      return route.fulfill({json:responseFixture(toggle)});
+    });
+    try {
+      await tab.goto(base, {waitUntil:'domcontentloaded'});
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='AI OFF',{timeout:30000});
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      assert.equal(decisions,0);
+      await tab.locator('#ai-switch').click();
+      await tab.locator('#mind-access-code').fill('0000');
+      await tab.locator('#pin-unlock').click();
+      await tab.waitForFunction(()=>document.querySelector('#mind-message')?.textContent?.includes('not accepted'));
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      await tab.locator('#mind-access-code').fill('4827');
+      await tab.locator('#pin-unlock').click();
+      await tab.waitForFunction(()=>document.querySelector('#ai-switch')?.textContent==='AI ON');
+      assert.equal(await tab.locator('#ask-etta').isEnabled(),true);
+      assert.equal(await tab.locator('#mind-access-area').isHidden(),true);
+      await tab.locator('#ask-etta').click();
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='TEST_FIXTURE');
+      assert.equal(imageSent,true,'One on-demand eye JPEG must accompany proposal');
+      assert.equal(decisions,1);
+      await tab.locator('#approve-proposal').click();
+      await tab.waitForFunction(()=>document.querySelector('#interact-button')?.textContent?.includes('Turn light on'));
+      await tab.screenshot({path:'test-results/etta-pin-fixture.png'});
+      await tab.locator('#ai-switch').click();
+      assert.equal(await tab.locator('#ask-etta').isDisabled(),true);
+      assert.equal(await tab.locator('#mind-access-code').inputValue(),'');
+      assert.equal(await tab.locator('#ai-switch').getAttribute('aria-pressed'),'false');
+      await tab.reload({waitUntil:'domcontentloaded'});
+      await tab.waitForFunction(()=>document.querySelector('#mind-status')?.textContent==='AI OFF');
+      assert.equal(decisions,1,'Reload must never auto-start AI');
+      assert.equal(unlocks,2);
+    } finally {await tab.close();}
+  });
 } finally {
   mkdirSync('test-results', { recursive: true });
   writeFileSync('test-results/mind-browser-results.json', JSON.stringify({ evidence: 'CHROMIUM_WITH_EXPLICIT_PROVIDER_FIXTURES', results, errors }, null, 2));
