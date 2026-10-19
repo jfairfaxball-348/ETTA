@@ -6,7 +6,7 @@
 
 **Review:** S007 adds exactly one approved walking action, *not* S008 multi-decision autonomy. WAIT/lamp and 4/minute, 40/UTC-day global ETTA-owned budget remain. No new credentials or billing. Mark a live Gemma navigation test NOT_RUN until the owner independently tries it on production.
 
-**PR:** [#6](https://github.com/jfairfaxball-348/ETTA/pull/6). Exact final CI pass / merge is established by hosted checks and GitHub metadata, never by this pre-merge text alone.
+**PR:** [#6](https://github.com/jfairfaxball-348/ETTA/pull/6). **CI_PASS:** [GitHub Actions 39237279038](https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038) (31/31 Node, Redis, packaged API, room and mind fixture Chromium; screenshots [artifact 12179209095](https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038/artifacts/12179209095)). This is application/test evidence only, not real Gemma navigation. PR merge/main verification must be checked separately; this closeout text does not predict their results.
 
 **Next:** S008 is installed as a complete standalone **FUTURE / NOT EXECUTED** prompt below. Do NOT carry out S008 in this invocation.
 
