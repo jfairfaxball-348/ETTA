@@ -53,7 +53,7 @@ try {
     assert.ok(bytes.length > 2000 && bytes.length <= 131072, 'Bounded nonempty captured JPEG');
     assert.equal(bytes[0], 0xff); assert.equal(bytes[1], 0xd8);
     writeFileSync('test-results/etta-avatar-eye.jpg', bytes);
-    assert.match(await page.locator('#mind-meta').innerText(), /TEST_FIXTURE.*fixture-only/);
+    assert.match(await page.locator('#mind-meta').textContent(), /TEST_FIXTURE.*fixture-only/);
     await page.locator('#mind-panel details summary').click();
     assert.match(await page.locator('#mind-observation').innerText(), /Standing lamp/);
     assert.match(await page.locator('#interact-button').innerText(), /Turn light off/);
