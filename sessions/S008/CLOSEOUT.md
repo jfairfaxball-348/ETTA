@@ -1,10 +1,10 @@
-# S008 closeout — provisional pending hosted CI
+# S008 closeout — CI_PASS, pending PR merge/live owner walkthrough
 
-Session scope: first explicitly opted-in, supervised, finite independent episode. Branch: session/S008-bounded-autonomy; [PR #7](https://github.com/jfairfaxball-348/ETTA/pull/7). Implementation and tests committed. Hosted validation/merge and independent production owner walkthrough are not yet confirmed. The owner separately observed real Gemma navigate to the rug in S007.
+Session scope: first explicitly opted-in, supervised, finite independent episode. Branch: session/S008-bounded-autonomy; [PR #7](https://github.com/jfairfaxball-348/ETTA/pull/7). Implementation and tests committed. **CI_PASS:** [run 39241206176](https://github.com/jfairfaxball-348/ETTA/actions/runs/39241206176), 37/37 Node tests, Redis, packaged Vercel API, room and mind fixture Chromium. Merge and independent production owner walkthrough are not yet confirmed. The owner separately observed real Gemma navigate to the rug in S007.
 
 Acceptance: 3 requests maximum, 60-second deadline, 3-second decision spacing, single active decision or walk, strict world permission checks, Stop/manual/reset/tab loss and stale response cancellation. Shared Upstash budget unchanged.
 
-Next S009 is installed as FUTURE / NOT EXECUTED in authoritative/NEXT_SESSION_PROMPT.md. Do not execute S009 in this S008 invocation. Closeout status to be amended after CI and merge checks.
+Next S009 is installed as FUTURE / NOT EXECUTED in authoritative/NEXT_SESSION_PROMPT.md. Do not execute S009 in this S008 invocation. CI source SHA 0f131b3; merge verification to be added once complete.
 
 ---
 

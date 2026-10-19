@@ -10,7 +10,7 @@
 | P1 BODY | Visual body, manual controls, camera, collisions | COMPLETED (CI/browser and owner use) |
 | P2 HOME | Furnished studio, doorway/porch, nearby objects, lamp | COMPLETED (CI/browser and owner use) |
 | P3 MIND | Protected live Gemma decision → legal world action with approval | **CORE LIVE GATE MET (OWNER_REPORTED, 2026-10-19)**: real WAIT and lamp toggle; production Stop exercise not separately recorded |
-| P4 LIFE | Self-directed movement, bounded autonomy, more interactions, memory/drives/routines | **S008 IMPLEMENTED ON SESSION BRANCH, HOSTED ACCEPTANCE UNDER REVIEW**: explicitly opt-in finite episodes; production live autonomy not yet owner-tested |
+| P4 LIFE | Self-directed movement, bounded autonomy, more interactions, memory/drives/routines | **S008 IMPLEMENTED AND CI_PASS**: explicitly opt-in finite episodes; production live autonomy not yet owner-tested |
 | P5 OPEN | Further world, relationships, new goals | Exploratory, not scheduled |
 
 ## Agreed session sequence
@@ -18,7 +18,7 @@
 | Session | Name | Outcome/acceptance |
 |---|---|---|
 | **S007** | Etta chooses where to walk | Gemma proposes a **named reachable location**; approval starts a finite world-engine-controlled walk, correctly avoiding obstacles; manual override/Stop always wins |
-| **S008 (CURRENT)** | First independent episode | Opt-in Autonomy ON/OFF; several bounded decisions/actions without per-action approval during a short observed episode, with strict request/time limits and immediate Stop |
+| **S008 (COMPLETE)** | First independent episode | Opt-in Autonomy ON/OFF; several bounded decisions/actions without per-action approval during a short observed episode, with strict request/time limits and immediate Stop |
 | **S009 (NEXT)** | More things to do | At least two meaningful, visible, permitted home activities (e.g., sit at chair, interact with desk/bed); world validates proximity/state |
 | S010 | Memory | Transparent, bounded, resettable persistence for actions/interactions across page reloads; no secret leakage |
 | S011 | Preferences, curiosity, motivations | Clearly **simulated** drives affect choices; controlled tests distinguish decisions in differing state |
