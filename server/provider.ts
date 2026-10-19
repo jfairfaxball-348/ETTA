@@ -1,24 +1,27 @@
-import { observe, parseProposal, record, type Snapshot, type Proposal } from '../src/mind/protocol.ts';
+import { observe, record, type Snapshot } from '../src/mind/protocol.ts';
+import { parseCognitiveChoice } from '../src/mind/cognition.ts';
+import type { Vision } from './vision.ts';
 import { HttpError, readLimited } from './http.ts';
 
 export async function requestProposal(state: Snapshot, apiKey: string, model: string, signal: AbortSignal,
-  fetcher = fetch): Promise<Proposal> {
-  const instructions = 'You are Etta, a virtual character in a small room. Choose exactly one action from validActions. ' +
-    'Reply ONLY with a JSON object having exactly action and reason, without prose or markdown. ' +
-    'For WAIT, respond as {"action":{"type":"WAIT"},"reason":"I will wait here."}. ' +
-    'For TOGGLE_LAMP, respond as {"action":{"type":"TOGGLE_LAMP","targetId":"lamp"},"reason":"I want to change the lamp."}, ' +
-    'but only when TOGGLE_LAMP is present in validActions. ' +
-    'For MOVE_TO, respond as {"action":{"type":"MOVE_TO","targetId":"rug"},"reason":"I want to walk to the rug."}, ' +
-    'but choose targetId ONLY from MOVE_TO actions explicitly present in validActions; use their named destinations, never coordinates. ' +
-    'Give a short reason (at most 240 characters); invent no actions or extra keys. ' +
-    'The user must approve the suggestion before it happens. Do not claim it already happened.';
+  fetcher = fetch, vision?: Vision) {
+  const instructions = 'You are Etta, a virtual character in a small room. The image is what your eyes can see, ' +
+    'while the following canonical geometric observation is the ONLY authority for valid actions. ' +
+    'Briefly report what is visible (perception), state one simple intention (intent), and choose exactly one action ' +
+    'listed in validActions. Reply ONLY in JSON with exactly perception, intent, action, reason. ' +
+    'Each summary must be short and public-facing, not internal private reasoning. ' +
+    'For WAIT use action {"type":"WAIT"}; for TOGGLE_LAMP use {"type":"TOGGLE_LAMP","targetId":"lamp"} ' +
+    'only when allowed; for MOVE_TO choose only a targetId explicitly offered in validActions. ' +
+    'Never invent coordinates, commands, interactions or extra keys. Reason must be at most 240 characters. ' +
+    'In manual mode the user must approve before anything happens; do not claim the action already occurred.';
   let response: Response;
   try {
     response = await fetcher(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST', redirect: 'error', signal,
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: instructions + '\nObservation:\n' + JSON.stringify(observe(state)) }] }],
+        contents: [{ role: 'user', parts: [{ text: instructions + '\nCanonical observation:\n' + JSON.stringify(observe(state)) },
+          ...(vision ? [{ inlineData: { mimeType: vision.mimeType, data: vision.data } }] : [])] }],
         generationConfig: { candidateCount: 1, maxOutputTokens: 256, temperature: 0.4,
           thinkingConfig: { thinkingLevel: 'minimal' } }
       })
@@ -71,7 +74,7 @@ export async function requestProposal(state: Snapshot, apiKey: string, model: st
     throw new HttpError(502, 'MODEL_FORMAT', 'The model response was not valid JSON. Nothing was executed.');
   }
   try {
-    return parseProposal(result, state);
+    return parseCognitiveChoice(result, state);
   } catch {
     throw new HttpError(502, 'MODEL_ACTION', 'The model proposed an action outside the allowed format or permissions. Nothing was executed.');
   }
