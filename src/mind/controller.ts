@@ -1,14 +1,16 @@
 import { observe, parseProposal, record, sameSnapshot, PROPOSAL_TTL_MS, type Snapshot, type Proposal, type Decision } from './protocol.ts';
+import { destination, type WalkResult } from '../navigation.ts';
 
 export interface MindView {
   status: 'DISABLED' | 'MANUAL' | 'REQUESTING' | 'ERROR' | 'MODEL_DECISION' | 'TEST_FIXTURE';
   message: string; decision: Decision | null; observation: ReturnType<typeof observe> | null;
-  pending: boolean; history: string[];
+  pending: boolean; moving: boolean; destination: string | null; history: string[];
 }
-interface Hooks { snapshot: () => Snapshot; stop: () => void; apply: (proposal: Proposal) => boolean; changed: (view: MindView) => void }
+interface Hooks { snapshot: () => Snapshot; stop: () => void; apply: (proposal: Proposal) => boolean; changed: (view: MindView) => void;
+  navigation?: { start: (targetId: string) => boolean; step: (dt: number) => WalkResult; cancel: () => void } }
 
 export class MindController {
-  readonly view: MindView = { status: 'DISABLED', message: 'Checking mind connection…', decision: null, observation: null, pending: false, history: [] };
+  readonly view: MindView = { status: 'DISABLED', message: 'Checking mind connection…', decision: null, observation: null, pending: false, moving: false, destination: null, history: [] };
   enabled = false;
   private generation = 0;
   private request: AbortController | null = null;
@@ -28,6 +30,7 @@ export class MindController {
     this.hooks.changed(this.view);
   }
   configure(enabled: boolean, message: string) {
+    if (!enabled && this.hasWork) this.cancel('Mind permission was removed.');
     this.enabled = enabled;
     this.view.status = enabled ? 'MANUAL' : 'DISABLED';
     this.publish(message);
@@ -35,14 +38,15 @@ export class MindController {
   cancel(message = 'Stopped. Manual controls are yours.') {
     this.generation++;
     this.request?.abort(); this.request = null; this.captured = null;
-    this.view.pending = false; this.view.decision = null;
+    this.hooks.navigation?.cancel();
+    this.view.pending = false; this.view.decision = null; this.view.moving = false; this.view.destination = null;
     this.hooks.stop();
     this.view.status = this.enabled ? 'MANUAL' : 'DISABLED';
     this.publish(message);
   }
-  get hasWork(): boolean { return this.view.pending || this.view.decision !== null; }
+  get hasWork(): boolean { return this.view.pending || this.view.decision !== null || this.view.moving; }
   async ask(accessCode: string): Promise<void> {
-    if (!this.enabled || this.view.pending) return;
+    if (!this.enabled || this.hasWork) return;
     this.cancel('Preparing one proposal.');
     if (!/^[A-Za-z0-9_-]{32,128}$/.test(accessCode)) {
       this.view.status = 'ERROR'; this.publish('Enter the private access code configured for this site.'); return;
@@ -83,7 +87,16 @@ export class MindController {
       if (id === this.generation) { this.view.pending = false; this.request = null; this.publish(); }
     }
   }
-  tick() {
+  tick(dt = 0) {
+    if (this.view.moving) {
+      const result = this.hooks.navigation?.step(dt) ?? 'BLOCKED';
+      if (result === 'MOVING') return;
+      const place = this.view.destination;
+      this.view.moving = false; this.view.destination = null;
+      if (result === 'ARRIVED') this.publish('Arrived at ' + place + '. Ask Etta again whenever you like.');
+      else { this.view.status = 'ERROR'; this.hooks.navigation?.cancel(); this.publish('The route was blocked or timed out. Movement stopped safely.'); }
+      return;
+    }
     if (!this.hasWork || !this.captured) return;
     if (!sameSnapshot(this.captured, this.hooks.snapshot())) this.cancel('The room changed; the proposal was discarded.');
     else if (this.view.decision && this.clock() >= this.expires) this.cancel('The proposal expired. Ask Etta again.');
@@ -96,9 +109,18 @@ export class MindController {
     this.view.decision = null; this.captured = null;
     try {
       this.hooks.stop();
-      if (!this.hooks.apply(decision.proposal)) throw new Error('Action is no longer permitted.');
-      this.view.status = decision.provenance;
-      this.publish(`${decision.proposal.action.type} completed after manual approval.`);
+      const action = decision.proposal.action;
+      if (action.type === 'MOVE_TO') {
+        if (!this.hooks.navigation?.start(action.targetId)) throw new Error('Route is no longer permitted.');
+        this.view.moving = true;
+        this.view.destination = destination(action.targetId)?.label ?? action.targetId;
+        this.view.status = decision.provenance;
+        this.publish('Walking to ' + this.view.destination + ' after manual approval. Stop or move to interrupt.');
+      } else {
+        if (!this.hooks.apply(decision.proposal)) throw new Error('Action is no longer permitted.');
+        this.view.status = decision.provenance;
+        this.publish(action.type + ' completed after manual approval.');
+      }
     } catch {
       this.view.status = 'ERROR'; this.publish('The world rejected that action. Ask Etta again.');
     }
