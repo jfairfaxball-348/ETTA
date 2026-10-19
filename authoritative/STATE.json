@@ -173,7 +173,9 @@
       "owner_production_pin_setup": "NOT_RUN",
       "provider_budget_change": "NONE",
       "test_provenance": "TEST_FIXTURE_NOT_LIVE_GEMMA",
-      "doc_only_closeout_final_commit": "PENDING_HOSTED_VERIFY"
+      "doc_only_closeout_final_commit": "PENDING_HOSTED_VERIFY",
+      "live_multimodal_owner_report": "2026-10-19: first episode stopped at 12 seconds, 0 decisions, provider timed out or connection failed; MODEL_ORIGIN_IMAGE_NOT_VERIFIED",
+      "timeout_hotfix": "IMPLEMENTATION_PENDING_CI_NO_LIVE_PROOF"
     }
   },
   "known_blockers": [
@@ -181,7 +183,8 @@
     "Production Stop/focus-loss manual verification not separately reported",
     "Shared ETTA request budget intentionally capped at 4/minute and 40/UTC day; Google quota applies separately",
     "S008.5 owner must configure private ETTA_ACCESS_PIN in Vercel, redeploy and confirm PIN mode before removing legacy ETTA_ACCESS_TOKEN",
-    "S008.5 real Gemma multimodal trial awaits owner; fixture browser and upstream-call shape are not proof of live image comprehension"
+    "S008.5 real Gemma multimodal trial awaits owner; fixture browser and upstream-call shape are not proof of live image comprehension",
+    "S008.5 owner reported 12-second visual-model request failure; a hotfix aligns server/browser/function timeouts at 40/45/50 seconds; real Google recheck pending"
   ],
   "migration": {
     "date": "2026-10-18",

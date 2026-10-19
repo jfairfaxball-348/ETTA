@@ -27,7 +27,9 @@ function json(data: unknown, status = 200): Response {
     ...(status === 405 ? { Allow: 'GET, POST' } : {}) } });
 }
 /** Injection is test-only code wiring; production has no fixture env switch or fallback. */
-export function createDecisionHandler(env: Environment, fetcher = fetch, timeoutMs = 12_000) {
+// Visual Gemma calls need more than the former 12s text-only window; keep within Vercel and foreground episode caps.
+export const SERVER_DECISION_TIMEOUT_MS = 40_000;
+export function createDecisionHandler(env: Environment, fetcher = fetch, timeoutMs = SERVER_DECISION_TIMEOUT_MS) {
   return async (request: Request): Promise<Response> => {
     const active = configured(env);
     if (request.method === 'GET') return json({ status: active ? 'READY' : 'DISABLED',

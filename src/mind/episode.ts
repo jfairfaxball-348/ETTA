@@ -92,7 +92,7 @@ export class EpisodeMindController extends MindController {
       }
       const decision = this.view.decision;
       if (!decision) {
-        this.cancel('Decision failed or budget was exhausted: ' + this.view.message);
+        this.cancel('Episode stopped because its decision failed: ' + this.view.message);
         return;
       }
       this.episodeInfo.decisions++;

@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { spawnBody } from '../src/simulation.ts';
 import { createWorld } from '../src/world.ts';
 import { snapshot, observe, parseSnapshot, parseProposal, applyProposal } from '../src/mind/protocol.ts';
-import { MindController } from '../src/mind/controller.ts';
-import { createDecisionHandler } from '../server/decision.ts';
+import { MindController, CLIENT_DECISION_TIMEOUT_MS } from '../src/mind/controller.ts';
+import { createDecisionHandler, SERVER_DECISION_TIMEOUT_MS } from '../server/decision.ts';
 import { BUDGET_SCRIPT } from '../server/budget.ts';
 import { readLimited } from '../server/http.ts';
 
@@ -223,4 +224,45 @@ test('Gemma thought parts, split text and code-fenced JSON normalize without loo
     assert.equal(calls.length, 2);
     assert.doesNotMatch(JSON.stringify(body), /TELEPORT|Here is my suggestion/);
   }
+});
+
+test('visual-inference server, browser and Vercel time limits are aligned, preserving the finite episode', () => {
+  const config = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8'));
+  const functionMs = config.functions['api/decision.ts'].maxDuration * 1000;
+  assert.equal(SERVER_DECISION_TIMEOUT_MS, 40_000);
+  assert.equal(CLIENT_DECISION_TIMEOUT_MS, 45_000);
+  assert.ok(SERVER_DECISION_TIMEOUT_MS + 3_000 < CLIENT_DECISION_TIMEOUT_MS);
+  assert.ok(CLIENT_DECISION_TIMEOUT_MS < functionMs);
+  assert.equal(functionMs, 50_000);
+});
+
+test('slow but valid provider fixture succeeds past a simulated shorter deadline without retries', async () => {
+  const transport = mockTransport(() => new Promise(resolve => setTimeout(() => resolve(providerOutput(wait)), 65)));
+  const response = await createDecisionHandler(env, transport.fetcher, 180)(request());
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).proposal, wait);
+  assert.equal(transport.calls.length, 2, 'one budget reservation and one provider request');
+});
+
+test('provider timeout and provider connection failure have distinct safe error codes and no fallback', async () => {
+  const slow = mockTransport((_url, options) => new Promise((_, reject) => {
+    options.signal.addEventListener('abort', () => reject(new Error('timed out fixture secret')), { once: true });
+  }));
+  // Node's AbortSignal.timeout uses an unref'd timer; hold the fixture event loop open.
+  const keepAlive = setTimeout(() => {}, 150);
+  let timeout;
+  try { timeout = await createDecisionHandler(env, slow.fetcher, 15)(request()); }
+  finally { clearTimeout(keepAlive); }
+  assert.equal(timeout.status, 504);
+  const timed = await timeout.json();
+  assert.equal(timed.code, 'PROVIDER_TIMEOUT');
+  assert.doesNotMatch(JSON.stringify(timed), /fixture secret/);
+  assert.equal(slow.calls.length, 2);
+  const offline = mockTransport(() => { throw new Error('network fixture secret'); });
+  const unavailable = await createDecisionHandler(env, offline.fetcher)(request());
+  assert.equal(unavailable.status, 502);
+  const data = await unavailable.json();
+  assert.equal(data.code, 'PROVIDER_UNAVAILABLE');
+  assert.doesNotMatch(JSON.stringify(data), /fixture secret/);
+  assert.equal(offline.calls.length, 2);
 });

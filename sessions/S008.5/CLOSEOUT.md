@@ -11,3 +11,6 @@ Status: **IMPLEMENTED, HOSTED CI_PASS** on [run 39254894541](https://github.com/
 
 ## Handover
 Follow [four-digit PIN deployment/migration](../../docs/VERCEL_DEPLOYMENT.md): owner adds secret `ETTA_ACCESS_PIN` privately in Vercel, redeploys, verifies READY/PIN; only then removes old legacy token. No credentials are committed. Real Gemma image observation and resulting permitted action must be marked NOT_RUN until owner performs a genuine production trial. Fully standalone **S009 FUTURE / NOT EXECUTED** prompt installed at `authoritative/NEXT_SESSION_PROMPT.md`; original unmodified archived at `authoritative/DEFERRED_S009_PROMPT.md`. S009's goal is two real visible home activities, preferred sitting at chair and examining writing table.
+
+### Post-closeout S008.5 latency hotfix
+After first owner-reported live multimodal episode failed at 12 seconds (0/3 decisions), a separate S008.5 maintenance branch raises the timeout ladder to 40s server/45s browser/50s Vercel and splits upstream timeout from connection error. It intentionally leaves S009 untouched. See `sessions/S008.5/HOTFIX_TIMEOUT.md` for evidence and provenance; this is not a new capability milestone.
