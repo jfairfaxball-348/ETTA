@@ -1,36 +1,32 @@
 # ETTA
 
-**An embodied-agent experiment.** Give Etta a body → a home → a mind → let her decide how she lives.
+**An embodied-character experiment:** give Etta a body → a home → a mind → let her decide how she lives.
 
-## S005 — the first mind bridge is scaffolded
+**Current milestone (19 Oct 2026):** Etta runs as a Vite/Three.js web app at https://etta-virid.vercel.app/. Her studio, walking controls, collisions, nearby-object inspector and manual lamp work. A server-side Gemma 4 adapter can propose **WAIT** or **TOGGLE_LAMP**, and the owner manually approves or discards the proposal. The owner **reported live success for both actions**, including a lamp state change after approval on 19 Oct. This is not a self-running agent; there is no persistent memory, self-navigation, conversation, voice or background autonomy.
 
-Etta has a furnished studio, manual movement, collisions and a switchable lamp. **Ask Etta** can now request one server-side Gemma proposal: **WAIT** or **TOGGLE_LAMP** when it is within reach. The proposal is displayed, checked again against the live room and executed only after **Approve action**. Movement, reset, manual interaction, Stop, loss of focus and a 60-second expiry discard pending work. There is no autonomous loop, saved memory or voice.
-
-**Live-model acceptance remains open.** The adapter and browser flow are tested using explicitly labelled fixtures; no real Google request is claimed. The room works with inference disabled. Owner reported the S004 deployed room, movement, proximity and lamp working on 18 October 2026.
+Latest source includes [S006 Vercel function packaging repair](https://github.com/jfairfaxball-348/ETTA/pull/3) and [Gemma response parser repair](https://github.com/jfairfaxball-348/ETTA/pull/4). The latter passed [hosted CI including real Chromium fixture browser tests](https://github.com/jfairfaxball-348/ETTA/actions/runs/39226168465); the Vercel deployment status succeeded. Owner-reported production use is recorded separately from CI.
 
 ## Controls
-- Click the scene; **WASD/arrows** move, **Shift** runs, **drag** orbits, **wheel** zooms.
-- **E** toggles the nearby lamp. **R** resets body, camera and lamp. **F1** toggles telemetry.
-- On touchscreens use the directional pad.
-- With the server configured, enter the site's private access code in **Ask Etta**, request a proposal and approve or discard it. Never enter the Google API key in the page.
+- Focus scene: **WASD/arrows** walk, **Shift** run, **drag** orbit, **wheel** zoom.
+- **E** near lamp toggles it. **R** resets. **F1** toggles HUD. Touch D-pad is provided.
+- **Ask Etta**: enter the *site private access code*, not Google's API key. One deliberate request yields one proposal; **Approve action** is required to execute. **Stop** cancels, as do movement, reset, state change, focus loss or expiry. Current successful live WAIT and lamp change were owner-observed; a separate production Stop walkthrough remains unrecorded.
 
-## Run and deploy
+## Local development / deployment
 Node 22.12+:
 
-```sh
+~~~sh
 npm ci
 npm run check
 npm run dev
-```
+~~~
 
-Development serves the API with server-only `.env.local` settings. A static `npm run preview` exposes a disabled API status. Vercel deploys the Vite client and `/api/decision` Node function from the repository root.
+Production uses the repository root, Vite build, Vercel `/api/decision` Node function, server-only `GEMINI_API_KEY`, `ETTA_ACCESS_TOKEN`, `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, and `ETTA_MIND_ENABLED=true`. Keep secrets out of source and browsers. The manual room works even when inference is disabled. See [Vercel deployment instructions](docs/VERCEL_DEPLOYMENT.md).
 
-**Manual room:** no variables required. **Live mind:** server-only Google key, private access token, explicit enable switch and Upstash Redis REST credentials for the global budget. No service or billing was created by this session. [Exact Vercel setup and activation walkthrough](docs/VERCEL_DEPLOYMENT.md).
+ETTA's own Redis shared budget is **4 attempts/minute and 40 attempts/UTC day** across instances. These are *our guardrails*, not Google's Gemma quotas (which apply separately). No unsupervised calls or 24/7 worker exists.
 
-## Evidence and next step
+## What's next?
+The owner approved the [practical roadmap through S014](ROADMAP.md). **S007 — First Self-Directed Movement** is [installed for the next invocation](authoritative/NEXT_SESSION_PROMPT.md), not yet executed: Gemma chooses a named legal destination, owner approves, and Etta physically walks via collision-safe world navigation. S008 is the planned first bounded opt-in autonomous episode.
 
-[S005 hosted checks](https://github.com/jfairfaxball-348/ETTA/actions/runs/39139974285) passed: **23 Node tests, 27 actual Chromium checks and the real Redis budget script**. Provider responses in browser tests are fixtures, not live Google. [Session validation](sessions/S005/VALIDATION.md) distinguishes local tests, hosted CI, browser fixtures and unverified live services. [S006](authoritative/NEXT_SESSION_PROMPT.md) is future/not executed: finish the configured Vercel and live-model acceptance gate before extending capabilities.
+[Project charter](PROJECT_CHARTER.md) · [Phase evidence](docs/PHASE_GATES.md) · [S006 live closeout](sessions/S006/CLOSEOUT.md) · [S007 prompt](authoritative/NEXT_SESSION_PROMPT.md).
 
-[Roadmap](ROADMAP.md) · [Architecture](docs/ARCHITECTURE.md) · [Phase gates](docs/PHASE_GATES.md) · [S005 closeout](sessions/S005/CLOSEOUT.md)
-
-Active repository: `jfairfaxball-348/ETTA`. Earlier CI in `jball348-svg/ETTA` is historical evidence only.
+Active GitHub repository: `jfairfaxball-348/ETTA`. Old `jball348-svg/ETTA` evidence is historical only.

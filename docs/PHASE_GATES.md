@@ -1,14 +1,18 @@
-# ETTA phase gate ledger — S005
+# ETTA phase gate ledger — updated 2026-10-19
 
-| Phase | Status | Evidence / remaining gate |
+| Phase | Current evidence/status | Remaining limitation |
 |---|---|---|
-| P0 FOUNDATION | EXISTING_BROWSER_PASS; NEW_DEPLOYMENT_UNVERIFIED | Build/CI evidence in S005 validation; Vercel function still needs live check |
-| P1 BODY | PASS_CHROMIUM_AUTOMATED | S003/S004 checks retained; no physical-phone benchmark |
-| P2 HOME | PASS_CHROMIUM_AND_OWNER_REPORTED | S004 17/17 Chromium; owner reports walking, proximity and lamp working |
-| P3 MIND | IMPLEMENTED_LIVE_GATE_OPEN | [S005 CI](https://github.com/jfairfaxball-348/ETTA/actions/runs/39139974285): 23 Node, 27 Chromium and actual Redis script PASS; live Google/hosted Upstash remain unverified |
-| P4 LIFE | NOT_STARTED | No autonomy or memory in S005 |
-| P5 OPEN | UNDEFINED | Owner-directed |
+| P0 FOUNDATION | Vite/Three.js checks and Vercel deployment passed. Owner accessed production `/api/decision` and saw READY | Hosting/runtime logs not accessible through ChatGPT's connected Vercel scope |
+| P1 BODY | CI_PASS S003/S004 actual Chromium and owner-used manual movement | No physical-device performance benchmark |
+| P2 HOME | CI_PASS S004 real Chromium; owner manually used room, proximity and lamp | Other furnishings are currently noninteractive |
+| **P3 MIND** | **CORE LIVE ACCEPTANCE MET — OWNER_REPORTED**: on 2026-10-19, real Gemma WAIT and TOGGLE_LAMP decisions were shown and lamp action executed after owner approval. POST request reached actual backend; Google and Redis checks were exercised by successful action. `GET /api/decision` returned READY. S006 packaging and #4 output-parser hotfix merged, tests passed | Actual raw provider output, Google usage dashboard and live Stop/blur/manual override were not independently recorded. CI validates these failure/override paths with fixtures; do not label production Stop as tested |
+| P4 LIFE | NOT STARTED | No self-navigation, multi-decision autonomy, memory, simulated drives, routines, conversation or background service |
+| P5 OPEN | EXPLORATORY | Requires later owner direction |
 
-The live P3 gate requires a deliberate browser request through the deployed protected adapter, an actual model proposal, approval of a legal world-changing action, visible cancellation/error paths and configuration evidence for the budget. No Google/Redis credentials are present. **S005 does not claim full P3 acceptance.** S006 is installed to finish that gate.
+### Verification references
+- S005 original deterministic/Chromium/Redis: [CI run 39139974285](https://github.com/jfairfaxball-348/ETTA/actions/runs/39139974285), [PR #2](https://github.com/jfairfaxball-348/ETTA/pull/2).
+- S006 Vercel function packaging fix: [PR #3](https://github.com/jfairfaxball-348/ETTA/pull/3), merged commit `a810044`.
+- Output-parser regression and fixture browser checks: [CI run 39226168465](https://github.com/jfairfaxball-348/ETTA/actions/runs/39226168465), [PR #4](https://github.com/jfairfaxball-348/ETTA/pull/4), merged commit `e3fe97e`. Vercel GitHub status reported successful deployment for this commit.
+- **Live model action acceptance is owner-reported**, not CI; confirmed in conversation on 19 October 2026 after #4 deploy. No key, bearer token, Redis token, usage or private provider response has been placed in repo.
 
-Historical S004 browser evidence: [Actions 39114318840](https://github.com/jfairfaxball-348/ETTA/actions/runs/39114318840), 10 deterministic/17 browser checks. S005 evidence is recorded separately in `sessions/S005/VALIDATION.md`.
+The next session S007 is **installed, not executed**: named destinations and a single approved movement. S008 will be the first opt-in autonomy episode; do not conflate S007 manual approval with autonomous life.
