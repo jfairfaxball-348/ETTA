@@ -4,5 +4,9 @@
   "installCommand": "npm ci --no-audit --no-fund",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "functions": { "api/decision.ts": { "maxDuration": 20 } }
+  "functions": {
+    "api/decision.ts": {
+      "maxDuration": 50
+    }
+  }
 }

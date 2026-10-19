@@ -1,6 +1,7 @@
 import { observe, parseProposal, record, sameSnapshot, PROPOSAL_TTL_MS, type Snapshot, type Proposal, type Decision } from './protocol.ts';
 import { destination, type WalkResult } from '../navigation.ts';
 
+export const CLIENT_DECISION_TIMEOUT_MS = 45_000;
 export interface MindView {
   status: 'DISABLED' | 'MANUAL' | 'REQUESTING' | 'ERROR' | 'MODEL_DECISION' | 'TEST_FIXTURE';
   message: string; decision: Decision | null; observation: ReturnType<typeof observe> | null;
@@ -62,7 +63,7 @@ export class MindController {
       return;
     }
     const abort = new AbortController(); this.request = abort;
-    const timer = setTimeout(() => abort.abort(), 16_000);
+    const timer = setTimeout(() => abort.abort(), CLIENT_DECISION_TIMEOUT_MS);
     this.view.pending = true; this.view.status = 'REQUESTING';
     this.publish('Asking Etta once. No action will run without your approval.');
     try {
@@ -90,7 +91,7 @@ export class MindController {
     } catch (error) {
       if (id !== this.generation) return;
       this.view.status = this.enabled ? 'ERROR' : 'DISABLED'; this.view.decision = null; this.captured = null;
-      this.publish(abort.signal.aborted ? 'Request stopped or timed out. Nothing was executed.' :
+      this.publish(abort.signal.aborted ? 'The request was stopped or reached the browser time limit. Nothing was executed.' :
         error instanceof Error ? error.message : 'Mind connection failed. Nothing was executed.');
     } finally {
       clearTimeout(timer);

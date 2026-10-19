@@ -26,7 +26,12 @@ export async function requestProposal(state: Snapshot, apiKey: string, model: st
           thinkingConfig: { thinkingLevel: 'minimal' } }
       })
     });
-  } catch { throw new HttpError(signal.aborted ? 504 : 502, 'PROVIDER_UNAVAILABLE', 'Model request timed out or could not connect.'); }
+  } catch {
+    if (signal.aborted) throw new HttpError(504, 'PROVIDER_TIMEOUT',
+      'Gemma did not respond within the request time limit. Nothing was executed.');
+    throw new HttpError(502, 'PROVIDER_UNAVAILABLE',
+      'The connection to Google failed. Nothing was executed.');
+  }
   if (!response.ok) {
     void response.body?.cancel();
     throw new HttpError(response.status === 429 ? 429 : 502, 'PROVIDER_ERROR',
