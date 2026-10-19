@@ -1,0 +1,4 @@
+# S008.5 review — current pre-merge status
+Safety boundaries preserved: no hardcoded access PIN, no Google key in bundle, no unchecked model action, no model budget lifted, no scheduled/continuous calls. Server-specific PIN admission is atomic at Redis with client/global rejection counters before any provider budget; wrong PIN and Redis outage fail closed. Vercel's forwarding header trusted only in Vercel context, generic arbitrary X-Forwarded-For ignored.
+
+Risk: four decimal digits yield only 10,000 possibilities; even with lockouts this is a convenience gate, not hardened multi-user identity. Aggregate abuse can deny legitimate users temporarily. Owner explicitly accepts limited risk on a nonbilling-connected free-tier prototype. Legacy-token route must be removed after confirmed migration. Rendered eye pixels are client-submitted context, but geometry/action truth remains server-derived and rechecked in world. Real image understanding awaits owner live trial.
