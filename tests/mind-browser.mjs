@@ -166,7 +166,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('Decisions 2/3'), {timeout:12000});
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('STOPPED'), {timeout:12000});
     assert.equal(decisions, 3);
-    assert.match(await page.locator('#episode-observation').innerText(), /TEST_FIXTURE|Three decisions completed/);
+    assert.match(await page.locator('#episode-observation').textContent(), /TEST_FIXTURE|Three decisions completed/);
     assert.equal(await page.locator('#ask-etta').isEnabled(), true);
     await page.screenshot({path:'test-results/etta-s008-finished-fixture.png'});
     await page.unroute('**/api/decision');
@@ -185,7 +185,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('ACTIVE'));
     await page.locator('#stop-mind').click();
     await pause(950);
-    assert.match(await page.locator('#episode-observation').innerText(), /STOPPED/);
+    assert.match(await page.locator('#episode-observation').textContent(), /STOPPED/);
     assert.equal(await page.locator('#approve-proposal').isDisabled(),true);
     const beforeReload = posts;
     await page.reload({waitUntil:'domcontentloaded'});
@@ -193,7 +193,7 @@ try {
     await pause(200);
     assert.equal(posts, beforeReload);
     assert.equal(await page.locator('#start-episode').isEnabled(),true);
-    assert.match(await page.locator('#episode-observation').innerText(), /^OFF/);
+    assert.match(await page.locator('#episode-observation').textContent(), /^OFF/);
     assert.equal(requests, 1);
     await page.unroute('**/api/decision');
     await page.locator('#mind-access-code').fill(code);

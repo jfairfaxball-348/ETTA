@@ -20,7 +20,7 @@ export async function requestProposal(state: Snapshot, apiKey: string, model: st
       method: 'POST', redirect: 'error', signal,
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: instructions + '\nCanonical observation:\n' + JSON.stringify(observe(state)) },
+        contents: [{ role: 'user', parts: [{ text: instructions + '\nObservation:\n' + JSON.stringify(observe(state)) },
           ...(vision ? [{ inlineData: { mimeType: vision.mimeType, data: vision.data } }] : [])] }],
         generationConfig: { candidateCount: 1, maxOutputTokens: 256, temperature: 0.4,
           thinkingConfig: { thinkingLevel: 'minimal' } }

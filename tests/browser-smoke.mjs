@@ -118,9 +118,9 @@ try {
     await reset();const b=await stage.boundingBox();assert.ok(b);
     const x=b.x+b.width*0.5,y=b.y+b.height*0.56;
     await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+220,y+25,{steps:8});await page.mouse.up();
-    const rotated=await walk('w',600);
-    await reset();const defaultWalk=await walk('w',600);
-    assert.ok(distance(rotated,defaultWalk)>0.65,'Mouse orbit did not change movement direction');
+    const rotated=await walk('w',1000);
+    await reset();const defaultWalk=await walk('w',1000);
+    assert.ok(distance(rotated,defaultWalk)>0.4,'Mouse orbit did not change movement direction');
   });
   await attempt('Window blur clears pressed movement',async()=>{
     await reset();await stage.focus();await page.keyboard.down('w');

@@ -30,7 +30,7 @@ export function attachMindPanel(body: BodyState, world: WorldState,
     apply: proposal => applyProposal(proposal, body, world),
     changed: view => {
       const available = ready && (accessMode === 'LEGACY' || aiOn);
-      el('mind-status').textContent = !available && accessMode === 'PIN' ? 'AI OFF' :
+      el('mind-status').textContent = !ready ? 'DISABLED' : !available && accessMode === 'PIN' ? 'AI OFF' :
         controller.episodeInfo.state === 'ACTIVE' ? 'AUTONOMY ACTIVE' : view.status;
       el('mind-message').textContent = view.message;
       el('mind-panel').setAttribute('aria-busy', String(view.pending));
@@ -66,7 +66,7 @@ export function attachMindPanel(body: BodyState, world: WorldState,
     const enabled = ready && (accessMode === 'LEGACY' || aiOn) && controller.enabled;
     ask.disabled = !enabled || controller.hasWork;
     autonomy.disabled = !enabled || controller.hasWork;
-    el('mind-status').textContent = accessMode === 'PIN' && !aiOn ? 'AI OFF' : controller.view.status;
+    el('mind-status').textContent = !ready ? 'DISABLED' : accessMode === 'PIN' && !aiOn ? 'AI OFF' : controller.view.status;
   }
   async function unlock() {
     if (!ready) return;
