@@ -129,6 +129,61 @@ try {
     assert.equal(await page.locator('#ask-etta').isEnabled(),true);
     await page.unroute('**/api/decision');
   });
+  await attempt('S008 opt-in: fixture makes three serial choices with observed walk and natural finish', async () => {
+    await page.goto(base, { waitUntil: 'domcontentloaded' });
+    await expectStatus('MANUAL');
+    await reset();
+    await page.locator('#mind-access-code').fill(code);
+    let decisions = 0;
+    const move = { action: { type: 'MOVE_TO', targetId: 'rug' }, reason: 'S008 fixture walk.' };
+    const waiting = { action: { type: 'WAIT' }, reason: 'S008 fixture wait.' };
+    await page.route('**/api/decision', route => {
+      if (route.request().method() !== 'POST') return route.continue();
+      decisions++;
+      return route.fulfill({ json: responseFixture(decisions === 1 ? move : waiting) });
+    });
+    await page.locator('#start-episode').click();
+    await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('Decisions 1/3'));
+    assert.equal(await page.locator('#ask-etta').isDisabled(), true);
+    assert.equal(await page.locator('#start-episode').isDisabled(), true);
+    assert.equal(await page.locator('#approve-proposal').isDisabled(), true);
+    assert.match(await page.locator('#mind-status').innerText(), /AUTONOMY ACTIVE/);
+    mkdirSync('test-results', {recursive:true});
+    await page.screenshot({path:'test-results/etta-s008-active-fixture.png'});
+    await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('Decisions 2/3'), {timeout:12000});
+    await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('STOPPED'), {timeout:12000});
+    assert.equal(decisions, 3);
+    assert.match(await page.locator('#episode-observation').innerText(), /TEST_FIXTURE|Three decisions completed/);
+    assert.equal(await page.locator('#ask-etta').isEnabled(), true);
+    await page.screenshot({path:'test-results/etta-s008-finished-fixture.png'});
+    await page.unroute('**/api/decision');
+  });
+  await attempt('S008 Stop aborts delayed decision; reload never auto-starts', async () => {
+    await reset();
+    await page.locator('#mind-access-code').fill(code);
+    let requests=0;
+    await page.route('**/api/decision', async route => {
+      if (route.request().method() !== 'POST') return route.continue();
+      requests++;
+      await pause(800);
+      return route.fulfill({json:responseFixture(toggle)}).catch(() => {});
+    });
+    await page.locator('#start-episode').click();
+    await page.waitForFunction(() => document.querySelector('#episode-observation')?.textContent?.includes('ACTIVE'));
+    await page.locator('#stop-mind').click();
+    await pause(950);
+    assert.match(await page.locator('#episode-observation').innerText(), /STOPPED/);
+    assert.equal(await page.locator('#approve-proposal').isDisabled(),true);
+    const beforeReload = posts;
+    await page.reload({waitUntil:'domcontentloaded'});
+    await expectStatus('MANUAL');
+    await pause(200);
+    assert.equal(posts, beforeReload);
+    assert.equal(await page.locator('#start-episode').isEnabled(),true);
+    assert.match(await page.locator('#episode-observation').innerText(), /^OFF/);
+    assert.equal(requests, 1);
+    await page.unroute('**/api/decision');
+  });
   await attempt('Model text renders as text; access code is not persisted', async () => {
     await page.route('**/api/decision', route => route.fulfill({ json: responseFixture({ ...toggle, reason: '<img src=x onerror=alert(1)>' }) }));
     await ask(); assert.equal(await page.locator('#mind-proposal img').count(), 0);
