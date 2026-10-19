@@ -4,19 +4,24 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 const root = process.cwd(), read = p => readFileSync(join(root, p), 'utf8');
 
-test('S008 episode handover is recorded and full S009 prompt is installed for later', () => {
+test('S008 completed; owner inserted S008.5 and preserved full deferred S009 prompt', () => {
   const state = JSON.parse(read('authoritative/STATE.json'));
   const roadmap = read('ROADMAP.md');
   const nextPrompt = read('authoritative/NEXT_SESSION_PROMPT.md');
   const closeout = read('sessions/S008/CLOSEOUT.md');
+  const deferred = read('authoritative/DEFERRED_S009_PROMPT.md');
   assert.equal(state.project, 'ETTA');
   assert.equal(state.last_completed_session, 'S008');
   assert.equal(state.last_executed_session, 'S008');
   assert.match(state.last_session_status, /S008/);
-  assert.equal(state.next_session, 'S009');
+  assert.equal(state.next_session, 'S008.5');
   assert.equal(state.next_session_status, 'INSTALLED_FUTURE_NOT_EXECUTED');
-  assert.match(nextPrompt, /S009.*FUTURE \/ NOT EXECUTED/);
-  assert.ok(closeout.includes(nextPrompt), 'Closeout contains the standalone next prompt verbatim');
+  assert.match(nextPrompt, /S008\.5.*FUTURE \/ NOT EXECUTED/);
+  assert.match(deferred, /S009.*FUTURE \/ NOT EXECUTED/);
+  assert.ok(closeout.includes(deferred), 'Historical S008 closeout retains full original S009 prompt');
+  assert.ok(read('sessions/S008.5/BRIEF.md').includes('NOT EXECUTED'));
+  assert.match(nextPrompt, /four-digit/i);
+  assert.match(nextPrompt, /avatar-eye/i);
   assert.match(roadmap, /Owner-approved direction/);
   for (let s = 7; s <= 14; s++) assert.ok(roadmap.includes('S' + String(s).padStart(3, '0')));
   for (const phase of ['P0','P1','P2','P3','P4','P5']) {

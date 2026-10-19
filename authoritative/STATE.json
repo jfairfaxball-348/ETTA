@@ -3,9 +3,9 @@
   "as_of": "2026-10-19",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
   "last_completed_session": "S008",
-  "next_session": "S009",
+  "next_session": "S008.5",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P4_S008_BOUNDED_AUTONOMY_COMPLETE_S009_MEANINGFUL_INTERACTIONS_NEXT",
+  "current_phase": "P4_S008_COMPLETE_S008_5_UI_MULTIMODAL_REFACTOR_NEXT_S009_DEFERRED",
   "phases": {
     "P0": {
       "title": "Foundation",
@@ -51,7 +51,8 @@
     "Persistent memory, motivations, routines, conversation and away-time operation",
     "Independent production Stop/cancel/focus-loss log verification",
     "Physical-device performance measurement",
-    "S008 production real Gemma multi-decision episode: NOT_RUN until owner verifies"
+    "S008 production real Gemma multi-decision episode: NOT_RUN until owner verifies",
+    "S008.5 four-digit PIN / decluttered immersive viewport / real Gemma avatar-eye multimodal perception: PLANNED_NOT_EXECUTED"
   ],
   "deployment": {
     "target": "Vercel",
@@ -173,6 +174,7 @@
     "sessions": [
       "S007_APPROVED_NAVIGATION",
       "S008_BOUNDED_AUTONOMY",
+      "S008.5_UI_PIN_MULTIMODAL_REFACTOR",
       "S009_INTERACTIONS",
       "S010_MEMORY",
       "S011_DRIVES",
@@ -186,7 +188,7 @@
       "world_beyond_home",
       "open_ended"
     ],
-    "basis": "owner explicitly agreed roadmap in conversation; later sessions are plans, not executed"
+    "basis": "owner explicitly agreed roadmap in conversation; later sessions are plans, not executed; owner inserted S008.5 before S009 for four-digit PIN, scene-first UI, avatar-eye multimodal Gemma and expandable cognition on 2026-10-19"
   },
   "rate_limits": {
     "enforced_by": "ETTA_UPSTASH_REDIS_LUA",
@@ -194,5 +196,20 @@
     "per_utc_day": 40,
     "provider_quota": "separate Google project/model limits",
     "change_policy": "owner approval required"
+  },
+  "next_session_owner_scope": {
+    "id": "S008.5",
+    "status": "PLAN_INSTALLED_NOT_IMPLEMENTED",
+    "approved": "2026-10-19",
+    "pillars": [
+      "Four-digit PIN + Redis fail-closed auth attempt throttling, key stays server-side",
+      "Scene-first immersive UI without hero/session/debug clutter",
+      "Avatar-eye image and text in one Gemma call; perception/intent/action modules with optional extra calls"
+    ],
+    "budget_change": "NONE",
+    "predecessor": "S008",
+    "deferred_successor": "S009",
+    "deferred_prompt_path": "authoritative/DEFERRED_S009_PROMPT.md",
+    "note": "Owner accepts 4-digit PIN limitations for nonbilling free-tier access; robust abuse limits remain required. Preserve working Vercel mind during env migration."
   }
 }

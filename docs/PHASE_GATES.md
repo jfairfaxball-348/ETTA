@@ -19,3 +19,7 @@
 
 
 **S008 CI_PASS:** [PR #7](https://github.com/jfairfaxball-348/ETTA/pull/7). Bounded opt-in client orchestration retains the original strict protected API, 4/min and 40/day admission and world-validated actions. Browser tests are explicit TEST_FIXTURE, not live Gemma. No production real autonomous episode has yet been observed (NOT_RUN). [Hosted run 39241206176](https://github.com/jfairfaxball-348/ETTA/actions/runs/39241206176) PASS: 37 Node tests, Redis, Vercel packaging, 17 room and 14 mind Chromium fixture checks. Merge and live owner trial must be verified separately.
+
+
+### Owner-directed next session inserted (planning only, 2026-10-19)
+**S008.5 FUTURE / NOT EXECUTED:** remove public-facing project/dashboard noise, emphasise large 3D scene, four-digit PIN with shared failed-auth lockouts and safe Vercel migration, avatar-eye bounded image + text passed in one Gemma request, modular perception/interpretation/validated actions with optional extra calls under the existing shared budget. This is an owner-approved plan, **not** CI, browser, deployed or live-provider evidence. The original S009 furniture activities prompt is preserved at `authoritative/DEFERRED_S009_PROMPT.md`.
