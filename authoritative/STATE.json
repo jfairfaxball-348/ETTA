@@ -44,7 +44,7 @@
     "Owner-reported genuine Gemma WAIT and approved lamp-toggle executed on production 2026-10-19",
     "World-validated named MOVE_TO rug/table choice, manual approval and collision-safe finite visible walking",
     "Immediate Stop, manual override, reset, blur, permission-loss and 30s route timeout cancellation",
-    "S007 31 deterministic Node tests passed in intermediate CI; final full PR CI pending"
+    "S007 CI_PASS: 31 Node tests, 17 room and 12 protected-mind Chromium fixture checks with screenshot evidence"
   ],
   "not_yet_capabilities": [
     "Production live Gemma-approved walk OWNER_REPORTED walkthrough (NOT_RUN)",
@@ -134,10 +134,11 @@
     "s007": {
       "pr": "https://github.com/jfairfaxball-348/ETTA/pull/6",
       "node_ci": "31/31 PASS intermediary run 39236410379",
-      "last_full_ci": "PENDING",
-      "browser_fixtures": "Pending corrected final Chromium run",
-      "real_gemma_navigation": "NOT_RUN",
-      "budget_change": "NONE"
+      "last_full_ci": "CI_PASS https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038",
+      "browser_fixtures": "PASS_REAL_CHROMIUM_EXPLICIT_MODEL_FIXTURES",
+      "real_gemma_navigation": "NOT_RUN_OWNER_WALKTHROUGH_REQUIRED",
+      "budget_change": "NONE",
+      "screenshots": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038/artifacts/12179209095"
     }
   },
   "known_blockers": [
@@ -154,7 +155,7 @@
     "historical_ci": "Old repository only"
   },
   "last_executed_session": "S007",
-  "last_session_status": "IMPLEMENTED_PR6_FINAL_CI_PENDING_LIVE_NAVIGATION_NOT_RUN",
+  "last_session_status": "CLOSED_S007_CI_PASS_REAL_GEMMA_NAVIGATION_NOT_RUN",
   "owner_approved_roadmap": {
     "date": "2026-10-19",
     "sessions": [
