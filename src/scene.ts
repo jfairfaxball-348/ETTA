@@ -134,6 +134,8 @@ export function createStage(mount: HTMLElement) {
   // Render to an offscreen target only after an explicit Ask/episode decision.
   const eyeCamera = new THREE.PerspectiveCamera(66, 384 / 216, 0.07, 30);
   const eyeTarget = new THREE.WebGLRenderTarget(384, 216, { depthBuffer: true });
+  // Use sRGB target pixels: raw linear RGB encoded as JPEG otherwise looks much too dark.
+  eyeTarget.texture.colorSpace = THREE.SRGBColorSpace;
   function captureEye(body: BodyState) {
     eyeCamera.position.set(body.x, 1.98, body.z);
     eyeCamera.lookAt(body.x - Math.sin(body.yaw) * 3, 1.87, body.z - Math.cos(body.yaw) * 3);
