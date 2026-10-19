@@ -35,3 +35,7 @@
 | DEC-0028 | S007 plan | Named-destination, owner-approved navigation only; deterministic physics/path routing and manual override | Grow what model may choose without granting raw positional commands or P4 autonomy early | S007 implementation |
 | DEC-0029 | Budget clarification | ETTA enforces 4/minute and 40/UTC day using Upstash, independent of Google's project/model quotas | Shared operational safeguards, not Gemma pricing/rate-limit claims | S008 autonomy/cost review |
 | DEC-0030 | Future infrastructure | No 24/7 world or recurring cloud requests before a separate hosting, security and spend decision | Prevent assumptions about Vercel free-tier persistence/compute | S014 feasibility |
+
+| DEC-0031 | S007 | Allow `MOVE_TO` only for immutable-geometry-derived rug/table destinations after explicit approval | The model chooses WHAT, never world coordinates, and shared server/browser permission checks prevent invented targets | Additional rooms/destinations |
+| DEC-0032 | S007 | Bounded 25 cm grid routing with swept-clearance checks and 30 s maximum walk | Real visible body translation/turning without wall clipping or infinite stalls; no model calls per frame | Complex obstacle layouts |
+| DEC-0033 | S007 | Approved navigation is a single action, not an autonomy toggle | Prevent accidental escalation of privileges before S008 cost/consent review | S008 opt-in episode |

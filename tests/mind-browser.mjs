@@ -84,6 +84,51 @@ try {
       await page.unroute('**/api/decision');
     }
   });
+
+  await attempt('Named destination: owner approves, body turns and physically reaches the rug (fixture)', async () => {
+    await reset();
+    const move={ action: { type: 'MOVE_TO', targetId: 'rug' }, reason: 'A test-only request to walk to the rug.' };
+    await page.route('**/api/decision', route => route.request().method() === 'POST' ?
+      route.fulfill({ json: responseFixture(move) }) : route.continue());
+    await ask();
+    assert.match(await page.locator('#mind-proposal').innerText(), /Centre of the woven rug/);
+    const before=await page.locator('#telemetry').innerText();
+    await pause(200);
+    assert.equal((await page.locator('#telemetry').innerText()).split('\n')[0], before.split('\n')[0], 'No movement before approval');
+    await page.locator('#approve-proposal').click();
+    assert.equal(await page.locator('#ask-etta').isDisabled(),true);
+    assert.match(await page.locator('#mind-message').innerText(), /Walking to/);
+    await pause(600);
+    assert.match(await page.locator('#telemetry').innerText(), /WALK/);
+    mkdirSync('test-results', { recursive: true });
+    await page.screenshot({path:'test-results/etta-s007-walking-fixture.png'});
+    await page.waitForFunction(() => document.querySelector('#mind-message')?.textContent?.startsWith('Arrived at'));
+    assert.match(await page.locator('#mind-message').innerText(), /woven rug/);
+    const final=await page.locator('#telemetry').innerText();
+    const coordinates=final.split('\n')[0].match(/-?\d+\.\d+/g).map(Number);
+    assert.ok(Math.hypot(coordinates[0]+0.04,coordinates[1]+0.875)<0.04,'Arrived at actual rug coordinates');
+    assert.equal(await page.locator('#ask-etta').isEnabled(),true);
+    await page.screenshot({path:'test-results/etta-s007-arrived-fixture.png'});
+    await page.unroute('**/api/decision');
+  });
+  await attempt('Stop and manual steering cancel an approved walk without teleporting (fixture)', async () => {
+    await reset();
+    const move={ action: { type: 'MOVE_TO', targetId: 'table' }, reason: 'Test-only walk to desk.' };
+    await page.route('**/api/decision', route => route.request().method() === 'POST' ?
+      route.fulfill({json:responseFixture(move)}) : route.continue());
+    await ask(); await page.locator('#approve-proposal').click(); await pause(450);
+    await page.locator('#stop-mind').click(); await expectStatus('MANUAL');
+    const frozen=await page.locator('#telemetry').innerText();
+    await pause(150);
+    assert.match(await page.locator('#mind-message').innerText(), /Stopped/);
+    assert.equal((await page.locator('#telemetry').innerText()).split('\n')[0],frozen.split('\n')[0]);
+    await reset(); await ask(); await page.locator('#approve-proposal').click(); await pause(300);
+    await page.locator('#scene').focus(); await page.keyboard.down('a');
+    try { await expectStatus('MANUAL'); } finally { await page.keyboard.up('a'); }
+    assert.match(await page.locator('#mind-message').innerText(), /Manual movement took over/);
+    assert.equal(await page.locator('#ask-etta').isEnabled(),true);
+    await page.unroute('**/api/decision');
+  });
   await attempt('Model text renders as text; access code is not persisted', async () => {
     await page.route('**/api/decision', route => route.fulfill({ json: responseFixture({ ...toggle, reason: '<img src=x onerror=alert(1)>' }) }));
     await ask(); assert.equal(await page.locator('#mind-proposal img').count(), 0);

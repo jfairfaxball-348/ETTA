@@ -1,6 +1,7 @@
 import { MindController } from './controller.ts';
 import { applyProposal, snapshot, record } from './protocol.ts';
 import type { BodyState } from '../simulation.ts';
+import { NavigationRunner, destination } from '../navigation.ts';
 import type { WorldState } from '../world.ts';
 
 export function attachMindPanel(body: BodyState, world: WorldState) {
@@ -12,7 +13,9 @@ export function attachMindPanel(body: BodyState, world: WorldState) {
   const ask = el<HTMLButtonElement>('ask-etta');
   const approve = el<HTMLButtonElement>('approve-proposal');
   const code = el<HTMLInputElement>('mind-access-code');
+  const navigator = new NavigationRunner(body);
   const controller = new MindController({
+    navigation: navigator,
     snapshot: () => snapshot(body, world),
     stop: () => { body.vx = 0; body.vz = 0; body.action = 'IDLE'; },
     apply: proposal => applyProposal(proposal, body, world),
@@ -20,11 +23,14 @@ export function attachMindPanel(body: BodyState, world: WorldState) {
       el('mind-status').textContent = view.status;
       el('mind-message').textContent = view.message;
       el('mind-panel').setAttribute('aria-busy', String(view.pending));
-      ask.disabled = !controller.enabled || view.pending;
+      ask.disabled = !controller.enabled || view.pending || view.moving || !!view.decision;
       approve.disabled = !view.decision;
       const decision = view.decision;
-      el('mind-proposal').textContent = decision ?
-        `${decision.proposal.action.type === 'WAIT' ? 'Wait here' : 'Switch the nearby lamp'} — ${decision.proposal.reason}` : 'No action awaiting approval.';
+      const action = decision?.proposal.action;
+      const label = action?.type === 'MOVE_TO' ? 'Walk to ' + (destination(action.targetId)?.label ?? action.targetId) :
+        action?.type === 'WAIT' ? 'Wait here' : 'Switch the nearby lamp';
+      el('mind-proposal').textContent = decision ? label + ' — ' + decision.proposal.reason :
+        view.moving ? 'Walking to ' + view.destination + ' (Stop or manual movement interrupts).' : 'No action awaiting approval.';
       el('mind-meta').textContent = decision ? `${decision.provenance} · ${decision.model} · ${Math.round(decision.elapsedMs)} ms` : '';
       el('mind-observation').textContent = view.observation ? JSON.stringify(view.observation, null, 2) : 'Ask Etta to capture the room as she can observe it.';
       el('mind-history').textContent = view.history.join('\n');

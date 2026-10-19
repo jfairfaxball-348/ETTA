@@ -2,10 +2,10 @@
   "project": "ETTA",
   "as_of": "2026-10-19",
   "mission": "Build an embodied autonomous virtual character using staged, verifiable software sessions.",
-  "last_completed_session": "S006",
-  "next_session": "S007",
+  "last_completed_session": "S007",
+  "next_session": "S008",
   "next_session_status": "INSTALLED_FUTURE_NOT_EXECUTED",
-  "current_phase": "P4_PLANNING_S007_BRIDGE",
+  "current_phase": "P4_S007_APPROVED_NAVIGATION_BRIDGE_S008_OPT_IN_EPISODE_NEXT",
   "phases": {
     "P0": {
       "title": "Foundation",
@@ -25,7 +25,7 @@
     },
     "P4": {
       "title": "Let her decide how she lives",
-      "status": "NOT_STARTED_S007_APPROVED_NAVIGATION_NEXT"
+      "status": "S007_FINITE_APPROVED_NAMED_NAVIGATION_IMPLEMENTED_NO_EPISODES"
     },
     "P5": {
       "title": "Who knows after that",
@@ -41,11 +41,13 @@
     "Ask Etta: one model proposal, manual approval, WAIT or nearby lamp toggle",
     "Server-only Google adapter with access token, shared Redis request budget and bounded requests",
     "Strict observation/proposal validation, cancellation, stale-response protection and visible errors",
-    "CI_PASS: 23 Node tests, 17 room Chromium checks, 10 fixture mind Chromium checks and actual Redis budget integration",
-    "Owner-reported genuine Gemma WAIT and approved lamp-toggle executed on production 2026-10-19"
+    "Owner-reported genuine Gemma WAIT and approved lamp-toggle executed on production 2026-10-19",
+    "World-validated named MOVE_TO rug/table choice, manual approval and collision-safe finite visible walking",
+    "Immediate Stop, manual override, reset, blur, permission-loss and 30s route timeout cancellation",
+    "S007 CI_PASS: 31 Node tests, 17 room and 12 protected-mind Chromium fixture checks with screenshot evidence"
   ],
   "not_yet_capabilities": [
-    "Self-directed named-destination navigation (S007, FUTURE)",
+    "Production live Gemma-approved walk OWNER_REPORTED walkthrough (NOT_RUN)",
     "Opt-in bounded multi-decision autonomy (S008, FUTURE)",
     "Persistent memory, motivations, routines, conversation and away-time operation",
     "Independent production Stop/cancel/focus-loss log verification",
@@ -128,6 +130,15 @@
       "owner_live_observation": "OWNER_REPORTED: 2026-10-19 READY; Gemma WAIT and TOGGLE_LAMP, approval changed lamp",
       "independent_live_provider_log": "NOT_RUN_VERCEL_LOG_SCOPE_403",
       "live_stop": "NOT_RUN_OWNER_NOT_REPORTED"
+    },
+    "s007": {
+      "pr": "https://github.com/jfairfaxball-348/ETTA/pull/6",
+      "node_ci": "31/31 PASS intermediary run 39236410379",
+      "last_full_ci": "CI_PASS https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038",
+      "browser_fixtures": "PASS_REAL_CHROMIUM_EXPLICIT_MODEL_FIXTURES",
+      "real_gemma_navigation": "NOT_RUN_OWNER_WALKTHROUGH_REQUIRED",
+      "budget_change": "NONE",
+      "screenshots": "https://github.com/jfairfaxball-348/ETTA/actions/runs/39237279038/artifacts/12179209095"
     }
   },
   "known_blockers": [
@@ -143,8 +154,8 @@
     "method": "source-file-snapshot",
     "historical_ci": "Old repository only"
   },
-  "last_executed_session": "S006",
-  "last_session_status": "CLOSED_OWNER_REPORTED_LIVE_P3_CORE_GATE_MET",
+  "last_executed_session": "S007",
+  "last_session_status": "CLOSED_S007_CI_PASS_REAL_GEMMA_NAVIGATION_NOT_RUN",
   "owner_approved_roadmap": {
     "date": "2026-10-19",
     "sessions": [

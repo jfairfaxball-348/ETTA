@@ -1,26 +1,28 @@
-# ETTA S007 — FIRST SELF-DIRECTED MOVEMENT (FUTURE / NOT EXECUTED)
+# ETTA S008 — FIRST BOUNDED OPT-IN AUTONOMOUS EPISODE (FUTURE / NOT EXECUTED)
 
-**Invocation:** When the owner says "run next session" in ETTA, execute **S007 only** in `jfairfaxball-348/ETTA`. This prompt is installed for the future; it is not evidence that S007 work has started.
+**Invocation:** When the owner says “run next session” after S007 is merged, execute **S008 only** in `jfairfaxball-348/ETTA`. This is a future handover, not proof that S008 work began.
 
 ## Read first
-Read live `main`, `AGENTS.md`, `PROJECT_CHARTER.md`, `ROADMAP.md`, `authoritative/STATE.json`, `sessions/S006/{VALIDATION,REVIEW,CLOSEOUT}.md`, `docs/PHASE_GATES.md`, and relevant `src/{world,simulation,input,main}.ts` and `src/mind/{protocol,controller,panel}.ts`, `server/{decision,provider}.ts`, and tests. The owner has approved the proposed S007–S014 roadmap. Preserve the live P3 bridge, and the separation between world-owned physics and model-chosen actions.
+Read latest `main`, `AGENTS.md`, `PROJECT_CHARTER.md`, `ROADMAP.md`, `authoritative/STATE.json`, `sessions/S007/{INPUT,PLAN,VALIDATION,REVIEW,CLOSEOUT}.md`, `docs/PHASE_GATES.md` and current navigation/mind/server sources and fixture browser tests. Preserve S007 production controls, named reachable destinations, approval gate for ordinary one-off decisions, and the current live WAIT/lamp bridge.
 
-## One primary deliverable
-Give Etta one new permitted decision: **choose a named reachable destination within her existing home and physically walk there after explicit owner approval**. Gemma chooses from a small server-derived allowlist of named destinations; it never supplies arbitrary coordinates, velocities, paths or code. Movement is completed by deterministic world-owned steering/pathfinding using the existing collision engine, with visibly rendered walking and a clear arrival/failure state.
+## Single primary objective
+Build ETTA's first **owner-initiated, observed, finite independent episode**. With an explicit Autonomy ON command the owner opts into one limited window in which Etta may request and carry out successive permitted actions without separate approval for every action, then stops automatically. This is opt-in automation of a simulated character, not sentience or background self-operation.
 
-- Start with at least two distinct, reachable, meaningful destinations (e.g., a safe approach to the writing table and an area near the doorway/rug), and include WAIT and existing nearby TOGGLE_LAMP unchanged.
-- Derive waypoints/approach positions and target eligibility from immutable world geometry on both server and browser, with safe navigation clearances. Use deterministic, bounded routing around furniture/walls (e.g., a small verified grid planner); no teleportation, wall clipping, endless stuck animation or guessing unreachable target coordinates.
-- Extend the strict typed model-action protocol and provider prompt; validate target IDs and permission/reachability, reject model-added fields and invalid routes. The model suggests WHAT; the world engine determines HOW. No provider calls during individual animation frames.
-- Display the proposed destination and intent before **Approve action**; show walking/arrival/interruption while executing. A single approved move is finite and terminates.
-- Manual movement, Stop, reset, navigation failure, tab blur/loss of focus and loss of permission must cancel safely. Document exactly when a new model request can be made, and avoid stale proposals or double execution.
-- Keep current server-side private credentials, shared Upstash budget (application-set 4/minute and 40/UTC day), provider quotas, and failure-closed rules. Do not increase the budget without explicit owner direction. No autonomous loop, unsupervised navigation, persistent memory, background worker, voice or paid infrastructure.
+- **Default OFF and fail closed.** Keep manual Ask Etta + per-action approval as the default. The owner must deliberately enter a short-lived episode each time, clearly seeing that the episode authorises multiple actions. Never auto-start on page reload.
+- **Hard session bounds:** at most **3** model decisions, at most **60 seconds** wall-clock episode duration, strictly serial requests, and a minimum 3-second interval between decisions. If any action is still executing, do not request another. Each episode terminates on completed bounds, Stop, failed model output, missing permission, HTTP failure, browser blur/hidden/pagehide, reset, manual movement or navigation timeout.
+- **Shared budget unchanged:** retain ETTA's Upstash 4 attempts/minute and 40 attempts/UTC-day global cap, independent of Google's quotas. An episode must never bypass admission controls, fire retries, use hidden polling, add cron/paid services or assume that free hosting is limitless. Show clear request usage for the episode and give the owner a Stop control at all times.
+- **World controls outcomes:** Gemma chooses one action from `validActions` (WAIT, permitted lamp toggle, or named reachable MOVE_TO); the deterministic world engine alone validates permission, calculates route and executes movement. No raw positions, code, velocities or arbitrary network actions; no per-frame provider calls.
+- **Useful observability:** label episodes `AUTONOMY ACTIVE` / `STOPPED` and display action provenance, current objective, decision number, remaining decisions, elapsed time and finished/failed reason. Preserve `MODEL_DECISION` vs `TEST_FIXTURE` provenance explicitly. No secret telemetry or access codes in localStorage/committed files.
+- **Interaction with manual controls:** Stop, WASD/touch controls, reset, manual lamp action, tab blur/loss and failed permission checks cancel both in-flight fetches and active walks. No orphaned delayed callback may restart an episode. Bound waits so WAIT cannot spin a rapid request loop.
+- **One-tab only.** No saved memory, background service, browser-tab-free agent, communication, speech, new environments or additional infrastructure in S008. These remain later milestones.
 
-## Acceptance and evidence
-1. `npm run check` and relevant deterministic unit/security tests PASS. Test reachable/unreachable paths, collision clearance, arrival, cancellation, manual override and model-invented destinations.
-2. Hosted CI and real Chromium fixture tests demonstrate a proposed named destination, manual approval, actual visible translation/turning to a legal arrival point, obstacle avoidance and manual override/Stop. Record screenshots/evidence; fixtures must be clearly labelled.
-3. Preserve the currently working live WAIT/lamp bridge and deployment. For a real Gemma navigation call, do not use an owner's access code or secret through chat; document the owner-run live walkthrough separately as OWNER_REPORTED, unless independently observed. Do not claim it passed from fixtures.
-4. Update `README.md`, `ROADMAP.md`, `docs/PHASE_GATES.md`, `docs/DECISIONS.md`, `authoritative/STATE.json` and `sessions/S007/{INPUT,PLAN,VALIDATION,REVIEW,CLOSEOUT}.md` honestly. Keep practical/lightweight session overhead.
-5. Complete one named session branch + PR, review hosted checks, merge and verify main. Install a **full standalone S008 prompt**, marked FUTURE / NOT EXECUTED, targeting a short, opt-in, cost-capped autonomous episode. **Do not execute S008.**
+## Acceptance / honest evidence
+1. `npm run check` passes with deterministic tests proving episode bounds, complete cancellation, failures, provider quota rejection, manual priority, stale response discard, no overlapping requests, WAIT spacing and no automatic start after reload.
+2. Hosted CI and **real Chromium with explicit model fixtures** exercise start → at least two authorised decisions → visible movement/interactions → natural finish and early Stop; archive video/screenshots/results where practical. Fixture behaviour must not be labelled live Gemma autonomy.
+3. Owner-run **real Gemma** episode is documented separately as OWNER_REPORTED only after it genuinely occurs. Do not use/store the private access code or Google/Redis tokens in ChatGPT messages or CI.
+4. No budget increase, new billing or hosted background execution without owner authorisation. Keep the current production live room safe if delivery is blocked.
+5. Update `README.md`, `ROADMAP.md`, `docs/{DECISIONS,PHASE_GATES}.md`, `authoritative/STATE.json`, and `sessions/S008/{INPUT,PLAN,VALIDATION,REVIEW,CLOSEOUT}.md` using lightweight practical ceremony.
+6. Work on a named branch, review hosted checks, merge if safe, reread main and install a complete **S009 FUTURE / NOT EXECUTED** prompt for meaningful object interactions. Do not run S009 in the S008 session.
 
-## Important baseline
-The owner confirmed on 2026-10-19 that production Gemma proposed WAIT and TOGGLE_LAMP and the lamp actually switched after approval. S006 packaging fix and later Gemma-format hotfix are merged. Production Stop/cancel walkthrough and physical-phone performance were not separately confirmed. Do not silently imply they were.
+## Ground truth at installation
+S006 real WAIT and approved lamp toggle are OWNER_REPORTED. S007 introduces only owner-approved world-routed walking; no independent autonomy or persistent memory. Any S007 live navigation walkthrough not yet owner-confirmed remains NOT_RUN, even if fixture Chromium passes.
